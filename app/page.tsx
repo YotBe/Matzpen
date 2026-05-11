@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { AlertBanner } from '@/components/AlertBanner';
 import { DailyLogForm } from '@/components/DailyLogForm';
@@ -9,7 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { usePatientId } from '@/lib/usePatientId';
 import { MOCK_PATIENT_ID, MOCK_PATIENT_NAME } from '@/lib/constants';
-import { getRecentLogs } from '@/services/supabaseService';
+import { getGoldenRecord, getRecentLogs } from '@/services/supabaseService';
 import type { DailyLog } from '@/lib/types';
 
 // Mock recent logs used when Supabase isn't configured so the AlertBanner
@@ -50,6 +51,9 @@ export default function DashboardPage() {
   const patientId = usePatientId();
   const [logs, setLogs] = useState<DailyLog[]>(MOCK_LOGS);
   const [logsLoading, setLogsLoading] = useState<boolean>(configured);
+  // Patient name from the Golden Record. `undefined` while loading, empty
+  // string when the caregiver hasn't filled it in yet, real name otherwise.
+  const [patientName, setPatientName] = useState<string | undefined>(undefined);
 
   const displayName =
     (user?.user_metadata?.full_name as string | undefined) ??
@@ -57,15 +61,25 @@ export default function DashboardPage() {
     t('dashboard.defaultName');
 
   useEffect(() => {
-    if (!configured) return;
+    if (!configured) {
+      // Preview mode: show the placeholder name so the dashboard isn't blank.
+      setPatientName(MOCK_PATIENT_NAME);
+      return;
+    }
     let cancelled = false;
     setLogsLoading(true);
     (async () => {
       try {
-        const fetched = await getRecentLogs(patientId, 7);
-        if (!cancelled && fetched.length > 0) setLogs(fetched);
+        const [fetched, golden] = await Promise.all([
+          getRecentLogs(patientId, 7),
+          getGoldenRecord(patientId).catch(() => null),
+        ]);
+        if (!cancelled) {
+          if (fetched.length > 0) setLogs(fetched);
+          setPatientName(golden?.patientName?.trim() || '');
+        }
       } catch {
-        /* leave mock logs */
+        if (!cancelled) setPatientName('');
       } finally {
         if (!cancelled) setLogsLoading(false);
       }
@@ -74,6 +88,9 @@ export default function DashboardPage() {
       cancelled = true;
     };
   }, [configured, patientId]);
+
+  const hasPatientName = Boolean(patientName);
+  const showSetupBanner = configured && patientName === '';
 
   return (
     <div className="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-6">
@@ -87,9 +104,13 @@ export default function DashboardPage() {
           {t('dashboard.valueProp')}
         </p>
         <p className="text-ink-mute mt-1 text-sm leading-relaxed">
-          {t('dashboard.subtitle', { patient: MOCK_PATIENT_NAME })}
+          {hasPatientName
+            ? t('dashboard.subtitle', { patient: patientName as string })
+            : t('dashboard.subtitleGeneric')}
         </p>
       </header>
+
+      {showSetupBanner && <SetupBanner />}
 
       {logsLoading ? (
         <div className="mz-card p-5 md:p-6 animate-pulse">
@@ -112,6 +133,33 @@ export default function DashboardPage() {
       <p className="text-xs text-ink-mute text-center leading-relaxed">
         {t('dashboard.disclaimer')}
       </p>
+    </div>
+  );
+}
+
+function SetupBanner() {
+  const { t } = useT();
+  return (
+    <div className="mz-card p-5 md:p-6 border-s-4 border-clay">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <div className="text-[11px] font-bold uppercase tracking-widest text-clay">
+            {t('dashboard.setup.kicker')}
+          </div>
+          <h2 className="text-lg md:text-xl font-extrabold mt-1">
+            {t('dashboard.setup.title')}
+          </h2>
+          <p className="text-sm text-ink-soft mt-2 leading-relaxed">
+            {t('dashboard.setup.body')}
+          </p>
+        </div>
+        <span aria-hidden className="text-3xl shrink-0 select-none">
+          ◐
+        </span>
+      </div>
+      <Link href="/golden-record" className="mz-btn mz-btn-clay mt-4">
+        {t('dashboard.setup.cta')}
+      </Link>
     </div>
   );
 }
