@@ -150,6 +150,15 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       'המדדים החריגים מסתמנים כמגמה. עברו למסך "מצב חירום" לקבלת מסלול פעולה.',
     'dailyLog.fieldImpulsivityYes': 'היה אירוע אימפולסיבי',
     'dailyLog.fieldImpulsivityNo': 'ללא אירועים חריגים',
+    'dailyLog.sectionMeds': 'תרופות',
+    'dailyLog.medsLabel': 'האם המטופל נטל היום את התרופות כסדרן?',
+    'dailyLog.medsYes': 'כן',
+    'dailyLog.medsNo': 'לא',
+    'dailyLog.medsRefused': 'סירב לקבל',
+    'dailyLog.medsField.yes': 'נטל כסדרן',
+    'dailyLog.medsField.no': 'לא נטל',
+    'dailyLog.medsField.refused': 'סירב לקבל',
+    'dailyLog.medsField.unknown': 'לא צוין',
     'dailyLog.addAnother': 'הוסף דיווח נוסף',
     'dailyLog.previewNote':
       'מצב תצוגה: הדיווח לא נשמר עד שהגדרות Supabase יוזנו ב־.env.local.',
@@ -176,6 +185,10 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       'התראה צהובה נמשכת {{days}} ימים — חציית סף לאדום',
     'alert.reason.impulsivityStreak':
       '{{days}} ימים רצופים של דיווח על אירוע אימפולסיבי חריג',
+    'alert.reason.medsMissed':
+      '{{days}} ימים רצופים שבהם המטופל לא נטל את התרופות',
+    'alert.reason.medsMissedLowSleep':
+      'במהלך הימים שלא ניטלו תרופות, השינה ירדה מתחת ל-{{hours}} שעות — סיכון מוגבר',
 
     // ── Emergency ──────────────────────────────────────────────────────────
     'emergency.kicker': 'מצב חירום',
@@ -243,6 +256,12 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.title': 'תיק למיון פסיכיאטרי',
     'gr.subtitle':
       'ה־Golden Record — מסמך אחד שמכיל את כל המידע הקריטי שצוות המיון צריך תוך דקות. ניתן להדפיס או להציג למוקדן.',
+    'gr.mode.edit': 'מצב עריכה',
+    'gr.mode.view': 'מצב תצוגה להדפסה',
+    'gr.viewEmpty.title': 'אין עדיין תיק שמור',
+    'gr.viewEmpty.body':
+      'עברו ל"מצב עריכה" ומלאו את התיק כדי שתוכלו להציג אותו לצוות המיון.',
+    'gr.printPdf': 'הדפס כ-PDF',
     'gr.cancelEdit': 'ביטול ושמירת הגרסה הקיימת',
     'gr.docHeader': 'תיק רפואי למיון',
     'gr.updated': 'עודכן: {{when}}',
@@ -597,6 +616,15 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       'Concerning metrics are forming a trend. Open the emergency screen for an action path.',
     'dailyLog.fieldImpulsivityYes': 'Impulsivity event',
     'dailyLog.fieldImpulsivityNo': 'No unusual events',
+    'dailyLog.sectionMeds': 'Medication',
+    'dailyLog.medsLabel': 'Did the patient take their medication today?',
+    'dailyLog.medsYes': 'Yes',
+    'dailyLog.medsNo': 'No',
+    'dailyLog.medsRefused': 'Refused',
+    'dailyLog.medsField.yes': 'Taken as prescribed',
+    'dailyLog.medsField.no': 'Not taken',
+    'dailyLog.medsField.refused': 'Refused',
+    'dailyLog.medsField.unknown': 'Not specified',
     'dailyLog.addAnother': 'Add another check-in',
     'dailyLog.previewNote':
       'Preview mode: check-ins are not persisted until Supabase env vars are set in .env.local.',
@@ -621,6 +649,10 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       'Yellow alert sustained for {{days}} days — crossed into red',
     'alert.reason.impulsivityStreak':
       '{{days}} consecutive days reporting an unusual impulsivity event',
+    'alert.reason.medsMissed':
+      '{{days}} consecutive days of missed medication',
+    'alert.reason.medsMissedLowSleep':
+      'On days medication was missed, sleep dropped below {{hours}} hours — elevated risk',
 
     'emergency.kicker': 'Emergency',
     'emergency.title': 'Decision tree',
@@ -692,6 +724,12 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.title': 'Triage record',
     'gr.subtitle':
       'The Golden Record — one document with all the critical information the ER team needs in minutes. Printable or shown to the dispatcher.',
+    'gr.mode.edit': 'Edit mode',
+    'gr.mode.view': 'View / print mode',
+    'gr.viewEmpty.title': 'No record yet',
+    'gr.viewEmpty.body':
+      'Switch to edit mode and fill in the record so you can display it to the ER team.',
+    'gr.printPdf': 'Print as PDF',
     'gr.cancelEdit': 'Cancel and keep the current version',
     'gr.docHeader': 'Triage medical file',
     'gr.updated': 'Updated: {{when}}',

@@ -1,5 +1,9 @@
 export type AffectiveState = 'depression' | 'euthymia' | 'euphoria' | 'irritability';
 
+// Adherence-to-medication answer from the daily log.
+// `unknown` is the default for legacy rows / unanswered submissions.
+export type MedicationTaken = 'yes' | 'no' | 'refused' | 'unknown';
+
 export interface DailyLog {
   id?: string;
   patientId: string;
@@ -9,6 +13,7 @@ export interface DailyLog {
   affectiveState: AffectiveState;
   psychomotorSpeed: number;
   impulsivityEvent: boolean;
+  medicationTaken?: MedicationTaken;
   notes?: string;
   createdAt: number;
 }

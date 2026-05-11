@@ -4,6 +4,7 @@ import type {
   BureaucracySection,
   DailyLog,
   GoldenRecord,
+  MedicationTaken,
 } from '@/lib/types';
 
 function requireClient() {
@@ -26,6 +27,7 @@ export async function addDailyLog(
     affective_state: log.affectiveState,
     psychomotor_speed: log.psychomotorSpeed,
     impulsivity_event: log.impulsivityEvent,
+    medication_taken: log.medicationTaken ?? null,
     note: log.notes ?? null,
     logged_by: log.loggedBy,
     logged_by_name: log.loggedByName ?? null,
@@ -51,6 +53,7 @@ export async function getRecentLogs(patientId: string, limit = 30): Promise<Dail
     affectiveState: row.affective_state,
     psychomotorSpeed: row.psychomotor_speed,
     impulsivityEvent: row.impulsivity_event,
+    medicationTaken: (row.medication_taken ?? undefined) as MedicationTaken | undefined,
     notes: row.note ?? undefined,
     createdAt: new Date(row.created_at).getTime(),
   }));

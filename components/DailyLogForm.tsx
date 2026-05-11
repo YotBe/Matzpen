@@ -6,7 +6,12 @@ import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { usePatientId } from '@/lib/usePatientId';
 import { computeAlertLevel } from '@/utils/alertAlgorithm';
-import { type AffectiveState, type AlertLevel, type DailyLog } from '@/lib/types';
+import {
+  type AffectiveState,
+  type AlertLevel,
+  type DailyLog,
+  type MedicationTaken,
+} from '@/lib/types';
 import { CheckIcon } from '@/components/icons';
 
 const AFFECTIVE_TONES: Record<AffectiveState, string> = {
@@ -41,6 +46,7 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
   const [affectiveState, setAffectiveState] = useState<AffectiveState>('euthymia');
   const [psychomotorSpeed, setPsychomotorSpeed] = useState<number>(3);
   const [impulsivityEvent, setImpulsivityEvent] = useState<boolean>(false);
+  const [medicationTaken, setMedicationTaken] = useState<MedicationTaken>('yes');
   const [notes, setNotes] = useState<string>('');
   const [status, setStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
@@ -77,6 +83,7 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
       affectiveState,
       psychomotorSpeed,
       impulsivityEvent,
+      medicationTaken,
       notes: notes.trim() || undefined,
       loggedBy: user?.id ?? 'mock-caregiver',
       loggedByName:
@@ -110,6 +117,7 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
     setAffectiveState('euthymia');
     setPsychomotorSpeed(3);
     setImpulsivityEvent(false);
+    setMedicationTaken('yes');
     setNotes('');
     setStatus('idle');
     setError(null);
@@ -164,6 +172,12 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
                 {snap.impulsivityEvent
                   ? t('dailyLog.fieldImpulsivityYes')
                   : t('dailyLog.fieldImpulsivityNo')}
+              </dd>
+            </div>
+            <div className="col-span-2">
+              <dt className="text-xs text-ink-mute">{t('dailyLog.sectionMeds')}</dt>
+              <dd className="font-semibold">
+                {t(`dailyLog.medsField.${snap.medicationTaken ?? 'unknown'}`)}
               </dd>
             </div>
           </dl>
@@ -228,22 +242,39 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
       <SectionCard kicker={t('dailyLog.sectionAffect')}>
         <fieldset>
           <legend className="mz-field-label">{t('dailyLog.affectiveLabel')}</legend>
-          <div className="mt-3 grid grid-cols-2 gap-2.5">
+          <div
+            role="radiogroup"
+            aria-label={t('dailyLog.affectiveLabel')}
+            className="mt-3 grid grid-cols-2 gap-2.5"
+          >
             {(Object.entries(affectiveLabels) as [AffectiveState, string][]).map(([k, label]) => {
               const active = affectiveState === k;
               return (
                 <button
                   type="button"
                   key={k}
-                  aria-pressed={active}
+                  role="radio"
+                  aria-checked={active}
                   onClick={() => setAffectiveState(k)}
-                  className={`text-start rounded-2xl border-2 px-4 py-3 transition-all ${
+                  className={`text-start rounded-2xl border-2 px-4 py-3 transition-all flex items-center gap-3 ${
                     active
-                      ? `${AFFECTIVE_TONES[k]} font-bold`
-                      : 'bg-white border-transparent text-ink-soft hover:border-sand-100'
+                      ? `${AFFECTIVE_TONES[k]} font-bold shadow-soft`
+                      : 'bg-white border-sand-100 text-ink-soft hover:border-clay/40 hover:bg-sand-50/60'
                   }`}
                 >
-                  <div className="text-base">{label}</div>
+                  <span
+                    aria-hidden
+                    className={`shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                      active ? 'border-current' : 'border-ink-mute/40'
+                    }`}
+                  >
+                    <span
+                      className={`w-2.5 h-2.5 rounded-full transition-transform ${
+                        active ? 'bg-current scale-100' : 'bg-transparent scale-0'
+                      }`}
+                    />
+                  </span>
+                  <span className="text-base">{label}</span>
                 </button>
               );
             })}
@@ -277,6 +308,46 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
           ))}
         </div>
         <div className="mt-2 text-[11px] text-ink-mute">{t('dailyLog.psychoLegend')}</div>
+      </SectionCard>
+
+      {/* Medication adherence */}
+      <SectionCard kicker={t('dailyLog.sectionMeds')}>
+        <div className="mz-field-label">{t('dailyLog.medsLabel')}</div>
+        <div
+          role="radiogroup"
+          aria-label={t('dailyLog.medsLabel')}
+          className="mt-3 grid grid-cols-3 gap-2"
+        >
+          {(
+            [
+              { value: 'yes', label: t('dailyLog.medsYes'), tone: 'sage' },
+              { value: 'no', label: t('dailyLog.medsNo'), tone: 'amber' },
+              { value: 'refused', label: t('dailyLog.medsRefused'), tone: 'crimson' },
+            ] as const
+          ).map((opt) => {
+            const active = medicationTaken === opt.value;
+            const activeTone =
+              opt.tone === 'sage'
+                ? 'bg-sage-bg border-sage text-sage'
+                : opt.tone === 'amber'
+                ? 'bg-amber_-bg border-amber_ text-amber_-ink'
+                : 'bg-crimson-bg border-crimson text-crimson-deep';
+            return (
+              <button
+                type="button"
+                key={opt.value}
+                role="radio"
+                aria-checked={active}
+                onClick={() => setMedicationTaken(opt.value)}
+                className={`rounded-2xl px-2 py-3 font-semibold border-2 transition-all text-center ${
+                  active ? activeTone : 'bg-white border-sand-100 text-ink-soft hover:border-clay/40'
+                }`}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
       </SectionCard>
 
       {/* Impulsivity */}
@@ -328,7 +399,7 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
         </div>
       )}
 
-      <button type="submit" disabled={status === 'saving'} className="mz-btn mz-btn-clay mz-btn-big w-full">
+      <button type="submit" disabled={status === 'saving'} className="mz-btn mz-btn-big w-full">
         {status === 'saving' ? t('dailyLog.submitting') : t('dailyLog.submit')}
       </button>
 

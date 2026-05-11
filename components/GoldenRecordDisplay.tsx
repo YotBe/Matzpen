@@ -8,9 +8,12 @@ import { useT } from '@/lib/i18n/LocaleProvider';
 export function GoldenRecordDisplay({
   record,
   onEdit,
+  printLabel,
 }: {
   record: GoldenRecord;
   onEdit: () => void;
+  // Override the default "הדפסה" label (the new view-mode flow asks for "הדפס כ-PDF").
+  printLabel?: string;
 }) {
   const { locale, t } = useT();
   const updated = new Date(record.updatedAt).toLocaleString(
@@ -34,7 +37,7 @@ export function GoldenRecordDisplay({
             {t('common.edit')}
           </button>
           <button onClick={() => window.print()} className="mz-btn h-10 px-4 text-sm">
-            <PrintIcon size={16} /> {t('common.print')}
+            <PrintIcon size={16} /> {printLabel ?? t('common.print')}
           </button>
         </div>
       </header>
