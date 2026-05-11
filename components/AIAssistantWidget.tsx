@@ -31,14 +31,14 @@ export function AIAssistantWidget() {
         onClick={() => setOpen((v) => !v)}
         aria-label={t('assistant.openLabel')}
         aria-expanded={open}
-        className="mz-no-print fixed z-40 left-4 bottom-20 md:bottom-6 h-14 w-14 rounded-full bg-clay text-white shadow-card flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+        className="mz-no-print fixed z-40 start-4 bottom-20 md:bottom-6 h-14 w-14 rounded-full bg-clay text-white shadow-card flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
       >
         {open ? <CloseIcon /> : <ChatIcon />}
       </button>
 
       {open && (
         <div
-          className="mz-no-print fixed z-40 inset-x-3 bottom-36 md:left-6 md:right-auto md:bottom-24 md:w-[380px] md:h-[560px] max-h-[80vh] rounded-card bg-white shadow-card border border-sand-100 overflow-hidden flex flex-col"
+          className="mz-no-print fixed z-40 inset-x-3 bottom-36 md:start-6 md:end-auto md:bottom-24 md:w-[380px] md:h-[560px] max-h-[80vh] rounded-card bg-white shadow-card border border-sand-100 overflow-hidden flex flex-col"
           role="dialog"
           aria-label={t('assistant.title')}
           dir="rtl"

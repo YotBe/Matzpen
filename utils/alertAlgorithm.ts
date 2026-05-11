@@ -36,7 +36,10 @@ export function computeAlertLevel(logs: DailyLog[]): AlertResult {
 
   const yellowStreak = consecutiveFromNewest(
     sorted,
-    (l) => l.sleepHours < SLEEP_THRESHOLD && l.psychomotorSpeed >= PSYCHO_THRESHOLD,
+    (l) =>
+      Number.isFinite(l.sleepHours) &&
+      l.sleepHours < SLEEP_THRESHOLD &&
+      l.psychomotorSpeed >= PSYCHO_THRESHOLD,
   );
   const impulseStreak = consecutiveFromNewest(sorted, (l) => l.impulsivityEvent === true);
   // Medication non-adherence: explicit "no" or "refused" (unknown/undefined doesn't count).
@@ -73,7 +76,11 @@ export function computeAlertLevel(logs: DailyLog[]): AlertResult {
 
     const missedDaysWithLowSleep = sorted
       .slice(0, medMissStreak)
-      .some((l) => l.sleepHours < SLEEP_RED_WITH_MEDS_THRESHOLD);
+      .some(
+        (l) =>
+          Number.isFinite(l.sleepHours) &&
+          l.sleepHours < SLEEP_RED_WITH_MEDS_THRESHOLD,
+      );
     if (missedDaysWithLowSleep) {
       level = escalate(level, 'RED_ALERT');
       reasons.push({

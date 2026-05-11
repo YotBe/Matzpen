@@ -4,8 +4,16 @@
 //   - Cache-first for /_next/static and /icon.svg (immutable build artifacts).
 //   - Bypass everything else (Supabase, Google fonts during SW lifetime, etc.) — let the network handle it.
 
-const CACHE_VERSION = 'matzpen-v1';
-const SHELL_URLS = ['/', '/emergency', '/golden-record', '/bureaucracy', '/icon.svg'];
+const CACHE_VERSION = 'matzpen-v2';
+const SHELL_URLS = [
+  '/',
+  '/emergency',
+  '/golden-record',
+  '/bureaucracy',
+  '/assistant',
+  '/privacy',
+  '/icon.svg',
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

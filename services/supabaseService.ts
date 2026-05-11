@@ -49,7 +49,9 @@ export async function getRecentLogs(patientId: string, limit = 30): Promise<Dail
     patientId: row.patient_id,
     loggedBy: row.logged_by ?? '',
     loggedByName: row.logged_by_name ?? undefined,
-    sleepHours: Number(row.sleep_hours),
+    // Coerce nulls to NaN (not 0) so the alert algorithm can skip them instead
+    // of treating "missing sleep" as "0 hours slept" and firing a false alert.
+    sleepHours: row.sleep_hours == null ? NaN : Number(row.sleep_hours),
     affectiveState: row.affective_state,
     psychomotorSpeed: row.psychomotor_speed,
     impulsivityEvent: row.impulsivity_event,
