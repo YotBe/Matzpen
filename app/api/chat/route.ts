@@ -210,19 +210,39 @@ export async function POST(req: Request) {
   if (token) {
     try {
       patientContext = await buildPatientContext(token);
-    } catch {
-      // Non-fatal — continue without patient context
+    } catch (err) {
+      console.error('[chat] buildPatientContext failed:', err);
     }
   }
 
   const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-  const result = streamText({
-    model: openai('gpt-4o-mini'),
-    system: SYSTEM_PROMPT + patientContext,
-    messages: await convertToModelMessages(messages),
-    temperature: 0.4,
-  });
+  try {
+    const result = streamText({
+      model: openai('gpt-4o-mini'),
+      system: SYSTEM_PROMPT + patientContext,
+      messages: await convertToModelMessages(messages),
+      temperature: 0.4,
+      onError: ({ error }) => {
+        console.error('[chat] streamText error:', error);
+      },
+    });
 
-  return result.toUIMessageStreamResponse();
+    return result.toUIMessageStreamResponse({
+      onError: (error) => {
+        console.error('[chat] stream response error:', error);
+        if (error == null) return 'unknown error';
+        if (typeof error === 'string') return error;
+        if (error instanceof Error) return error.message;
+        return JSON.stringify(error);
+      },
+    });
+  } catch (err) {
+    console.error('[chat] fatal error:', err);
+    const message = err instanceof Error ? err.message : 'Unknown server error';
+    return new Response(JSON.stringify({ error: message }), {
+      status: 500,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
 }
