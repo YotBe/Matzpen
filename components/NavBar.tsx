@@ -2,15 +2,18 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
-import { SignOutIcon } from '@/components/icons';
+import { ChevronEnd, SignOutIcon } from '@/components/icons';
 import { LanguageToggle } from '@/components/LanguageToggle';
 
 export function NavBar() {
   const pathname = usePathname() ?? '/';
   const { user, signOut, configured } = useAuth();
   const { t } = useT();
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const toolsRef = useRef<HTMLLIElement>(null);
 
   const links = [
     { href: '/', label: t('nav.daily'), helper: t('nav.dailyHelper') },
@@ -19,6 +22,36 @@ export function NavBar() {
     { href: '/bureaucracy', label: t('nav.bureaucracy'), helper: t('nav.bureaucracyHelper') },
     { href: '/assistant', label: t('nav.assistant'), helper: t('nav.assistantHelper') },
   ] as const;
+
+  const tools = [
+    { href: '/legal-shield', label: t('nav.legal'), helper: t('nav.legalHelper') },
+    { href: '/hospitalization', label: t('nav.hospitalization'), helper: t('nav.hospitalizationHelper') },
+    { href: '/case-studies', label: t('nav.cases'), helper: t('nav.casesHelper') },
+  ];
+
+  const inTools = tools.some((tl) => pathname === tl.href || pathname.startsWith(tl.href));
+
+  // Close the tools dropdown on outside click or escape.
+  useEffect(() => {
+    if (!toolsOpen) return;
+    function handlePointer(e: MouseEvent) {
+      if (!toolsRef.current?.contains(e.target as Node)) setToolsOpen(false);
+    }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setToolsOpen(false);
+    }
+    document.addEventListener('mousedown', handlePointer);
+    document.addEventListener('keydown', handleKey);
+    return () => {
+      document.removeEventListener('mousedown', handlePointer);
+      document.removeEventListener('keydown', handleKey);
+    };
+  }, [toolsOpen]);
+
+  // Close the dropdown when navigation happens.
+  useEffect(() => {
+    setToolsOpen(false);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-30 hidden md:block bg-sand-50/85 backdrop-blur border-b border-ink/5">
@@ -53,6 +86,60 @@ export function NavBar() {
               </li>
             );
           })}
+          <li className="relative" ref={toolsRef}>
+            <button
+              type="button"
+              onClick={() => setToolsOpen((v) => !v)}
+              aria-expanded={toolsOpen}
+              aria-haspopup="menu"
+              className={`group flex flex-col items-start leading-tight px-3 py-1.5 rounded-xl transition-colors ${
+                inTools
+                  ? 'bg-white text-clay shadow-soft'
+                  : 'text-ink-soft hover:text-ink hover:bg-white/60'
+              }`}
+            >
+              <span className="text-sm font-semibold flex items-center gap-1">
+                {t('nav.tools')}
+                <ChevronEnd
+                  size={14}
+                  className={`transition-transform ${toolsOpen ? 'rotate-90' : ''}`}
+                />
+              </span>
+              <span
+                className={`text-[10px] mt-0.5 ${
+                  inTools ? 'text-clay/70' : 'text-ink-mute'
+                }`}
+              >
+                {t('nav.toolsHelper')}
+              </span>
+            </button>
+            {toolsOpen && (
+              <ul
+                role="menu"
+                className="absolute end-0 mt-2 w-72 bg-white rounded-card shadow-card border border-sand-100 p-1.5 z-40"
+              >
+                {tools.map((tl) => {
+                  const active = pathname === tl.href || pathname.startsWith(tl.href);
+                  return (
+                    <li key={tl.href}>
+                      <Link
+                        href={tl.href}
+                        role="menuitem"
+                        className={`block px-3 py-2 rounded-xl ${
+                          active ? 'bg-clay/10 text-clay' : 'hover:bg-sand-50'
+                        }`}
+                      >
+                        <div className="text-sm font-semibold">{tl.label}</div>
+                        <div className="text-xs text-ink-mute mt-0.5 leading-snug">
+                          {tl.helper}
+                        </div>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </li>
         </ul>
         <div className="flex items-center gap-3 text-sm">
           <LanguageToggle />

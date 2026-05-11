@@ -34,6 +34,13 @@ export function GoldenRecordDisplay({
               {t('gr.relationshipLine', { relationship: record.relationship })}
             </div>
           )}
+          {(record.city || record.region) && (
+            <div className="text-xs text-ink-mute mt-1">
+              {[record.city, record.region ? t(`region.${record.region}`) : '']
+                .filter(Boolean)
+                .join(' · ')}
+            </div>
+          )}
           <div className="text-xs text-ink-mute mt-1">{t('gr.updated', { when: updated })}</div>
         </div>
         <div className="flex gap-2 mz-no-print">

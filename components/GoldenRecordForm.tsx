@@ -4,6 +4,7 @@ import { useCallback, useState, type FormEvent } from 'react';
 import { useDropzone, type FileRejection } from 'react-dropzone';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { supabase } from '@/lib/supabaseClient';
+import { REGIONS, type Region } from '@/lib/regions';
 import type { GoldenRecord } from '@/lib/types';
 
 interface Props {
@@ -17,6 +18,10 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
   const { t } = useT();
   const [patientName, setPatientName] = useState(initial?.patientName ?? '');
   const [relationship, setRelationship] = useState(initial?.relationship ?? '');
+  const [region, setRegion] = useState<Region | ''>(
+    (initial?.region as Region | undefined) ?? '',
+  );
+  const [city, setCity] = useState(initial?.city ?? '');
   const [diagnosis, setDiagnosis] = useState(initial?.diagnosis ?? '');
   const [comorbidities, setComorbidities] = useState(initial?.comorbidities ?? '');
   const [medicationsText, setMedicationsText] = useState(
@@ -48,6 +53,8 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
       await onSave({
         patientName: patientName.trim() || undefined,
         relationship: relationship.trim() || undefined,
+        region: region || undefined,
+        city: city.trim() || undefined,
         diagnosis,
         comorbidities,
         medications,
@@ -94,6 +101,33 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
             maxLength={60}
           />
         </Field>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Field label={t('gr.form.region.label')} hint={t('gr.form.region.hint')}>
+            <select
+              value={region}
+              onChange={(e) => setRegion(e.target.value as Region | '')}
+              className="mz-input appearance-none"
+            >
+              <option value="">{t('gr.form.region.placeholder')}</option>
+              {REGIONS.map((r) => (
+                <option key={r} value={r}>
+                  {t(`region.${r}`)}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field label={t('gr.form.city.label')} hint={t('gr.form.city.hint')}>
+            <input
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder={t('gr.form.city.placeholder')}
+              className="mz-input"
+              autoComplete="address-level2"
+              maxLength={80}
+            />
+          </Field>
+        </div>
       </div>
 
       <ExtractionDropzone onExtracted={handleExtracted} />

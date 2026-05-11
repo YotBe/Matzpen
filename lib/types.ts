@@ -70,6 +70,10 @@ export interface GoldenRecord {
   // Free-text relationship of the caregiver to the patient (e.g. "בני",
   // "אחותי", "בן זוגי"). Helps personalize AI responses.
   relationship?: string;
+  // Coarse region bucket (see lib/regions.ts) used by the hospitalization
+  // routing module. Free-text city is captured separately for human use.
+  region?: string;
+  city?: string;
   diagnosis: string;
   comorbidities: string;
   medications: string[];
