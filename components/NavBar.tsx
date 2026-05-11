@@ -17,6 +17,7 @@ export function NavBar() {
     { href: '/emergency', label: t('nav.emergency'), helper: t('nav.emergencyHelper') },
     { href: '/golden-record', label: t('nav.goldenRecord'), helper: t('nav.goldenRecordHelper') },
     { href: '/bureaucracy', label: t('nav.bureaucracy'), helper: t('nav.bureaucracyHelper') },
+    { href: '/assistant', label: t('nav.assistant'), helper: t('nav.assistantHelper') },
   ] as const;
 
   return (
