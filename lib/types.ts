@@ -33,7 +33,18 @@ export interface AlertResult {
   reasons: AlertReason[];
 }
 
-export type BureaucracySection = 'national_insurance' | 'rehab_basket' | 'legal';
+// Section IDs are used as DB keys for `checklist_items.section`. The first three
+// are legacy (institution-grouped); the latter five are the situation-based
+// reorganization. Old rows in the DB remain valid but no longer shown in the UI.
+export type BureaucracySection =
+  | 'national_insurance'
+  | 'rehab_basket'
+  | 'legal'
+  | 'first_hospitalization'
+  | 'discharge_followup'
+  | 'deterioration'
+  | 'disability_claim'
+  | 'advance_planning';
 
 export interface BureaucracyChecklist {
   id?: string;

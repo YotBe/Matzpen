@@ -4,9 +4,9 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { addDailyLog } from '@/services/supabaseService';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
+import { usePatientId } from '@/lib/usePatientId';
 import { computeAlertLevel } from '@/utils/alertAlgorithm';
 import { type AffectiveState, type AlertLevel, type DailyLog } from '@/lib/types';
-import { MOCK_PATIENT_ID } from '@/lib/constants';
 import { CheckIcon } from '@/components/icons';
 
 const AFFECTIVE_TONES: Record<AffectiveState, string> = {
@@ -36,6 +36,7 @@ function SectionCard({ kicker, children }: { kicker: string; children: ReactNode
 export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
   const { user, configured } = useAuth();
   const { t } = useT();
+  const patientId = usePatientId();
   const [sleepHours, setSleepHours] = useState<number>(7);
   const [affectiveState, setAffectiveState] = useState<AffectiveState>('euthymia');
   const [psychomotorSpeed, setPsychomotorSpeed] = useState<number>(3);
@@ -86,13 +87,13 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
 
     try {
       if (configured) {
-        await addDailyLog(MOCK_PATIENT_ID, payload);
+        await addDailyLog(patientId, payload);
       } else {
         await new Promise((r) => setTimeout(r, 350));
       }
       const snapshot: Omit<DailyLog, 'id'> = {
         ...payload,
-        patientId: MOCK_PATIENT_ID,
+        patientId,
         createdAt: Date.now(),
       };
       setSubmittedSnapshot(snapshot);
@@ -187,7 +188,7 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
         <label htmlFor="sleep" className="mz-field-label">
           {t('dailyLog.sleepLabel')}
         </label>
-        <div className="mt-3 flex items-baseline gap-2">
+        <div className="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
           <span
             className={`text-5xl font-extrabold tabular-nums tracking-tight ${
               sleepHours < 4 ? 'text-crimson' : sleepHours < 6 ? 'text-amber_' : 'text-ink'
@@ -196,7 +197,7 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
             {sleepHours.toFixed(1)}
           </span>
           <span className="text-base text-ink-mute">{t('dailyLog.sleepUnit')}</span>
-          <span className="text-xs text-ink-mute ms-auto">
+          <span className="text-xs text-ink-mute ms-auto basis-full md:basis-auto md:text-end">
             {sleepHours < 4
               ? t('dailyLog.sleepHigh')
               : sleepHours < 6

@@ -55,6 +55,35 @@ function ScriptCard({ text, label }: { text: string; label: string }) {
   );
 }
 
+function ShortcutButton({
+  title,
+  hint,
+  tone,
+  onClick,
+}: {
+  title: string;
+  hint: string;
+  tone: 'crimson' | 'amber' | 'muted';
+  onClick: () => void;
+}) {
+  const toneClass =
+    tone === 'crimson'
+      ? 'bg-crimson-deep hover:bg-crimson text-white'
+      : tone === 'amber'
+      ? 'bg-amber_ hover:bg-amber_/90 text-amber_-ink'
+      : 'bg-white/12 hover:bg-white/20 text-white border border-white/20';
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`w-full text-start rounded-2xl px-5 py-4 transition-colors ${toneClass}`}
+    >
+      <div className="text-lg font-bold leading-tight">{title}</div>
+      <div className="text-xs opacity-80 mt-1">{hint}</div>
+    </button>
+  );
+}
+
 function DialButton({ number, label }: { number: string; label: string }) {
   return (
     <a
@@ -142,15 +171,50 @@ export default function EmergencyPage() {
         </div>
 
         {step === 'q-violence' && (
-          <section>
-            <h2 className="text-2xl font-bold leading-tight">{t('emergency.qViolence')}</h2>
-            <p className="text-sm opacity-75 mt-2">{t('emergency.qViolenceHelp')}</p>
-            <YesNo
-              onYes={() => setStep('route-police')}
-              onNo={() => setStep('q-evacuation')}
-              yesLabel={t('common.yes')}
-              noLabel={t('common.no')}
-            />
+          <section className="space-y-7">
+            <div>
+              <h3 className="text-xs uppercase tracking-widest font-semibold opacity-70 mb-3">
+                {t('emergency.shortcutsTitle')}
+              </h3>
+              <div className="grid gap-2.5">
+                <ShortcutButton
+                  title={t('emergency.shortcut.violence')}
+                  hint={t('emergency.shortcut.violenceHint')}
+                  tone="crimson"
+                  onClick={() => setStep('route-police')}
+                />
+                <ShortcutButton
+                  title={t('emergency.shortcut.suicide')}
+                  hint={t('emergency.shortcut.suicideHint')}
+                  tone="amber"
+                  onClick={() => setStep('route-ambulance')}
+                />
+                <ShortcutButton
+                  title={t('emergency.shortcut.involuntary')}
+                  hint={t('emergency.shortcut.involuntaryHint')}
+                  tone="muted"
+                  onClick={() => setStep('route-psychiatrist')}
+                />
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="absolute inset-x-0 top-1/2 h-px bg-white/15" />
+              <div className="relative text-center text-[11px] uppercase tracking-widest text-white/60">
+                <span className="bg-[#2a1410] px-3">{t('emergency.orQuestions')}</span>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-bold leading-tight">{t('emergency.qViolence')}</h2>
+              <p className="text-sm opacity-75 mt-2">{t('emergency.qViolenceHelp')}</p>
+              <YesNo
+                onYes={() => setStep('route-police')}
+                onNo={() => setStep('q-evacuation')}
+                yesLabel={t('common.yes')}
+                noLabel={t('common.no')}
+              />
+            </div>
           </section>
         )}
 

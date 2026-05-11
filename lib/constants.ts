@@ -3,3 +3,9 @@
 // something to read/write against.
 export const MOCK_PATIENT_ID = 'demo-patient';
 export const MOCK_PATIENT_NAME = 'דורון';
+
+// Contact email surfaced in the footer and the privacy page. Override via
+// NEXT_PUBLIC_CONTACT_EMAIL (build-time). Falls back to a clearly-placeholder
+// value so it's obvious to the operator that something needs configuring.
+export const CONTACT_EMAIL =
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'TODO-set-NEXT_PUBLIC_CONTACT_EMAIL@example.com';

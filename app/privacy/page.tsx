@@ -1,8 +1,7 @@
 'use client';
 
 import { useT } from '@/lib/i18n/LocaleProvider';
-
-const CONTACT_EMAIL = 'feedback@matzpen.app';
+import { CONTACT_EMAIL } from '@/lib/constants';
 
 export default function PrivacyPage() {
   const { t } = useT();

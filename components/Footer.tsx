@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useT } from '@/lib/i18n/LocaleProvider';
+import { CONTACT_EMAIL } from '@/lib/constants';
 
 // Lightweight footer with privacy + feedback links. Hidden on /login (the Shell
 // already hides chrome there) and never shown when printing the triage record.
@@ -16,7 +17,7 @@ export function Footer() {
             {t('nav.privacy')}
           </Link>
           <a
-            href="mailto:feedback@matzpen.app?subject=Matzpen%20feedback"
+            href={`mailto:${CONTACT_EMAIL}?subject=Matzpen%20feedback`}
             className="hover:text-ink"
           >
             {t('nav.feedback')}

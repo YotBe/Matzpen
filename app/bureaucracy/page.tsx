@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
-import { MOCK_PATIENT_ID } from '@/lib/constants';
+import { usePatientId } from '@/lib/usePatientId';
 import { getChecklist, setChecklistItem } from '@/services/supabaseService';
 import type { BureaucracySection } from '@/lib/types';
 import { CheckIcon, ChevronEnd, ChevronStart } from '@/components/icons';
@@ -26,44 +26,74 @@ interface SectionDef {
 
 const SECTIONS: SectionDef[] = [
   {
-    id: 'national_insurance',
-    titleKey: 'bur.ni.title',
-    badgeKey: 'bur.ni.badge',
-    introKey: 'bur.ni.intro',
+    id: 'first_hospitalization',
+    titleKey: 'bur.situation.firstHosp.title',
+    badgeKey: 'bur.situation.firstHosp.badge',
+    introKey: 'bur.situation.firstHosp.intro',
     toneClass: 'border-clay/40 bg-clay-bg/40',
     items: [
-      { key: 'psychiatric-annex', labelKey: 'bur.ni.psych.label', hintKey: 'bur.ni.psych.hint' },
-      { key: 'discharge-summaries', labelKey: 'bur.ni.discharge.label', hintKey: 'bur.ni.discharge.hint' },
-      { key: 'confidentiality-waiver', labelKey: 'bur.ni.waiver.label', hintKey: 'bur.ni.waiver.hint' },
-      { key: 'income-docs', labelKey: 'bur.ni.income.label', hintKey: 'bur.ni.income.hint' },
-      { key: 'comorbidity-docs', labelKey: 'bur.ni.comorbid.label', hintKey: 'bur.ni.comorbid.hint' },
-      { key: 'submit-online', labelKey: 'bur.ni.submit.label', hintKey: 'bur.ni.submit.hint' },
+      { key: 'family-letter', labelKey: 'bur.firstHosp.familyLetter.label', hintKey: 'bur.firstHosp.familyLetter.hint' },
+      { key: 'discharge-docs', labelKey: 'bur.firstHosp.discharge.label', hintKey: 'bur.firstHosp.discharge.hint' },
+      { key: 'waiver', labelKey: 'bur.firstHosp.waiver.label', hintKey: 'bur.firstHosp.waiver.hint' },
+      { key: 'community-psych', labelKey: 'bur.firstHosp.psychiatrist.label', hintKey: 'bur.firstHosp.psychiatrist.hint' },
     ],
   },
   {
-    id: 'rehab_basket',
-    titleKey: 'bur.rehab.title',
-    badgeKey: 'bur.rehab.badge',
-    introKey: 'bur.rehab.intro',
+    id: 'discharge_followup',
+    titleKey: 'bur.situation.discharge.title',
+    badgeKey: 'bur.situation.discharge.badge',
+    introKey: 'bur.situation.discharge.intro',
     toneClass: 'border-sage/40 bg-sage-bg/40',
-    noteKey: 'bur.rehab.note',
     items: [
-      { key: 'rehab-coordinator', labelKey: 'bur.rehab.coord.label', hintKey: 'bur.rehab.coord.hint' },
-      { key: 'rehab-form', labelKey: 'bur.rehab.form.label', hintKey: 'bur.rehab.form.hint' },
-      { key: 'rehab-committee', labelKey: 'bur.rehab.committee.label', hintKey: 'bur.rehab.committee.hint' },
-      { key: 'rehab-choice', labelKey: 'bur.rehab.choice.label', hintKey: 'bur.rehab.choice.hint' },
+      { key: 'summary', labelKey: 'bur.discharge.summary.label', hintKey: 'bur.discharge.summary.hint' },
+      { key: 'followup', labelKey: 'bur.discharge.followup.label', hintKey: 'bur.discharge.followup.hint' },
+      { key: 'meds', labelKey: 'bur.discharge.meds.label', hintKey: 'bur.discharge.meds.hint' },
+      { key: 'rehab', labelKey: 'bur.discharge.rehab.label', hintKey: 'bur.discharge.rehab.hint' },
+      { key: 'work', labelKey: 'bur.discharge.work.label', hintKey: 'bur.discharge.work.hint' },
     ],
   },
   {
-    id: 'legal',
-    titleKey: 'bur.legal.title',
-    badgeKey: 'bur.legal.badge',
-    introKey: 'bur.legal.intro',
+    id: 'deterioration',
+    titleKey: 'bur.situation.deterioration.title',
+    badgeKey: 'bur.situation.deterioration.badge',
+    introKey: 'bur.situation.deterioration.intro',
+    toneClass: 'border-crimson/40 bg-crimson-bg/30',
+    items: [
+      { key: 'open-emergency', labelKey: 'bur.deter.emergency.label', hintKey: 'bur.deter.emergency.hint' },
+      { key: 'contact-team', labelKey: 'bur.deter.team.label', hintKey: 'bur.deter.team.hint' },
+      { key: 'update-golden', labelKey: 'bur.deter.golden.label', hintKey: 'bur.deter.golden.hint' },
+      { key: 'family-letter', labelKey: 'bur.deter.familyLetter.label', hintKey: 'bur.deter.familyLetter.hint' },
+    ],
+  },
+  {
+    id: 'disability_claim',
+    titleKey: 'bur.situation.disability.title',
+    badgeKey: 'bur.situation.disability.badge',
+    introKey: 'bur.situation.disability.intro',
+    toneClass: 'border-amber_/40 bg-amber_-bg/40',
+    items: [
+      { key: 'psych-annex', labelKey: 'bur.disability.psych.label', hintKey: 'bur.disability.psych.hint' },
+      { key: 'discharge-file', labelKey: 'bur.disability.discharge.label', hintKey: 'bur.disability.discharge.hint' },
+      { key: 'waiver', labelKey: 'bur.disability.waiver.label', hintKey: 'bur.disability.waiver.hint' },
+      { key: 'income', labelKey: 'bur.disability.income.label', hintKey: 'bur.disability.income.hint' },
+      { key: 'comorbid', labelKey: 'bur.disability.comorbid.label', hintKey: 'bur.disability.comorbid.hint' },
+      { key: 'submit', labelKey: 'bur.disability.submit.label', hintKey: 'bur.disability.submit.hint' },
+      { key: 'rehab-coord', labelKey: 'bur.disability.rehabCoord.label', hintKey: 'bur.disability.rehabCoord.hint' },
+      { key: 'rehab-form', labelKey: 'bur.disability.rehabForm.label', hintKey: 'bur.disability.rehabForm.hint' },
+      { key: 'rehab-committee', labelKey: 'bur.disability.rehabCommittee.label', hintKey: 'bur.disability.rehabCommittee.hint' },
+      { key: 'rehab-choice', labelKey: 'bur.disability.rehabChoice.label', hintKey: 'bur.disability.rehabChoice.hint' },
+    ],
+  },
+  {
+    id: 'advance_planning',
+    titleKey: 'bur.situation.planning.title',
+    badgeKey: 'bur.situation.planning.badge',
+    introKey: 'bur.situation.planning.intro',
     toneClass: 'border-muted_blue/40 bg-muted_blue-bg/40',
     items: [
-      { key: 'epoa-discussed', labelKey: 'bur.legal.epoa-discussed.label', hintKey: 'bur.legal.epoa-discussed.hint' },
-      { key: 'epoa-signed', labelKey: 'bur.legal.epoa-signed.label', hintKey: 'bur.legal.epoa-signed.hint' },
-      { key: 'lawyer-contact', labelKey: 'bur.legal.lawyer.label', hintKey: 'bur.legal.lawyer.hint' },
+      { key: 'epoa-talk', labelKey: 'bur.planning.epoaTalk.label', hintKey: 'bur.planning.epoaTalk.hint' },
+      { key: 'epoa-signed', labelKey: 'bur.planning.epoaSigned.label', hintKey: 'bur.planning.epoaSigned.hint' },
+      { key: 'lawyer', labelKey: 'bur.planning.lawyer.label', hintKey: 'bur.planning.lawyer.hint' },
     ],
   },
 ];
@@ -71,7 +101,8 @@ const SECTIONS: SectionDef[] = [
 export default function BureaucracyPage() {
   const { configured } = useAuth();
   const { t } = useT();
-  const [openId, setOpenId] = useState<BureaucracySection>('national_insurance');
+  const patientId = usePatientId();
+  const [openId, setOpenId] = useState<BureaucracySection>('first_hospitalization');
   const [state, setState] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
 
@@ -80,7 +111,7 @@ export default function BureaucracyPage() {
     (async () => {
       if (configured) {
         try {
-          const docs = await getChecklist(MOCK_PATIENT_ID);
+          const docs = await getChecklist(patientId);
           if (!cancelled) {
             const m: Record<string, boolean> = {};
             for (const d of docs) m[`${d.section}.${d.itemKey}`] = d.done;
@@ -95,7 +126,7 @@ export default function BureaucracyPage() {
     return () => {
       cancelled = true;
     };
-  }, [configured]);
+  }, [configured, patientId]);
 
   const toggle = useCallback(
     async (section: BureaucracySection, itemKey: string) => {
@@ -104,14 +135,14 @@ export default function BureaucracyPage() {
       setState((s) => ({ ...s, [k]: next }));
       if (configured) {
         try {
-          await setChecklistItem(MOCK_PATIENT_ID, section, itemKey, next);
+          await setChecklistItem(patientId, section, itemKey, next);
         } catch {
           // revert on error
           setState((s) => ({ ...s, [k]: !next }));
         }
       }
     },
-    [configured, state],
+    [configured, patientId, state],
   );
 
   const sectionsWithProgress = useMemo(

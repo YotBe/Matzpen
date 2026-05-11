@@ -19,6 +19,34 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'common.no': 'לא',
     'common.previewMode': 'תצוגה',
     'common.langName': 'EN',
+    'common.skip': 'דלג',
+    'common.next': 'הבא',
+    'common.done': 'התחל',
+    'common.back': 'חזרה',
+    'common.step': 'שלב {{current}} מתוך {{total}}',
+
+    // Onboarding
+    'onboarding.welcome': 'ברוכים הבאים למצפן',
+    'onboarding.intro': 'מצפן עוזר לכם לתמוך במתמודד שלכם — בקצרה, מה תמצאו פה.',
+    'onboarding.s1.title': 'מצפן בכל יום',
+    'onboarding.s1.body':
+      'כדקה ביום: שינה, מצב רגשי, פעילות, אירועים חריגים. כל דיווח עוזר לזהות מגמות וסימני אזהרה מוקדמים.',
+    'onboarding.s2.title': 'כשמשהו משתבש',
+    'onboarding.s2.body':
+      '"מצב חירום" מוביל אתכם דרך עץ החלטה: למי לפנות (משטרה / מד״א / פסיכיאטר מחוזי), ומה להקריא למוקדן.',
+    'onboarding.s3.title': 'מיון, זכויות, ובירוקרטיה',
+    'onboarding.s3.body':
+      '"תיק למיון" מרכז את המידע הרפואי שצוות חדר המיון יזדקק לו. "זכויות ובירוקרטיה" שומר על ההתקדמות שלכם מול ביטוח לאומי וסל שיקום.',
+
+    // Emergency shortcuts
+    'emergency.shortcutsTitle': 'יודעים מה צריך? עברו ישר',
+    'emergency.shortcut.violence': 'סכנה מיידית או אלימות',
+    'emergency.shortcut.violenceHint': 'משטרה — חיוג 100',
+    'emergency.shortcut.suicide': 'אובדנות / סכנה לעצמו',
+    'emergency.shortcut.suicideHint': 'מד״א — חיוג 101',
+    'emergency.shortcut.involuntary': 'פסיכוזה ללא אלימות',
+    'emergency.shortcut.involuntaryHint': 'הוראת בדיקה מהפסיכיאטר המחוזי',
+    'emergency.orQuestions': 'או ענו על השאלות',
 
     // ── Navigation ─────────────────────────────────────────────────────────
     'nav.daily': 'מעקב יומי',
@@ -307,6 +335,111 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'bur.legal.lawyer.hint':
       'עו״ד המכיר את חוק הטיפול בחולי נפש (תשנ״א-1991).',
 
+    // Situation 1: first hospitalization
+    'bur.situation.firstHosp.title': 'אשפוז ראשון',
+    'bur.situation.firstHosp.badge': 'מה לעשות עכשיו',
+    'bur.situation.firstHosp.intro':
+      'אשפוז ראשון מטלטל. השלבים האלה שומרים לכם תיק מסודר ותומך לכל מה שיבוא אחרי.',
+    'bur.firstHosp.familyLetter.label': 'התחלת כתיבת מכתב משפחתי כרונולוגי',
+    'bur.firstHosp.familyLetter.hint':
+      'תאריכים, התנהגות, אמירות, חוסר שינה — כל דיווח מאומת יחזק את התיק.',
+    'bur.firstHosp.discharge.label': 'איסוף סיכומי אשפוז ודוחות מיון',
+    'bur.firstHosp.discharge.hint':
+      'בקשו עותקים בכתב — תזדקקו להם גם לטיפול עתידי וגם לטופס נכות.',
+    'bur.firstHosp.waiver.label': 'חתימה על טופס ויתור סודיות',
+    'bur.firstHosp.waiver.hint':
+      'מאפשר לבני משפחה לתקשר עם הצוות המטפל ולקבל מידע.',
+    'bur.firstHosp.psychiatrist.label': 'איתור פסיכיאטר מטפל בקהילה',
+    'bur.firstHosp.psychiatrist.hint':
+      'דרך הקופה או המסגרת הקהילתית — קביעת תור מיד לאחר השחרור.',
+
+    // Situation 2: discharge & follow-up
+    'bur.situation.discharge.title': 'שחרור מאשפוז',
+    'bur.situation.discharge.badge': 'המשכיות טיפול',
+    'bur.situation.discharge.intro':
+      'הימים הראשונים אחרי שחרור הם החשובים ביותר. וודאו רצף תרופתי, ייעוץ וזכויות.',
+    'bur.discharge.summary.label': 'קבלת מכתב שחרור בכתב',
+    'bur.discharge.summary.hint':
+      'בלעדיו לא ניתן יהיה לחדש תרופות ולקבוע מעקב.',
+    'bur.discharge.followup.label': 'תיאום פגישת מעקב פסיכיאטרי תוך 14 יום',
+    'bur.discharge.followup.hint':
+      'הסיכון לאשפוז חוזר גבוה ביותר בשבועיים הראשונים.',
+    'bur.discharge.meds.label': 'המשכיות תרופתית — מרשמים בקופה',
+    'bur.discharge.meds.hint':
+      'בקשו מרשם לחודש מלא לפני שתום המלאי הקיים.',
+    'bur.discharge.rehab.label': 'בדיקת זכאות לסל שיקום (לאחר 40%+ נכות)',
+    'bur.discharge.rehab.hint':
+      'אם יש כבר אישור נכות — פנו לרכזת השיקום המחוזית.',
+    'bur.discharge.work.label': 'הודעה למקום עבודה / מוסד לימודים',
+    'bur.discharge.work.hint':
+      'הסבר על תקופת התאוששות והגבלות זמניות, בליווי מכתב הרופא.',
+
+    // Situation 3: deterioration
+    'bur.situation.deterioration.title': 'החמרה במצב',
+    'bur.situation.deterioration.badge': 'פעולה מיידית',
+    'bur.situation.deterioration.intro':
+      'כשהמדדים מסתמנים — אל תחכו. הצעדים האלה ממקמים אתכם בעמדה הכי טובה לעזרה מהירה.',
+    'bur.deter.emergency.label': 'פתחו את מסך "מצב חירום" עכשיו',
+    'bur.deter.emergency.hint':
+      'עץ ההחלטה יזהה איזה מסלול נדרש: 100 / 101 / פסיכיאטר מחוזי.',
+    'bur.deter.team.label': 'יצירת קשר עם הצוות המטפל בקהילה',
+    'bur.deter.team.hint':
+      'עדכון הפסיכיאטר המטפל לפני הסלמה לעיתים מונע אשפוז.',
+    'bur.deter.golden.label': 'עדכון "תיק למיון" עם תרופות ומידע עדכני',
+    'bur.deter.golden.hint':
+      'אם תגיעו למיון — התיק חוסך זמן יקר לצוות.',
+    'bur.deter.familyLetter.label': 'התחלת מכתב משפחתי עדכני',
+    'bur.deter.familyLetter.hint':
+      'תיעוד כרונולוגי של האירועים האחרונים, נחוץ לפסיכיאטר המחוזי.',
+
+    // Situation 4: disability claim
+    'bur.situation.disability.title': 'תג נכה וקצבת נכות',
+    'bur.situation.disability.badge': 'ביטוח לאומי + סל שיקום',
+    'bur.situation.disability.intro':
+      'תהליך 9–12 חודשים. ההצלחה תלויה במלאי מסמכים מלא לפני זימון הוועדה הרפואית.',
+    'bur.disability.psych.label': 'חוות דעת פסיכיאטרית (נספח רפואי)',
+    'bur.disability.psych.hint':
+      'מפרט אבחנה לפי סעיף 33/34 ופגיעה תפקודית. חובה — חתום ע״י פסיכיאטר מומחה.',
+    'bur.disability.discharge.label': 'תיק סיכומי אשפוז ודוחות מיון',
+    'bur.disability.discharge.hint':
+      'מוכיחים אירועי קצה ומשבריות לאורך השנים.',
+    'bur.disability.waiver.label': 'טופס ויתור סודיות חתום',
+    'bur.disability.waiver.hint': 'בלעדיו התביעה לא תיפתח.',
+    'bur.disability.income.label': 'מסמכי הכנסה (15 חודשי תלושים / שומות מס)',
+    'bur.disability.income.hint': 'הוכחת פגיעה בכושר השתכרות.',
+    'bur.disability.comorbid.label': 'אישורים על ליקויים גופניים נוספים',
+    'bur.disability.comorbid.hint':
+      'מצטרפים לחישוב הנכות המשוקללת — קריטי לחציית סף 40%.',
+    'bur.disability.submit.label': 'הגשת הבקשה באתר ביטוח לאומי',
+    'bur.disability.submit.hint': 'ההגשה המקוונת מקצרת זמני קליטה.',
+    'bur.disability.rehabCoord.label': 'פנייה לרכזת השיקום המחוזית (לאחר אישור)',
+    'bur.disability.rehabCoord.hint':
+      'דרך עו״ס בקופה / בית חולים / מסגרת קהילתית.',
+    'bur.disability.rehabForm.label': 'טופס בקשת סל שיקום + ויתור סודיות',
+    'bur.disability.rehabForm.hint':
+      'בצירוף מכתב הזכאות מביטוח לאומי.',
+    'bur.disability.rehabCommittee.label': 'הופעה בפני ועדת שיקום עם מלווה',
+    'bur.disability.rehabCommittee.hint':
+      'הביאו עמכם בן/בת משפחה לתיאור התפקוד היומיומי.',
+    'bur.disability.rehabChoice.label': 'בחירת מסגרת שיקום',
+    'bur.disability.rehabChoice.hint':
+      'דיור / תעסוקה / חונכות — מומלץ לבקר בכל אופציה לפני ההחלטה.',
+
+    // Situation 5: advance planning
+    'bur.situation.planning.title': 'היערכות מקדימה',
+    'bur.situation.planning.badge': 'בתקופת יציבות',
+    'bur.situation.planning.intro':
+      'הכלים המשפטיים שמגינים על המתמודד ועל המשפחה — מפעילים אותם בתקופות יציבות, לא במשבר.',
+    'bur.planning.epoaTalk.label': 'שיחה משפחתית על ייפוי כוח מתמשך',
+    'bur.planning.epoaTalk.hint':
+      'תכנון מקדים בתקופת הפוגה — לפני שנדרשת התערבות.',
+    'bur.planning.epoaSigned.label': 'הושלם ייפוי כוח מתמשך',
+    'bur.planning.epoaSigned.hint':
+      'נחתם מול עו״ד מורשה ונרשם אצל האפוטרופוס הכללי.',
+    'bur.planning.lawyer.label': 'איש קשר משפטי לשעת חירום',
+    'bur.planning.lawyer.hint':
+      'עו״ד המכיר את חוק הטיפול בחולי נפש (תשנ״א-1991).',
+
     // ── Privacy ────────────────────────────────────────────────────────────
     'privacy.kicker': 'שקיפות ואמון',
     'privacy.title': 'פרטיות ואבטחת מידע',
@@ -336,6 +469,33 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'common.no': 'No',
     'common.previewMode': 'Preview',
     'common.langName': 'עב',
+    'common.skip': 'Skip',
+    'common.next': 'Next',
+    'common.done': 'Get started',
+    'common.back': 'Back',
+    'common.step': 'Step {{current}} of {{total}}',
+
+    'onboarding.welcome': 'Welcome to Matzpen',
+    'onboarding.intro':
+      'Matzpen helps you support your loved one — here is a quick tour of what you will find.',
+    'onboarding.s1.title': 'Matzpen every day',
+    'onboarding.s1.body':
+      'About a minute a day: sleep, mood, activity, unusual events. Each check-in helps surface trends and early warning signs.',
+    'onboarding.s2.title': 'When something goes wrong',
+    'onboarding.s2.body':
+      'The Emergency module walks you through a decision tree: who to call (police / MDA / district psychiatrist), and what to read to the dispatcher.',
+    'onboarding.s3.title': 'Triage and rights',
+    'onboarding.s3.body':
+      'The "Triage record" holds the medical information an ER team needs. "Rights & paperwork" tracks your progress with National Insurance and the rehab basket.',
+
+    'emergency.shortcutsTitle': 'Know what you need? Skip ahead',
+    'emergency.shortcut.violence': 'Immediate danger or violence',
+    'emergency.shortcut.violenceHint': 'Police — dial 100',
+    'emergency.shortcut.suicide': 'Suicidality / danger to self',
+    'emergency.shortcut.suicideHint': 'MDA — dial 101',
+    'emergency.shortcut.involuntary': 'Psychosis without violence',
+    'emergency.shortcut.involuntaryHint': 'District psychiatrist exam order',
+    'emergency.orQuestions': 'Or answer the questions',
 
     'nav.daily': 'Daily check-in',
     'nav.dailyShort': 'Daily',
@@ -626,6 +786,108 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       'Signed with a licensed attorney and registered with the General Guardian.',
     'bur.legal.lawyer.label': 'Legal contact for emergencies',
     'bur.legal.lawyer.hint':
+      'An attorney familiar with the Treatment of Mental Patients Law (5751-1991).',
+
+    'bur.situation.firstHosp.title': 'First hospitalization',
+    'bur.situation.firstHosp.badge': 'What to do right now',
+    'bur.situation.firstHosp.intro':
+      'A first hospitalization is destabilizing. These steps keep an organized record that will support everything that follows.',
+    'bur.firstHosp.familyLetter.label': 'Start a chronological family letter',
+    'bur.firstHosp.familyLetter.hint':
+      'Dates, behavior, statements, sleeplessness — every documented detail strengthens the record.',
+    'bur.firstHosp.discharge.label': 'Collect hospitalization summaries and ER reports',
+    'bur.firstHosp.discharge.hint':
+      'Ask for written copies — you will need them both for future care and for the disability claim.',
+    'bur.firstHosp.waiver.label': 'Sign the confidentiality waiver',
+    'bur.firstHosp.waiver.hint':
+      'Lets family members talk to the treating team and receive information.',
+    'bur.firstHosp.psychiatrist.label': 'Find a community-based treating psychiatrist',
+    'bur.firstHosp.psychiatrist.hint':
+      'Via the HMO or community framework — schedule a visit immediately after discharge.',
+
+    'bur.situation.discharge.title': 'Discharge from hospital',
+    'bur.situation.discharge.badge': 'Care continuity',
+    'bur.situation.discharge.intro':
+      'The first days after discharge are the most important. Secure medication continuity, follow-up care, and rights.',
+    'bur.discharge.summary.label': 'Receive the written discharge summary',
+    'bur.discharge.summary.hint':
+      'Without it you cannot renew medications or schedule follow-up care.',
+    'bur.discharge.followup.label': 'Schedule a psychiatric follow-up within 14 days',
+    'bur.discharge.followup.hint':
+      'The risk of re-hospitalization is highest in the first two weeks.',
+    'bur.discharge.meds.label': 'Medication continuity — prescriptions at the HMO',
+    'bur.discharge.meds.hint':
+      'Request a full month\'s prescription before the existing supply runs out.',
+    'bur.discharge.rehab.label': 'Check rehabilitation basket eligibility (once 40%+ disability)',
+    'bur.discharge.rehab.hint':
+      'If you already have a disability rating — contact the district rehab coordinator.',
+    'bur.discharge.work.label': 'Notify the workplace / school',
+    'bur.discharge.work.hint':
+      'Explain recovery period and temporary limitations, accompanied by a physician note.',
+
+    'bur.situation.deterioration.title': 'Deterioration',
+    'bur.situation.deterioration.badge': 'Immediate action',
+    'bur.situation.deterioration.intro':
+      'When the metrics are trending wrong — do not wait. These steps put you in the best position for fast help.',
+    'bur.deter.emergency.label': 'Open the Emergency screen now',
+    'bur.deter.emergency.hint':
+      'The decision tree will identify which route is needed: 100 / 101 / district psychiatrist.',
+    'bur.deter.team.label': 'Contact the community treating team',
+    'bur.deter.team.hint':
+      'Updating the treating psychiatrist before escalation sometimes prevents hospitalization.',
+    'bur.deter.golden.label': 'Update the Triage record with current meds and info',
+    'bur.deter.golden.hint':
+      'If you do reach the ER — the record saves precious time for the team.',
+    'bur.deter.familyLetter.label': 'Start an updated family letter',
+    'bur.deter.familyLetter.hint':
+      'Chronological log of recent events, needed by the district psychiatrist.',
+
+    'bur.situation.disability.title': 'Disability tag & pension',
+    'bur.situation.disability.badge': 'National Insurance + rehab basket',
+    'bur.situation.disability.intro':
+      'A 9–12 month process. Success depends on a complete document set before the medical committee is convened.',
+    'bur.disability.psych.label': 'Psychiatric assessment (medical appendix)',
+    'bur.disability.psych.hint':
+      'Details diagnosis per section 33/34 and functional impact. Mandatory — signed by a specialist psychiatrist.',
+    'bur.disability.discharge.label': 'File of hospitalization summaries and ER reports',
+    'bur.disability.discharge.hint':
+      'Demonstrate critical events and crisis history over the years.',
+    'bur.disability.waiver.label': 'Signed confidentiality waiver',
+    'bur.disability.waiver.hint': 'Without it the claim will not be opened.',
+    'bur.disability.income.label': 'Income documents (15 months of pay slips / tax assessments)',
+    'bur.disability.income.hint': 'Proof of impaired earning capacity.',
+    'bur.disability.comorbid.label': 'Certificates for additional physical disabilities',
+    'bur.disability.comorbid.hint':
+      'Combine into the weighted disability calculation — critical for crossing the 40% threshold.',
+    'bur.disability.submit.label': 'Submit the claim on the National Insurance website',
+    'bur.disability.submit.hint': 'Online submission speeds up intake.',
+    'bur.disability.rehabCoord.label':
+      'Contact the district rehab coordinator (after approval)',
+    'bur.disability.rehabCoord.hint':
+      'Via a social worker at the HMO / hospital / community framework.',
+    'bur.disability.rehabForm.label':
+      'Fill the rehab basket application + confidentiality waiver',
+    'bur.disability.rehabForm.hint':
+      'Attach the eligibility letter from National Insurance.',
+    'bur.disability.rehabCommittee.label': 'Attend the rehab committee with a companion',
+    'bur.disability.rehabCommittee.hint':
+      'Bring a family member to describe day-to-day functioning.',
+    'bur.disability.rehabChoice.label': 'Choose a rehab framework',
+    'bur.disability.rehabChoice.hint':
+      'Housing / employment / mentoring — visit each option before deciding.',
+
+    'bur.situation.planning.title': 'Advance planning',
+    'bur.situation.planning.badge': 'During stable times',
+    'bur.situation.planning.intro':
+      'The legal tools that protect the person and the family — activate them during stable periods, not in crisis.',
+    'bur.planning.epoaTalk.label': 'Family conversation about durable power of attorney',
+    'bur.planning.epoaTalk.hint':
+      'Advance planning during a remission period — before intervention is required.',
+    'bur.planning.epoaSigned.label': 'Durable power of attorney completed',
+    'bur.planning.epoaSigned.hint':
+      'Signed with a licensed attorney and registered with the General Guardian.',
+    'bur.planning.lawyer.label': 'Legal contact for emergencies',
+    'bur.planning.lawyer.hint':
       'An attorney familiar with the Treatment of Mental Patients Law (5751-1991).',
 
     'privacy.kicker': 'Transparency & trust',

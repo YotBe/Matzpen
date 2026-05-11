@@ -5,27 +5,17 @@ import { GoldenRecordDisplay } from '@/components/GoldenRecordDisplay';
 import { GoldenRecordForm } from '@/components/GoldenRecordForm';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
-import { MOCK_PATIENT_ID } from '@/lib/constants';
+import { usePatientId } from '@/lib/usePatientId';
 import {
   getGoldenRecord,
   saveGoldenRecord,
 } from '@/services/supabaseService';
 import type { GoldenRecord } from '@/lib/types';
 
-const EMPTY_LOCAL: GoldenRecord = {
-  patientId: MOCK_PATIENT_ID,
-  diagnosis: '',
-  comorbidities: '',
-  medications: [],
-  allergies: '',
-  riskVectors: '',
-  contacts: '',
-  updatedAt: 0,
-};
-
 export default function GoldenRecordPage() {
   const { configured } = useAuth();
   const { t } = useT();
+  const patientId = usePatientId();
   const [record, setRecord] = useState<GoldenRecord | null>(null);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -35,7 +25,7 @@ export default function GoldenRecordPage() {
     (async () => {
       if (configured) {
         try {
-          const r = await getGoldenRecord(MOCK_PATIENT_ID);
+          const r = await getGoldenRecord(patientId);
           if (!cancelled) setRecord(r);
         } catch {
           /* leave empty */
@@ -46,22 +36,22 @@ export default function GoldenRecordPage() {
     return () => {
       cancelled = true;
     };
-  }, [configured]);
+  }, [configured, patientId]);
 
   const handleSave = useCallback(
     async (data: Omit<GoldenRecord, 'id' | 'patientId' | 'updatedAt'>) => {
       const next: GoldenRecord = {
         ...data,
-        patientId: MOCK_PATIENT_ID,
+        patientId,
         updatedAt: Date.now(),
       };
       if (configured) {
-        await saveGoldenRecord(MOCK_PATIENT_ID, data);
+        await saveGoldenRecord(patientId, data);
       }
       setRecord(next);
       setEditing(false);
     },
-    [configured],
+    [configured, patientId],
   );
 
   if (loading) {
