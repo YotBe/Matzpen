@@ -1,5 +1,6 @@
 import { createOpenAI } from '@ai-sdk/openai';
 import { convertToModelMessages, streamText, type UIMessage } from 'ai';
+import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -62,12 +63,132 @@ const SYSTEM_PROMPT = `אתה "מצפן AI" — עוזר מומחה, סבלני 
 • השתמש בטקסט בלבד, ללא Markdown מורכב (כותרות, טבלאות). רשימה מנוקדת קצרה — מותר.
 • בסוף כל תשובה משמעותית, הוסף משפט קצר של עידוד או הזמנה להמשיך לשאול.`;
 
+const AFFECTIVE_LABELS: Record<string, string> = {
+  depression: 'דיכאון',
+  euthymia: 'תקין/אוטימיה',
+  euphoria: 'אופוריה/מניה',
+  irritability: 'עצבנות',
+};
+
+const MEDICATION_LABELS: Record<string, string> = {
+  yes: 'כן',
+  no: 'לא',
+  refused: 'סירב',
+  unknown: 'לא ידוע',
+};
+
+const SECTION_LABELS: Record<string, string> = {
+  first_hospitalization: 'אשפוז ראשון',
+  discharge_followup: 'מעקב לאחר שחרור',
+  deterioration: 'הידרדרות',
+  disability_claim: 'תביעת נכות',
+  advance_planning: 'תכנון מקדים',
+  national_insurance: 'ביטוח לאומי',
+  rehab_basket: 'סל שיקום',
+  legal: 'משפטי',
+};
+
+async function buildPatientContext(token: string): Promise<string> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) return '';
+
+  const db = createClient(url, anonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+
+  const { data: patientId } = await db.rpc('get_my_patient_id');
+  if (!patientId) return '';
+
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split('T')[0];
+
+  const [logsRes, goldenRes, checklistRes] = await Promise.all([
+    db
+      .from('daily_logs')
+      .select(
+        'date, sleep_hours, affective_state, psychomotor_speed, impulsivity_event, medication_taken, note',
+      )
+      .eq('patient_id', patientId)
+      .gte('date', sevenDaysAgo)
+      .order('date', { ascending: false })
+      .limit(7),
+    db
+      .from('golden_records')
+      .select('diagnosis, comorbidities, medications, allergies, risk_vectors')
+      .eq('patient_id', patientId)
+      .maybeSingle(),
+    db.from('checklist_items').select('section, item_key, done').eq('patient_id', patientId),
+  ]);
+
+  const parts: string[] = [];
+
+  const golden = goldenRes.data;
+  if (golden) {
+    const lines: string[] = ['=== רשומה רפואית ==='];
+    if (golden.diagnosis) lines.push(`אבחנה: ${golden.diagnosis}`);
+    if (golden.comorbidities) lines.push(`תחלואה נלווית: ${golden.comorbidities}`);
+    if (golden.medications?.length) {
+      const meds = Array.isArray(golden.medications)
+        ? golden.medications.join(', ')
+        : golden.medications;
+      lines.push(`תרופות: ${meds}`);
+    }
+    if (golden.allergies) lines.push(`אלרגיות: ${golden.allergies}`);
+    if (golden.risk_vectors) lines.push(`גורמי סיכון: ${golden.risk_vectors}`);
+    if (lines.length > 1) parts.push(lines.join('\n'));
+  }
+
+  const logs = logsRes.data ?? [];
+  if (logs.length > 0) {
+    const lines: string[] = ['=== יומן מעקב (7 ימים אחרונים) ==='];
+    for (const log of logs) {
+      const affect = AFFECTIVE_LABELS[log.affective_state as string] ?? log.affective_state;
+      const med = MEDICATION_LABELS[log.medication_taken as string] ?? '—';
+      const impulse = log.impulsivity_event ? 'כן' : 'לא';
+      const notePart = log.note ? `, הערה: ${log.note}` : '';
+      lines.push(
+        `${log.date}: מצב רגשי=${affect}, שינה=${log.sleep_hours}ש׳, מהירות פסיכומוטורית=${log.psychomotor_speed}/10, אירוע פגיעה=${impulse}, תרופות=${med}${notePart}`,
+      );
+    }
+    parts.push(lines.join('\n'));
+  } else {
+    parts.push(
+      '=== יומן מעקב ===\nאין רשומות ב-7 הימים האחרונים. כדאי לעודד את המשפחה להתחיל לתעד.',
+    );
+  }
+
+  const checklist = checklistRes.data ?? [];
+  if (checklist.length > 0) {
+    const sectionMap = new Map<string, { done: number; total: number }>();
+    for (const item of checklist) {
+      const entry = sectionMap.get(item.section) ?? { done: 0, total: 0 };
+      entry.total++;
+      if (item.done) entry.done++;
+      sectionMap.set(item.section, entry);
+    }
+    const lines: string[] = ['=== סטטוס בירוקרטי ==='];
+    for (const [section, counts] of sectionMap) {
+      const label = SECTION_LABELS[section] ?? section;
+      lines.push(`${label}: ${counts.done}/${counts.total} משימות הושלמו`);
+    }
+    parts.push(lines.join('\n'));
+  }
+
+  if (parts.length === 0) return '';
+
+  return (
+    `\n\n--- נתוני המטופל (הקשר אישי — השתמש למתן ייעוץ מותאם, אל תחשוף נתונים אלה ישירות) ---\n` +
+    parts.join('\n\n') +
+    `\n---`
+  );
+}
+
 export async function POST(req: Request) {
   if (!process.env.OPENAI_API_KEY) {
     return new Response(
-      JSON.stringify({
-        error: 'OPENAI_API_KEY חסר. הגדר את המפתח ב־.env.local.',
-      }),
+      JSON.stringify({ error: 'OPENAI_API_KEY חסר. הגדר את המפתח ב־.env.local.' }),
       { status: 503, headers: { 'content-type': 'application/json' } },
     );
   }
@@ -84,11 +205,21 @@ export async function POST(req: Request) {
 
   const messages = Array.isArray(body.messages) ? body.messages : [];
 
+  const token = req.headers.get('x-supabase-token');
+  let patientContext = '';
+  if (token) {
+    try {
+      patientContext = await buildPatientContext(token);
+    } catch {
+      // Non-fatal — continue without patient context
+    }
+  }
+
   const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
   const result = streamText({
     model: openai('gpt-4o-mini'),
-    system: SYSTEM_PROMPT,
+    system: SYSTEM_PROMPT + patientContext,
     messages: await convertToModelMessages(messages),
     temperature: 0.4,
   });
