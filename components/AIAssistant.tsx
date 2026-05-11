@@ -1,33 +1,101 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { useChat } from '@ai-sdk/react';
-import { DefaultChatTransport } from 'ai';
+import { DefaultChatTransport, type UIMessage } from 'ai';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { supabase } from '@/lib/supabaseClient';
+
+// Keep in sync with the server-side allow-list in app/api/chat/route.ts.
+const ALLOWED_PAGES = new Set([
+  '/',
+  '/emergency',
+  '/golden-record',
+  '/bureaucracy',
+  '/assistant',
+]);
 
 interface Props {
   /** Render in a fixed-height container (for the floating widget) vs flowing full-page. */
   variant?: 'panel' | 'page';
 }
 
+async function fetchAuthToken(): Promise<string | undefined> {
+  if (!supabase) return undefined;
+  const { data } = await supabase.auth.getSession();
+  return data.session?.access_token;
+}
+
 export function AIAssistant({ variant = 'page' }: Props) {
   const { t } = useT();
+  const router = useRouter();
 
   const transport = useMemo(
     () =>
       new DefaultChatTransport({
         headers: async (): Promise<Record<string, string>> => {
-          if (!supabase) return {};
-          const { data } = await supabase.auth.getSession();
-          const token = data.session?.access_token;
+          const token = await fetchAuthToken();
           return token ? { 'x-supabase-token': token } : {};
         },
       }),
     [],
   );
 
-  const { messages, sendMessage, status, error, clearError } = useChat({ transport });
+  const { messages, sendMessage, setMessages, addToolResult, status, error, clearError } =
+    useChat({
+      transport,
+      // When the AI invokes a tool, the SDK hands the call here. We handle
+      // openPage by navigating client-side and returning a result so the
+      // model can continue the conversation knowing it succeeded.
+      onToolCall: ({ toolCall }) => {
+        if (toolCall.toolName === 'openPage') {
+          const input = toolCall.input as { path?: string; reason?: string };
+          const path = input?.path;
+          if (typeof path === 'string' && ALLOWED_PAGES.has(path)) {
+            router.push(path);
+            void addToolResult({
+              tool: 'openPage',
+              toolCallId: toolCall.toolCallId,
+              output: { ok: true, navigatedTo: path },
+            });
+            return;
+          }
+          void addToolResult({
+            tool: 'openPage',
+            toolCallId: toolCall.toolCallId,
+            output: { ok: false, error: 'unknown_path' },
+          });
+        }
+      },
+    });
+
+  // Hydrate prior conversation from Supabase so the AI feels like a continuing
+  // companion across sessions. Runs once per mount; falls back to an empty
+  // chat if the user is anonymous, has no history, or the request fails.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const token = await fetchAuthToken();
+      if (!token) return;
+      try {
+        const res = await fetch('/api/chat/history', {
+          headers: { 'x-supabase-token': token },
+        });
+        if (!res.ok) return;
+        const json = (await res.json()) as { messages?: UIMessage[] };
+        if (cancelled) return;
+        if (Array.isArray(json.messages) && json.messages.length > 0) {
+          setMessages(json.messages);
+        }
+      } catch {
+        /* no history → start fresh */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [setMessages]);
   const [input, setInput] = useState('');
   const scrollerRef = useRef<HTMLDivElement>(null);
 

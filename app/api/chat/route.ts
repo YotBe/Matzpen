@@ -1,6 +1,66 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { convertToModelMessages, streamText, type UIMessage } from 'ai';
-import { createClient } from '@supabase/supabase-js';
+import { convertToModelMessages, streamText, tool, type UIMessage } from 'ai';
+import { z } from 'zod';
+import {
+  getAuthorizedDb,
+  saveChatMessage,
+  type AuthorizedDb,
+} from '@/lib/chatServer';
+
+// Allow-list of paths the AI can navigate the user to. Keeps the tool from
+// being abused to point at arbitrary external URLs and keeps the contract
+// stable as the app grows.
+const ALLOWED_PAGES = [
+  '/',
+  '/emergency',
+  '/golden-record',
+  '/bureaucracy',
+  '/assistant',
+] as const;
+
+const tools = {
+  openPage: tool({
+    description:
+      "Navigate the user to a specific page in the Matzpen app. Use ONLY when the user explicitly asks to be taken there (e.g. 'open the emergency page', 'show me the bureaucracy checklist'). Never call this as part of explaining something — describe instead. Available paths: '/' (dashboard / daily check-in), '/emergency' (the emergency decision tree with police / ambulance / district-psychiatrist scripts), '/golden-record' (the printable medical record for the triage team), '/bureaucracy' (the rights & forms checklist), '/assistant' (the full chat page).",
+    inputSchema: z.object({
+      path: z.enum(ALLOWED_PAGES),
+      reason: z
+        .string()
+        .min(1)
+        .max(80)
+        .describe(
+          'One short Hebrew phrase explaining why — surfaced to the user.',
+        ),
+    }),
+  }),
+};
+
+// Hard questions get Gemini 2.5 Pro (slower, ~10× cost, much better reasoning).
+// Everything else stays on Flash. Triggers:
+//   • length > 180 chars (longer prompts = more nuance to weigh)
+//   • Hebrew/English keywords for legal / medical / ethical questions
+const PRO_KEYWORDS =
+  /חוק|סעיף|ועדה|תקנה|נוהל|ערעור|זכאות|אפוטרופ|יפוי כוח|אשפוז כפוי|פסיכיאטר מחוזי|מינון|מ["״]?ג|ליתיום|אנטיפסיכוט|תופעות לוואי|אינטראקצי|התווית נגד|דילמה|האם מותר|מה הנכון|מי אחראי|\blaw\b|\bstatute\b|\bsection\b|\bregulation\b|\beligibility\b|\bappeal\b|\bguardianship\b|\binvoluntary\b|\bdose\b|\bdosage\b|\bmg\b|\bcontraindication\b|\binteraction\b|\bside\s?effect\b|\bantipsychotic\b|\blithium\b|\bethical\b|\bdilemma\b/i;
+
+function selectModel(latestUserText: string): 'gemini-2.5-pro' | 'gemini-2.5-flash' {
+  if (!latestUserText) return 'gemini-2.5-flash';
+  if (latestUserText.length > 180) return 'gemini-2.5-pro';
+  if (PRO_KEYWORDS.test(latestUserText)) return 'gemini-2.5-pro';
+  return 'gemini-2.5-flash';
+}
+
+function latestUserTextOf(messages: UIMessage[]): string {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m.role !== 'user') continue;
+    const parts = Array.isArray(m.parts) ? m.parts : [];
+    return parts
+      .map((p) => (p.type === 'text' && typeof p.text === 'string' ? p.text : ''))
+      .join(' ')
+      .trim();
+  }
+  return '';
+}
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -61,7 +121,18 @@ const SYSTEM_PROMPT = `אתה "מצפן AI" — עוזר מומחה, סבלני 
 סגנון:
 • תשובות ממוקדות, רצוי עד 4-6 משפטים. אם נחוץ פירוט, ארגן בנקודות קצרות.
 • השתמש בטקסט בלבד, ללא Markdown מורכב (כותרות, טבלאות). רשימה מנוקדת קצרה — מותר.
-• בסוף כל תשובה משמעותית, הוסף משפט קצר של עידוד או הזמנה להמשיך לשאול.`;
+• בסוף כל תשובה משמעותית, הוסף משפט קצר של עידוד או הזמנה להמשיך לשאול.
+• אם זמינים פרטי המתמודד (שם והקשר של המשתמש), השתמש בהם בטבעיות — פנה למשתמש לפי הקשר ("האח שלך", "בנך"), והזכיר את המתמודד בשמו הפרטי כשמתאים. אל תחשוף את הנתונים האחרים (אבחנה, תרופות, יומן מעקב) ישירות אלא אם המשתמש שואל עליהם — השתמש בהם רק כדי להתאים את הייעוץ.
+
+כלי ניווט:
+יש לך כלי בשם openPage שמאפשר לעבור בשם המשתמש למסך מסוים באפליקציה. השתמש בו אך ורק כשהמשתמש מבקש זאת בפירוש ("פתחי את עץ ההחלטה לחירום", "קח אותי לתיק הרפואי"). לעולם אל תפעיל את הכלי כחלק מהסבר רגיל — במצב כזה תאר את הצעד בלבד.
+המסכים הזמינים:
+• "/" — לוח המחוונים והדיווח היומי.
+• "/emergency" — עץ החלטה לחירום עם תסריטים לחיוג 100/101 ולהוראת בדיקה.
+• "/golden-record" — תיק רפואי להדפסה למוקדן.
+• "/bureaucracy" — צ'קליסט זכויות וסל שיקום.
+• "/assistant" — עמוד הצ'אט המלא (לעיתים רחוקות נחוץ).
+אחרי הפעלת הכלי, המשך בתשובה קצרה בלבד — הניווט עצמו כבר הסביר מה קרה.`;
 
 const AFFECTIVE_LABELS: Record<string, string> = {
   depression: 'דיכאון',
@@ -88,17 +159,8 @@ const SECTION_LABELS: Record<string, string> = {
   legal: 'משפטי',
 };
 
-async function buildPatientContext(token: string): Promise<string> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anonKey) return '';
-
-  const db = createClient(url, anonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-
-  const { data: patientId } = await db.rpc('get_my_patient_id');
-  if (!patientId) return '';
+async function buildPatientContext(auth: AuthorizedDb): Promise<string> {
+  const { db, patientId } = auth;
 
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
     .toISOString()
@@ -222,23 +284,43 @@ export async function POST(req: Request) {
   );
 
   const token = req.headers.get('x-supabase-token');
+  const auth = await getAuthorizedDb(token).catch((err) => {
+    console.error('[chat] getAuthorizedDb failed:', err);
+    return null;
+  });
+
   let patientContext = '';
-  if (token) {
+  if (auth) {
     try {
-      patientContext = await buildPatientContext(token);
+      patientContext = await buildPatientContext(auth);
     } catch (err) {
       console.error('[chat] buildPatientContext failed:', err);
     }
   }
 
+  const latestUserText = latestUserTextOf(messages);
+  if (auth && latestUserText) {
+    // Fire-and-forget — the chat shouldn't stall on a write.
+    void saveChatMessage(auth, 'user', latestUserText);
+  }
+
   const google = createGoogleGenerativeAI({ apiKey: googleApiKey });
+
+  const modelId = selectModel(latestUserText);
+  console.log('[chat] routing to', modelId);
 
   try {
     const result = streamText({
-      model: google('gemini-2.5-flash'),
+      model: google(modelId),
       system: SYSTEM_PROMPT + patientContext,
       messages: await convertToModelMessages(messages),
       temperature: 0.4,
+      tools,
+      onFinish: ({ text }) => {
+        if (auth && text) {
+          void saveChatMessage(auth, 'assistant', text, modelId);
+        }
+      },
       onError: ({ error }) => {
         console.error('[chat] streamText error:', error);
       },
