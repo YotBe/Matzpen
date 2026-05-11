@@ -1,12 +1,5 @@
 export type AffectiveState = 'depression' | 'euthymia' | 'euphoria' | 'irritability';
 
-export const AFFECTIVE_LABELS: Record<AffectiveState, string> = {
-  depression: 'דיכאון עמוק',
-  euthymia: 'יציב',
-  euphoria: 'אופוריה / היי',
-  irritability: 'עצבנות ורוגזנות',
-};
-
 export interface DailyLog {
   id?: string;
   patientId: string;
@@ -30,9 +23,14 @@ export interface Patient {
 
 export type AlertLevel = 'STABLE' | 'YELLOW_ALERT' | 'RED_ALERT';
 
+export interface AlertReason {
+  key: string;
+  vars?: Record<string, string | number>;
+}
+
 export interface AlertResult {
   level: AlertLevel;
-  reasons: string[];
+  reasons: AlertReason[];
 }
 
 export type BureaucracySection = 'national_insurance' | 'rehab_basket' | 'legal';

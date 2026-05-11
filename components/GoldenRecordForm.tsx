@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
+import { useT } from '@/lib/i18n/LocaleProvider';
 import type { GoldenRecord } from '@/lib/types';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function GoldenRecordForm({ initial, onSave }: Props) {
+  const { t } = useT();
   const [diagnosis, setDiagnosis] = useState(initial?.diagnosis ?? '');
   const [comorbidities, setComorbidities] = useState(initial?.comorbidities ?? '');
   const [medicationsText, setMedicationsText] = useState(
@@ -42,10 +44,7 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
 
   return (
     <form onSubmit={submit} className="space-y-5">
-      <Field
-        label="אבחנה בסיסית"
-        hint="לדוגמה: Bipolar 1 Disorder."
-      >
+      <Field label={t('gr.form.diagnosis.label')} hint={t('gr.form.diagnosis.hint')}>
         <textarea
           rows={2}
           value={diagnosis}
@@ -53,10 +52,7 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
           className="mz-input resize-none"
         />
       </Field>
-      <Field
-        label="מחלות רקע"
-        hint="סוכרת, יתר לחץ דם, מחלות לב, השמנת יתר וכו׳ — קריטי לבחירת תרופות."
-      >
+      <Field label={t('gr.form.comorbidities.label')} hint={t('gr.form.comorbidities.hint')}>
         <textarea
           rows={2}
           value={comorbidities}
@@ -64,10 +60,7 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
           className="mz-input resize-none"
         />
       </Field>
-      <Field
-        label="רשימת תרופות נוכחית"
-        hint="שורה לכל תרופה: שם · מינון · תזמון."
-      >
+      <Field label={t('gr.form.meds.label')} hint={t('gr.form.meds.hint')}>
         <textarea
           rows={5}
           value={medicationsText}
@@ -77,10 +70,7 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
           dir="ltr"
         />
       </Field>
-      <Field
-        label="אלרגיות ותופעות לוואי חריגות"
-        hint="תרופות שגרמו לרעד, נוקשות, טוקסיות — להימנע מהן במיון."
-      >
+      <Field label={t('gr.form.allergies.label')} hint={t('gr.form.allergies.hint')}>
         <textarea
           rows={3}
           value={allergies}
@@ -88,10 +78,7 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
           className="mz-input resize-none"
         />
       </Field>
-      <Field
-        label="גורמי סיכון (אובדנות / סמים / נשק)"
-        hint="ניסיונות אובדנות בעבר, שימוש בחומרים, החזקת רישיון נשק."
-      >
+      <Field label={t('gr.form.risk.label')} hint={t('gr.form.risk.hint')}>
         <textarea
           rows={3}
           value={riskVectors}
@@ -99,10 +86,7 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
           className="mz-input resize-none"
         />
       </Field>
-      <Field
-        label="אנשי קשר רפואיים בקהילה"
-        hint="פסיכיאטר מטפל, מסגרת שיקומית, רופא משפחה — שם וטלפון."
-      >
+      <Field label={t('gr.form.contacts.label')} hint={t('gr.form.contacts.hint')}>
         <textarea
           rows={3}
           value={contacts}
@@ -112,7 +96,7 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
       </Field>
 
       <button type="submit" disabled={busy} className="mz-btn mz-btn-clay w-full">
-        {busy ? 'שומר…' : 'שמירת התיק'}
+        {busy ? t('common.saving') : t('gr.form.submit')}
       </button>
     </form>
   );

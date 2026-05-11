@@ -1,151 +1,78 @@
 ## Matzpen Repository Structure
 
-This document outlines the organization and purpose of directories and files in the Matzpen repository.
+Next.js 14 (App Router) + TypeScript + Tailwind. Hebrew-first, RTL, Supabase-backed.
 
-### Directory Structure
+### Directory layout
 
 ```
 Matzpen/
-├── src/                          # Main TypeScript source code (95.3%)
-│   ├── components/               # Reusable UI components
-│   ├── pages/                    # Page-level components
-│   ├── utils/                    # Utility functions and helpers
-│   ├── types/                    # TypeScript type definitions and interfaces
-│   ├── styles/                   # Component-scoped styles
-│   └── index.ts                  # Application entry point
+├── app/                       # Next.js App Router — routes, layout, global CSS
+│   ├── layout.tsx             # Root layout: fonts, AuthProvider, AuthGate, Shell
+│   ├── page.tsx               # Dashboard (daily log + alert banner)
+│   ├── globals.css            # Tailwind base + design tokens
+│   ├── login/                 # /login — email/password + Google OAuth
+│   ├── emergency/             # /emergency — crisis mode UI
+│   ├── golden-record/         # /golden-record — patient medical summary
+│   └── bureaucracy/           # /bureaucracy — rights & paperwork checklists
 │
-├── styles/                       # Global styles (3% CSS)
-│   ├── global.css               # Reset and base styles
-│   ├── variables.css            # CSS custom properties (design tokens)
-│   └── theme.css                # Theme switching styles
+├── components/                # Reusable client components
+│   ├── AlertBanner.tsx        # Early-warning banner driven by recent logs
+│   ├── AuthGate.tsx           # Redirects unauthenticated users to /login
+│   ├── BottomNav.tsx          # Mobile bottom nav
+│   ├── ConfigBanner.tsx       # "Supabase not configured" preview banner
+│   ├── DailyLogForm.tsx       # Daily tracking form
+│   ├── GoldenRecordDisplay.tsx
+│   ├── GoldenRecordForm.tsx
+│   ├── NavBar.tsx             # Desktop top nav
+│   ├── Shell.tsx              # Page chrome wrapper
+│   └── icons.tsx              # Inline SVG icons
 │
-├── scripts/                      # Automation scripts (1.5% Shell)
-│   ├── build.sh                 # Production build script
-│   ├── deploy.sh                # Deployment script
-│   └── setup.sh                 # Development environment setup
+├── context/
+│   └── AuthContext.tsx        # Supabase auth state + sign-in/up/out helpers
 │
-├── tests/                        # Test files
-│   ├── unit/                    # Unit tests
-│   └── integration/             # Integration tests
+├── lib/
+│   ├── constants.ts           # Shared constants (currently MOCK_PATIENT_*)
+│   ├── supabaseClient.ts      # Supabase client + `supabaseConfigured` flag
+│   └── types.ts               # Domain types: DailyLog, GoldenRecord, etc.
 │
-├── public/                       # Static assets
-│   └── favicon.ico              # Website favicon
+├── services/
+│   └── supabaseService.ts     # Data-access layer for daily_logs, checklists, golden_records
 │
-├── docs/                         # Documentation files
-│   └── [documentation files]
+├── utils/
+│   └── alertAlgorithm.ts      # Rule engine that turns logs into alert level
 │
-├── .github/                      # GitHub-specific configurations
-│   └── workflows/               # CI/CD workflow definitions
-│
-├── package.json                  # Node.js dependencies and scripts
-├── tsconfig.json                 # TypeScript configuration
-├── .eslintrc.json               # ESLint configuration
-├── .prettierrc                   # Prettier code formatting configuration
-├── .gitignore                    # Git ignore rules
-├── README.md                     # Project overview and setup instructions
-└── REPO_STRUCTURE.md             # This file
+├── next.config.mjs
+├── tailwind.config.ts
+├── tsconfig.json
+├── vercel.json
+└── package.json
 ```
 
-### Key Directories
+### Environment
 
-#### `/src` - Source Code
-- **components/**: Reusable, self-contained UI components
-- **pages/**: Full-page components (used in routing)
-- **utils/**: Helper functions, constants, and shared logic
-- **types/**: TypeScript interfaces and type definitions
-- **styles/**: Component-scoped or module-specific CSS files
+`NEXT_PUBLIC_*` env vars are baked into the client bundle at **build time**.
 
-#### `/styles` - Global Styles
-- **global.css**: Universal reset, base element styles, and typography
-- **variables.css**: CSS custom properties for design tokens (colors, spacing, typography)
-- **theme.css**: Light/dark mode theme definitions
+Required:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-#### `/scripts` - Automation
-- **build.sh**: Builds the project for production
-- **deploy.sh**: Handles deployment to production environment
-- **setup.sh**: Sets up local development environment
+Local dev: copy `.env.local.example` → `.env.local` and fill values, then `npm run dev`.
+Vercel: set both vars under Project → Settings → Environment Variables, then **redeploy** (existing builds were compiled without them).
 
-#### `/tests` - Testing
-- **unit/**: Tests for individual functions and components
-- **integration/**: Tests for feature interactions and workflows
+When the vars are absent the app runs in a read-only "preview" mode: `AuthGate` lets everything through, `DailyLogForm` simulates saves, and the dashboard shows `MOCK_LOGS`.
 
-#### `/.github/workflows` - CI/CD
-- GitHub Actions workflow files for automated testing, building, and deployment
+### Data model (Supabase tables)
 
-### File Conventions
+- `daily_logs` — one row per caregiver submission. Columns referenced by code: `patient_id`, `date`, `sleep_hours`, `affective_state`, `psychomotor_speed`, `impulsivity_event`, `note`, `logged_by`, `logged_by_name`, `created_at`.
+- `checklist_items` — bureaucracy progress. Unique on `(patient_id, section, item_key)`.
+- `golden_records` — one row per patient. Unique on `patient_id`.
 
-#### TypeScript Files
-- Use `.ts` extension for TypeScript files
-- Use `.tsx` extension for React/component files
-- Keep files focused and single-responsibility
-- Use meaningful, descriptive file names
+### Scripts
 
-#### Naming Conventions
-- **Components**: PascalCase (e.g., `Button.tsx`, `UserCard.tsx`)
-- **Utilities**: camelCase (e.g., `formatDate.ts`, `calculateTotal.ts`)
-- **Constants**: UPPER_SNAKE_CASE (e.g., `API_BASE_URL`, `DEFAULT_TIMEOUT`)
-- **Directories**: lowercase with hyphens (e.g., `ui-components`, `api-handlers`)
-
-### Getting Started
-
-1. **Setup Development Environment**
-   ```bash
-   ./scripts/setup.sh
-   ```
-
-2. **Start Development Server**
-   ```bash
-   npm run dev
-   ```
-
-3. **Run Tests**
-   ```bash
-   npm test
-   ```
-
-4. **Build for Production**
-   ```bash
-   ./scripts/build.sh
-   ```
-
-### Language Composition
-- **TypeScript**: 95.3% - Main application language
-- **CSS**: 3% - Styling and design system
-- **Shell**: 1.5% - Build and deployment automation
-- **JavaScript**: 0.2% - Configuration files (kept minimal)
-
-### Best Practices
-
-1. **Keep components small and focused**
-   - One component per file
-   - Clear, single responsibility
-
-2. **Use TypeScript strictly**
-   - Type all function parameters and returns
-   - Avoid `any` types
-   - Use discriminated unions for complex types
-
-3. **Organize CSS systematically**
-   - Use CSS custom properties from `variables.css`
-   - Keep styles scoped to components when possible
-   - Follow SMACSS or similar methodology
-
-4. **Maintain clean git history**
-   - Use meaningful commit messages
-   - Keep commits atomic and focused
-   - Reference issues in commit messages
-
-### Contributing
-
-When adding new features:
-1. Create appropriate directories under `/src` if needed
-2. Add tests in `/tests`
-3. Update documentation in `/docs` if needed
-4. Follow naming conventions
-5. Maintain TypeScript strict mode compliance
-
-### Resources
-
-- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- [ESLint Guide](https://eslint.org/docs/rules/)
-- [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/--*)
+```bash
+npm run dev        # next dev
+npm run build      # next build
+npm run start      # next start (after build)
+npm run lint       # next lint
+npm run typecheck  # tsc --noEmit
+```

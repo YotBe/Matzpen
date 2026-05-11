@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { addDailyLog } from '@/services/supabaseService';
 import { useAuth } from '@/context/AuthContext';
-import { AFFECTIVE_LABELS, type AffectiveState, type DailyLog } from '@/lib/types';
+import { useT } from '@/lib/i18n/LocaleProvider';
+import { computeAlertLevel } from '@/utils/alertAlgorithm';
+import { type AffectiveState, type AlertLevel, type DailyLog } from '@/lib/types';
 import { MOCK_PATIENT_ID } from '@/lib/constants';
 import { CheckIcon } from '@/components/icons';
 
@@ -16,10 +18,24 @@ const AFFECTIVE_TONES: Record<AffectiveState, string> = {
 
 interface Props {
   onSubmitted?: (log: Omit<DailyLog, 'id'>) => void;
+  // Recent logs used to compute the post-submit guidance level. Optional.
+  recentLogs?: DailyLog[];
 }
 
-export function DailyLogForm({ onSubmitted }: Props) {
+function SectionCard({ kicker, children }: { kicker: string; children: ReactNode }) {
+  return (
+    <section>
+      <div className="text-[11px] font-bold uppercase tracking-widest text-ink-mute mb-2.5">
+        {kicker}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
   const { user, configured } = useAuth();
+  const { t } = useT();
   const [sleepHours, setSleepHours] = useState<number>(7);
   const [affectiveState, setAffectiveState] = useState<AffectiveState>('euthymia');
   const [psychomotorSpeed, setPsychomotorSpeed] = useState<number>(3);
@@ -27,13 +43,29 @@ export function DailyLogForm({ onSubmitted }: Props) {
   const [notes, setNotes] = useState<string>('');
   const [status, setStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [submittedSnapshot, setSubmittedSnapshot] = useState<Omit<DailyLog, 'id'> | null>(null);
 
-  const psychoLabel =
-    psychomotorSpeed <= 1 ? 'איטי מאוד'
-    : psychomotorSpeed === 2 ? 'איטי'
-    : psychomotorSpeed === 3 ? 'תקין'
-    : psychomotorSpeed === 4 ? 'מואץ'
-    : 'מואץ מאוד / חסר מנוח';
+  const psychoLabel = t(
+    psychomotorSpeed <= 1 ? 'dailyLog.psycho1'
+    : psychomotorSpeed === 2 ? 'dailyLog.psycho2'
+    : psychomotorSpeed === 3 ? 'dailyLog.psycho3'
+    : psychomotorSpeed === 4 ? 'dailyLog.psycho4'
+    : 'dailyLog.psycho5',
+  );
+
+  const affectiveLabels: Record<AffectiveState, string> = {
+    depression: t('affective.depression'),
+    euthymia: t('affective.euthymia'),
+    euphoria: t('affective.euphoria'),
+    irritability: t('affective.irritability'),
+  };
+
+  // Re-run the alert algorithm including the just-submitted snapshot so the
+  // post-submit guidance reflects the freshly logged data.
+  const postSubmitLevel: AlertLevel = useMemo(() => {
+    if (!submittedSnapshot) return 'STABLE';
+    return computeAlertLevel([submittedSnapshot, ...(recentLogs ?? [])]).level;
+  }, [submittedSnapshot, recentLogs]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -46,7 +78,10 @@ export function DailyLogForm({ onSubmitted }: Props) {
       impulsivityEvent,
       notes: notes.trim() || undefined,
       loggedBy: user?.id ?? 'mock-caregiver',
-      loggedByName: (user?.user_metadata?.full_name as string | undefined) ?? user?.email ?? 'בן/בת משפחה',
+      loggedByName:
+        (user?.user_metadata?.full_name as string | undefined) ??
+        user?.email ??
+        t('dashboard.defaultName'),
     };
 
     try {
@@ -55,15 +90,17 @@ export function DailyLogForm({ onSubmitted }: Props) {
       } else {
         await new Promise((r) => setTimeout(r, 350));
       }
-      setStatus('success');
-      onSubmitted?.({
+      const snapshot: Omit<DailyLog, 'id'> = {
         ...payload,
         patientId: MOCK_PATIENT_ID,
         createdAt: Date.now(),
-      });
+      };
+      setSubmittedSnapshot(snapshot);
+      setStatus('success');
+      onSubmitted?.(snapshot);
     } catch (err) {
       setStatus('error');
-      setError(err instanceof Error ? err.message : 'שגיאה לא ידועה');
+      setError(err instanceof Error ? err.message : t('login.unknownError'));
     }
   }
 
@@ -75,20 +112,69 @@ export function DailyLogForm({ onSubmitted }: Props) {
     setNotes('');
     setStatus('idle');
     setError(null);
+    setSubmittedSnapshot(null);
   }
 
-  if (status === 'success') {
+  if (status === 'success' && submittedSnapshot) {
+    const snap = submittedSnapshot;
+    const nextKey =
+      postSubmitLevel === 'RED_ALERT'
+        ? { title: 'dailyLog.nextEscalateTitle', body: 'dailyLog.nextEscalateBody', tone: 'bg-crimson-bg text-crimson-deep border-crimson/30' }
+        : postSubmitLevel === 'YELLOW_ALERT'
+        ? { title: 'dailyLog.nextWatchTitle', body: 'dailyLog.nextWatchBody', tone: 'bg-amber_-bg text-amber_-ink border-amber_/30' }
+        : { title: 'dailyLog.nextStableTitle', body: 'dailyLog.nextStableBody', tone: 'bg-sage-bg/70 text-sage border-sage/30' };
+
     return (
-      <div className="mz-card p-8 text-center">
-        <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-sage-bg text-sage mb-4 animate-pop">
-          <CheckIcon size={36} strokeWidth={3} />
+      <div className="space-y-5">
+        <div className="text-center">
+          <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-sage-bg text-sage mb-4 animate-pop">
+            <CheckIcon size={36} strokeWidth={3} />
+          </div>
+          <h3 className="text-xl font-bold">{t('dailyLog.successTitle')}</h3>
+          <p className="text-sm text-ink-mute mt-2 leading-relaxed">
+            {t('dailyLog.successBody')}
+          </p>
         </div>
-        <h3 className="text-xl font-bold">הדיווח נשמר ✓</h3>
-        <p className="text-sm text-ink-mute mt-2 leading-relaxed">
-          המידע נכלל במעקב היומי ויסונכרן עם שאר בני המשפחה.
-        </p>
-        <button onClick={reset} className="mz-btn mz-btn-ghost mt-6">
-          הוסף דיווח נוסף
+
+        <div className="rounded-2xl bg-sand-50 p-4 text-sm">
+          <div className="text-xs font-bold uppercase tracking-widest text-ink-mute mb-3">
+            {t('dailyLog.successSummaryTitle')}
+          </div>
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5">
+            <div>
+              <dt className="text-xs text-ink-mute">{t('dailyLog.sectionSleep')}</dt>
+              <dd className="font-semibold">
+                {snap.sleepHours.toFixed(1)} {t('dailyLog.sleepUnit')}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs text-ink-mute">{t('dailyLog.sectionAffect')}</dt>
+              <dd className="font-semibold">{affectiveLabels[snap.affectiveState]}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-ink-mute">{t('dailyLog.sectionActivity')}</dt>
+              <dd className="font-semibold">
+                {snap.psychomotorSpeed} · {t(`dailyLog.psycho${snap.psychomotorSpeed}`)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs text-ink-mute">{t('dailyLog.sectionEvents')}</dt>
+              <dd className="font-semibold">
+                {snap.impulsivityEvent
+                  ? t('dailyLog.fieldImpulsivityYes')
+                  : t('dailyLog.fieldImpulsivityNo')}
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <div className={`rounded-2xl border p-4 ${nextKey.tone}`}>
+          <div className="font-bold text-sm">{t(nextKey.title)}</div>
+          <p className="text-sm leading-relaxed mt-1">{t(nextKey.body)}</p>
+        </div>
+
+        <button onClick={reset} className="mz-btn mz-btn-ghost w-full">
+          {t('dailyLog.addAnother')}
         </button>
       </div>
     );
@@ -97,9 +183,9 @@ export function DailyLogForm({ onSubmitted }: Props) {
   return (
     <form onSubmit={handleSubmit} className="space-y-7">
       {/* Sleep */}
-      <section>
+      <SectionCard kicker={t('dailyLog.sectionSleep')}>
         <label htmlFor="sleep" className="mz-field-label">
-          שעות שינה אתמול
+          {t('dailyLog.sleepLabel')}
         </label>
         <div className="mt-3 flex items-baseline gap-2">
           <span
@@ -109,7 +195,14 @@ export function DailyLogForm({ onSubmitted }: Props) {
           >
             {sleepHours.toFixed(1)}
           </span>
-          <span className="text-base text-ink-mute">שעות</span>
+          <span className="text-base text-ink-mute">{t('dailyLog.sleepUnit')}</span>
+          <span className="text-xs text-ink-mute ms-auto">
+            {sleepHours < 4
+              ? t('dailyLog.sleepHigh')
+              : sleepHours < 6
+              ? t('dailyLog.sleepLow')
+              : t('dailyLog.sleepOk')}
+          </span>
         </div>
         <input
           id="sleep"
@@ -128,21 +221,14 @@ export function DailyLogForm({ onSubmitted }: Props) {
           <span>18</span>
           <span>24</span>
         </div>
-        <div className="mt-1 text-xs text-ink-mute">
-          {sleepHours < 4
-            ? '⚠ סיכון גבוה — שינה קצרה מאוד'
-            : sleepHours < 6
-            ? 'מתחת לטווח המומלץ'
-            : 'בטווח התקין'}
-        </div>
-      </section>
+      </SectionCard>
 
       {/* Affective state */}
-      <section>
+      <SectionCard kicker={t('dailyLog.sectionAffect')}>
         <fieldset>
-          <legend className="mz-field-label">מצב אפקטיבי כעת</legend>
+          <legend className="mz-field-label">{t('dailyLog.affectiveLabel')}</legend>
           <div className="mt-3 grid grid-cols-2 gap-2.5">
-            {(Object.entries(AFFECTIVE_LABELS) as [AffectiveState, string][]).map(([k, label]) => {
+            {(Object.entries(affectiveLabels) as [AffectiveState, string][]).map(([k, label]) => {
               const active = affectiveState === k;
               return (
                 <button
@@ -162,17 +248,17 @@ export function DailyLogForm({ onSubmitted }: Props) {
             })}
           </div>
         </fieldset>
-      </section>
+      </SectionCard>
 
       {/* Psychomotor */}
-      <section>
+      <SectionCard kicker={t('dailyLog.sectionActivity')}>
         <label htmlFor="psycho" className="mz-field-label">
-          קצב פעילות ותנועה
+          {t('dailyLog.psychoLabel')}
         </label>
         <div className="mt-2 flex items-center justify-between text-sm">
-          <span className="text-ink-mute">איטי</span>
+          <span className="text-ink-mute">{t('dailyLog.psychoSlow')}</span>
           <span className="font-semibold text-ink">{psychomotorSpeed} · {psychoLabel}</span>
-          <span className="text-ink-mute">חסר מנוח</span>
+          <span className="text-ink-mute">{t('dailyLog.psychoRestless')}</span>
         </div>
         <input
           id="psycho"
@@ -189,11 +275,12 @@ export function DailyLogForm({ onSubmitted }: Props) {
             <span key={n}>{n}</span>
           ))}
         </div>
-      </section>
+        <div className="mt-2 text-[11px] text-ink-mute">{t('dailyLog.psychoLegend')}</div>
+      </SectionCard>
 
       {/* Impulsivity */}
-      <section>
-        <div className="mz-field-label">האם היה היום אירוע חריג של פזרנות או אימפולסיביות?</div>
+      <SectionCard kicker={t('dailyLog.sectionEvents')}>
+        <div className="mz-field-label">{t('dailyLog.impulsivityLabel')}</div>
         <div className="mt-3 grid grid-cols-2 gap-2.5">
           <button
             type="button"
@@ -205,7 +292,7 @@ export function DailyLogForm({ onSubmitted }: Props) {
                 : 'bg-white border-transparent text-ink-soft'
             }`}
           >
-            לא
+            {t('common.no')}
           </button>
           <button
             type="button"
@@ -217,25 +304,22 @@ export function DailyLogForm({ onSubmitted }: Props) {
                 : 'bg-white border-transparent text-ink-soft'
             }`}
           >
-            כן
+            {t('common.yes')}
           </button>
         </div>
-      </section>
 
-      {/* Notes */}
-      <section>
-        <label htmlFor="notes" className="mz-field-label">
-          הערות (אופציונלי)
+        <label htmlFor="notes" className="mz-field-label block mt-5">
+          {t('dailyLog.notesLabel')}
         </label>
         <textarea
           id="notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
-          placeholder="לדוגמה: יזם נסיעה פתאומית, דיבור מואץ ולא קשור"
+          placeholder={t('dailyLog.notesPlaceholder')}
           className="mz-input mt-3 resize-none"
         />
-      </section>
+      </SectionCard>
 
       {error && (
         <div className="text-sm text-crimson-deep bg-crimson-bg rounded-xl px-3 py-2">
@@ -244,12 +328,12 @@ export function DailyLogForm({ onSubmitted }: Props) {
       )}
 
       <button type="submit" disabled={status === 'saving'} className="mz-btn mz-btn-clay mz-btn-big w-full">
-        {status === 'saving' ? 'שומר…' : 'שמירת דיווח יומי'}
+        {status === 'saving' ? t('dailyLog.submitting') : t('dailyLog.submit')}
       </button>
 
       {!configured && (
         <p className="text-xs text-ink-mute text-center -mt-2">
-          מצב תצוגה: הדיווח לא נשמר עד שהגדרות Supabase יוזנו ב־<code className="font-mono">.env.local</code>.
+          {t('dailyLog.previewNote')}
         </p>
       )}
     </form>

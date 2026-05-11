@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { GoldenRecordDisplay } from '@/components/GoldenRecordDisplay';
 import { GoldenRecordForm } from '@/components/GoldenRecordForm';
 import { useAuth } from '@/context/AuthContext';
+import { useT } from '@/lib/i18n/LocaleProvider';
 import { MOCK_PATIENT_ID } from '@/lib/constants';
 import {
   getGoldenRecord,
@@ -24,6 +25,7 @@ const EMPTY_LOCAL: GoldenRecord = {
 
 export default function GoldenRecordPage() {
   const { configured } = useAuth();
+  const { t } = useT();
   const [record, setRecord] = useState<GoldenRecord | null>(null);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -65,7 +67,7 @@ export default function GoldenRecordPage() {
   if (loading) {
     return (
       <div className="max-w-3xl mx-auto px-4 md:px-6 py-12 text-center text-ink-mute">
-        טוען…
+        {t('common.loading')}
       </div>
     );
   }
@@ -75,13 +77,11 @@ export default function GoldenRecordPage() {
   return (
     <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-6">
       <header>
-        <p className="text-sm text-ink-mute">תיק רפואי דיגיטלי</p>
+        <p className="text-sm text-ink-mute">{t('gr.kicker')}</p>
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mt-1">
-          תיק למיון פסיכיאטרי
+          {t('gr.title')}
         </h1>
-        <p className="text-ink-mute mt-2 leading-relaxed">
-          ה־<em>Golden Record</em> — מסמך אחד שמכיל את כל המידע הקריטי שצוות המיון צריך תוך דקות. ניתן להדפיס או להציג למוקדן.
-        </p>
+        <p className="text-ink-mute mt-2 leading-relaxed">{t('gr.subtitle')}</p>
       </header>
 
       {showForm ? (
@@ -93,7 +93,7 @@ export default function GoldenRecordPage() {
               onClick={() => setEditing(false)}
               className="mt-4 text-sm text-ink-mute"
             >
-              ביטול ושמירת הגרסה הקיימת
+              {t('gr.cancelEdit')}
             </button>
           )}
         </div>

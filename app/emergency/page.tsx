@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { AlertIcon, PhoneIcon, ShieldIcon, CheckIcon } from '@/components/icons';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
 type Step =
   | 'q-violence'
@@ -11,6 +12,7 @@ type Step =
   | 'route-ambulance'
   | 'route-psychiatrist';
 
+// Scripts stay in Hebrew always — they are read aloud to Israeli dispatchers.
 const POLICE_SCRIPT =
   'שלום, בן משפחתי נמצא בפסיכוזה אקוטית ויש סכנת אלימות. על פי נוהל אדם עם מוגבלות נפשית, אני מבקש שהצוות יגיע ללא סירנות ויצויד בטייזר בלבד ולא בנשק חם.';
 
@@ -18,47 +20,27 @@ const AMBULANCE_SCRIPT =
   'אני מבקש לשלוח פראמדיק או צוות התערבות במשבר לבריאות הנפש לצורך הערכה ופינוי.';
 
 const PSYCH_CHECKLIST = [
-  {
-    key: 'doctor-letter',
-    label: 'השגת מכתב מרופא בקהילה (משפחה / פסיכיאטר מטפל / רופא משפחה).',
-    hint: 'מכתב הממליץ על בדיקה כפויה עקב סירוב המטופל להגיע למרפאה.',
-  },
-  {
-    key: 'family-letter',
-    label: 'כתיבת מכתב משפחתי מפורט וכרונולוגי.',
-    hint: 'תיאור התנהגות פסיכוטית, אמירות אובדניות / איומים, חוסר שינה.',
-  },
-  {
-    key: 'welfare',
-    label: 'התקשרות למוקד הרווחה העירוני 106 לערב עו״ס.',
-    hint: 'עו״ס שמבקש את הצו מצמצם דחיות של "סכסוך משפחתי".',
-  },
-  {
-    key: 'district',
-    label: 'איתור לשכת הפסיכיאטר המחוזי הרלוונטית ושיגור הבקשה.',
-    hint: 'תוקף הוראת בדיקה כפויה — 10 ימים. דרשו זירוז ביצוע.',
-  },
-  {
-    key: 'verify',
-    label: 'אימות קליטת הפנייה תוך שעה — שיחת טלפון ללשכה.',
-    hint: 'ללא אישור קליטה, הבקשה לא מטופלת.',
-  },
+  { key: 'doctor-letter', labelKey: 'emergency.psych.doctor.label', hintKey: 'emergency.psych.doctor.hint' },
+  { key: 'family-letter', labelKey: 'emergency.psych.family.label', hintKey: 'emergency.psych.family.hint' },
+  { key: 'welfare', labelKey: 'emergency.psych.welfare.label', hintKey: 'emergency.psych.welfare.hint' },
+  { key: 'district', labelKey: 'emergency.psych.district.label', hintKey: 'emergency.psych.district.hint' },
+  { key: 'verify', labelKey: 'emergency.psych.verify.label', hintKey: 'emergency.psych.verify.hint' },
 ] as const;
 
-function YesNo({ onYes, onNo }: { onYes: () => void; onNo: () => void }) {
+function YesNo({ onYes, onNo, yesLabel, noLabel }: { onYes: () => void; onNo: () => void; yesLabel: string; noLabel: string }) {
   return (
     <div className="grid grid-cols-2 gap-3 mt-6">
       <button
         onClick={onNo}
         className="bg-white rounded-2xl py-6 text-xl font-bold text-ink hover:bg-sand-100 transition-colors border-2 border-transparent"
       >
-        לא
+        {noLabel}
       </button>
       <button
         onClick={onYes}
         className="bg-crimson-deep text-white rounded-2xl py-6 text-xl font-bold hover:bg-crimson transition-colors"
       >
-        כן
+        {yesLabel}
       </button>
     </div>
   );
@@ -68,7 +50,7 @@ function ScriptCard({ text, label }: { text: string; label: string }) {
   return (
     <div className="rounded-2xl bg-white/10 border-s-4 border-white p-4 mt-3">
       <div className="text-xs font-bold uppercase tracking-wide opacity-70">{label}</div>
-      <p className="text-base leading-relaxed mt-2">&ldquo;{text}&rdquo;</p>
+      <p className="text-base leading-relaxed mt-2" dir="rtl">&ldquo;{text}&rdquo;</p>
     </div>
   );
 }
@@ -91,6 +73,7 @@ function DialButton({ number, label }: { number: string; label: string }) {
 }
 
 export default function EmergencyPage() {
+  const { t } = useT();
   const [step, setStep] = useState<Step>('q-violence');
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
@@ -99,44 +82,74 @@ export default function EmergencyPage() {
     setChecked({});
   };
 
+  // Position of each step in the decision tree (translated at render time).
+  const STEP_DEPTH: Record<Step, { current: number; total: number; trailKey: string }> = {
+    'q-violence': { current: 1, total: 2, trailKey: 'emergency.crumb.violence' },
+    'route-police': { current: 2, total: 2, trailKey: 'emergency.crumb.police' },
+    'q-evacuation': { current: 2, total: 3, trailKey: 'emergency.crumb.evacuation' },
+    'route-ambulance': { current: 3, total: 3, trailKey: 'emergency.crumb.ambulance' },
+    'route-psychiatrist': { current: 3, total: 3, trailKey: 'emergency.crumb.psych' },
+  };
+
+  const depth = STEP_DEPTH[step];
+
   return (
-    <div className="min-h-[calc(100dvh-6rem)] bg-gradient-to-b from-[#1a0e0c] via-[#2a1410] to-[#3a1812] text-white">
+    <div
+      className="dark-surface min-h-[calc(100dvh-6rem)] bg-gradient-to-b from-[#1a0e0c] via-[#2a1410] to-[#3a1812] text-white"
+      data-focus-on-dark
+    >
       <div className="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12">
-        <header className="flex items-start justify-between mb-6">
+        <header className="flex items-start justify-between mb-4">
           <div>
             <div className="text-xs uppercase tracking-widest opacity-60 font-semibold">
-              מצב חירום
+              {t('emergency.kicker')}
             </div>
-            <h1 className="text-3xl font-extrabold mt-1">עץ קבלת החלטות</h1>
+            <h1 className="text-3xl font-extrabold mt-1">{t('emergency.title')}</h1>
           </div>
           {step !== 'q-violence' && (
             <button
               onClick={reset}
               className="text-xs px-3 py-2 rounded-full bg-white/10 hover:bg-white/20"
             >
-              חזרה לתחילה
+              {t('emergency.reset')}
             </button>
           )}
         </header>
 
+        <nav
+          aria-label={t('emergency.breadcrumbAriaLabel')}
+          className="mb-6 flex items-center gap-2 text-xs text-white/70"
+        >
+          <div className="flex items-center gap-1" aria-hidden>
+            {Array.from({ length: depth.total }).map((_, i) => (
+              <span
+                key={i}
+                className={`h-1.5 rounded-full transition-all ${
+                  i < depth.current ? 'bg-white w-6' : 'bg-white/25 w-3'
+                }`}
+              />
+            ))}
+          </div>
+          <span className="font-semibold">
+            {t('emergency.stepCount', { current: depth.current, total: depth.total })}
+          </span>
+          <span className="opacity-60 truncate">· {t(depth.trailKey)}</span>
+        </nav>
+
         <div className="rounded-2xl bg-white/5 border border-white/10 p-4 mb-6 flex items-start gap-3">
           <ShieldIcon size={20} className="mt-0.5 shrink-0" />
-          <p className="text-sm opacity-90 leading-relaxed">
-            נשמו עמוק. עץ ההחלטה יעזור לזהות את הגוף הנכון לפנייה. אין צורך למלא הכל — בחרו את התרחיש הקרוב למצב כעת.
-          </p>
+          <p className="text-sm opacity-90 leading-relaxed">{t('emergency.calm')}</p>
         </div>
 
         {step === 'q-violence' && (
           <section>
-            <h2 className="text-2xl font-bold leading-tight">
-              האם יש כרגע סכנה מיידית, אלימות פעילה או נשק?
-            </h2>
-            <p className="text-sm opacity-75 mt-2">
-              אלימות פיזית, איומים בנשק, או סכנה לעצמכם או למתמודד עכשיו.
-            </p>
+            <h2 className="text-2xl font-bold leading-tight">{t('emergency.qViolence')}</h2>
+            <p className="text-sm opacity-75 mt-2">{t('emergency.qViolenceHelp')}</p>
             <YesNo
               onYes={() => setStep('route-police')}
               onNo={() => setStep('q-evacuation')}
+              yesLabel={t('common.yes')}
+              noLabel={t('common.no')}
             />
           </section>
         )}
@@ -145,22 +158,20 @@ export default function EmergencyPage() {
           <section className="space-y-5 animate-slide-up">
             <div>
               <div className="text-xs uppercase tracking-widest opacity-60 font-semibold">
-                המסלול המומלץ
+                {t('emergency.recommendedRoute')}
               </div>
-              <h2 className="text-3xl font-extrabold mt-1">משטרת ישראל</h2>
-              <p className="opacity-80 mt-2 leading-relaxed">
-                המשטרה מוסמכת להגיע במצבי אלימות. בקשו במפורש "נוהל אדם עם מוגבלות נפשית" — מנוע הסלמה.
-              </p>
+              <h2 className="text-3xl font-extrabold mt-1">{t('emergency.routePoliceTitle')}</h2>
+              <p className="opacity-80 mt-2 leading-relaxed">{t('emergency.routePoliceBody')}</p>
             </div>
-            <DialButton number="100" label="חיוג מהיר — חירום" />
-            <ScriptCard label="הקראה למוקדן" text={POLICE_SCRIPT} />
+            <DialButton number="100" label={t('emergency.dial.emergency')} />
+            <ScriptCard label={t('emergency.scriptLabel')} text={POLICE_SCRIPT} />
             <div className="rounded-2xl bg-white/6 p-4 text-sm leading-relaxed">
-              <strong className="block mb-1">לפני הגעת הצוות</strong>
+              <strong className="block mb-1">{t('emergency.beforeTeam')}</strong>
               <ul className="list-disc ps-5 space-y-1 opacity-90">
-                <li>הרחיקו ילדים וקרובים פגיעים מהאזור.</li>
-                <li>אל תתעמתו עם המתמודד; צאו מהחדר אם צריך.</li>
-                <li>ציינו במפורש: משבר פסיכיאטרי, לא פלילי.</li>
-                <li>בקשו ליווי לאמבולנס לאחר ייצוב המצב.</li>
+                <li>{t('emergency.policeStep1')}</li>
+                <li>{t('emergency.policeStep2')}</li>
+                <li>{t('emergency.policeStep3')}</li>
+                <li>{t('emergency.policeStep4')}</li>
               </ul>
             </div>
           </section>
@@ -168,15 +179,13 @@ export default function EmergencyPage() {
 
         {step === 'q-evacuation' && (
           <section>
-            <h2 className="text-2xl font-bold leading-tight">
-              האם נדרש פינוי דחוף למיון פסיכיאטרי?
-            </h2>
-            <p className="text-sm opacity-75 mt-2">
-              מצב מסכן חיים שאינו אלים: אובדנות, ניתוק מהמציאות, סכנה רפואית.
-            </p>
+            <h2 className="text-2xl font-bold leading-tight">{t('emergency.qEvacuation')}</h2>
+            <p className="text-sm opacity-75 mt-2">{t('emergency.qEvacuationHelp')}</p>
             <YesNo
               onYes={() => setStep('route-ambulance')}
               onNo={() => setStep('route-psychiatrist')}
+              yesLabel={t('common.yes')}
+              noLabel={t('common.no')}
             />
           </section>
         )}
@@ -185,20 +194,16 @@ export default function EmergencyPage() {
           <section className="space-y-5 animate-slide-up">
             <div>
               <div className="text-xs uppercase tracking-widest opacity-60 font-semibold">
-                המסלול המומלץ
+                {t('emergency.recommendedRoute')}
               </div>
-              <h2 className="text-3xl font-extrabold mt-1">מד״א — פינוי רפואי</h2>
-              <p className="opacity-80 mt-2 leading-relaxed">
-                בקשו פראמדיק או צוות התערבות במשבר לבריאות הנפש (פיילוט מד״א ת״א).
-              </p>
+              <h2 className="text-3xl font-extrabold mt-1">{t('emergency.routeAmbulanceTitle')}</h2>
+              <p className="opacity-80 mt-2 leading-relaxed">{t('emergency.routeAmbulanceBody')}</p>
             </div>
-            <DialButton number="101" label="מד״א — חירום רפואי" />
-            <ScriptCard label="הקראה למוקדן" text={AMBULANCE_SCRIPT} />
+            <DialButton number="101" label={t('emergency.dial.mda')} />
+            <ScriptCard label={t('emergency.scriptLabel')} text={AMBULANCE_SCRIPT} />
             <div className="rounded-2xl bg-white/6 p-4 text-sm leading-relaxed">
-              <strong className="block mb-1">חשוב לדעת</strong>
-              <p className="opacity-90">
-                פינוי שאינו מסתיים באשפוז גורר לעיתים חיוב כספי. אם הצוות מאשפז, הקופה מכסה את העלות.
-              </p>
+              <strong className="block mb-1">{t('emergency.ambulanceNoteTitle')}</strong>
+              <p className="opacity-90">{t('emergency.ambulanceNoteBody')}</p>
             </div>
           </section>
         )}
@@ -207,17 +212,15 @@ export default function EmergencyPage() {
           <section className="space-y-5 animate-slide-up">
             <div>
               <div className="text-xs uppercase tracking-widest opacity-60 font-semibold">
-                המסלול המומלץ
+                {t('emergency.recommendedRoute')}
               </div>
-              <h2 className="text-3xl font-extrabold mt-1">פסיכיאטר מחוזי</h2>
-              <p className="opacity-80 mt-2 leading-relaxed">
-                כשהמתמודד פסיכוטי ומסרב טיפול אך אינו אלים — מסלול הוראת בדיקה כפויה (סעיף 6/7 לחוק).
-              </p>
+              <h2 className="text-3xl font-extrabold mt-1">{t('emergency.routePsychTitle')}</h2>
+              <p className="opacity-80 mt-2 leading-relaxed">{t('emergency.routePsychBody')}</p>
             </div>
 
             <div className="rounded-2xl bg-white/10 p-4">
               <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-3">
-                צ׳קליסט שלבי הפעולה
+                {t('emergency.psychChecklistTitle')}
               </div>
               <ul className="space-y-3">
                 {PSYCH_CHECKLIST.map((item, idx) => {
@@ -241,9 +244,9 @@ export default function EmergencyPage() {
                         </button>
                         <div className="flex-1">
                           <div className="font-semibold text-base leading-snug">
-                            {idx + 1}. {item.label}
+                            {idx + 1}. {t(item.labelKey)}
                           </div>
-                          <div className="text-xs opacity-70 mt-0.5">{item.hint}</div>
+                          <div className="text-xs opacity-70 mt-0.5">{t(item.hintKey)}</div>
                         </div>
                       </label>
                     </li>
@@ -254,9 +257,7 @@ export default function EmergencyPage() {
 
             <div className="rounded-2xl bg-white/6 p-4 text-sm leading-relaxed flex gap-3">
               <AlertIcon size={18} className="mt-0.5 shrink-0" />
-              <span className="opacity-90">
-                אם המצב מחמיר במהלך הטיפול — חזרו לתחילת עץ ההחלטה ובחרו במסלול 100 / 101.
-              </span>
+              <span className="opacity-90">{t('emergency.psychEscalate')}</span>
             </div>
           </section>
         )}
@@ -265,7 +266,7 @@ export default function EmergencyPage() {
           href="/"
           className="mt-10 inline-block text-sm opacity-70 hover:opacity-100"
         >
-          ← חזרה למסך המעקב
+          {t('emergency.backToDashboard')}
         </Link>
       </div>
     </div>

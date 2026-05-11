@@ -27,6 +27,8 @@ export async function addDailyLog(
     psychomotor_speed: log.psychomotorSpeed,
     impulsivity_event: log.impulsivityEvent,
     note: log.notes ?? null,
+    logged_by: log.loggedBy,
+    logged_by_name: log.loggedByName ?? null,
   });
   if (error) throw error;
 }
@@ -43,7 +45,8 @@ export async function getRecentLogs(patientId: string, limit = 30): Promise<Dail
   return (data ?? []).map((row) => ({
     id: row.id,
     patientId: row.patient_id,
-    loggedBy: row.patient_id,
+    loggedBy: row.logged_by ?? '',
+    loggedByName: row.logged_by_name ?? undefined,
     sleepHours: Number(row.sleep_hours),
     affectiveState: row.affective_state,
     psychomotorSpeed: row.psychomotor_speed,
