@@ -1,4 +1,4 @@
-import { createOpenAI } from '@ai-sdk/openai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { convertToModelMessages, streamText, type UIMessage } from 'ai';
 import { createClient } from '@supabase/supabase-js';
 
@@ -186,9 +186,13 @@ async function buildPatientContext(token: string): Promise<string> {
 }
 
 export async function POST(req: Request) {
-  if (!process.env.OPENAI_API_KEY) {
+  const googleApiKey =
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY;
+  if (!googleApiKey) {
     return new Response(
-      JSON.stringify({ error: 'OPENAI_API_KEY חסר. הגדר את המפתח ב־.env.local.' }),
+      JSON.stringify({
+        error: 'GOOGLE_GENERATIVE_AI_API_KEY חסר. הגדר את המפתח ב־.env.local.',
+      }),
       { status: 503, headers: { 'content-type': 'application/json' } },
     );
   }
@@ -215,11 +219,11 @@ export async function POST(req: Request) {
     }
   }
 
-  const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const google = createGoogleGenerativeAI({ apiKey: googleApiKey });
 
   try {
     const result = streamText({
-      model: openai('gpt-4o-mini'),
+      model: google('gemini-2.5-flash'),
       system: SYSTEM_PROMPT + patientContext,
       messages: await convertToModelMessages(messages),
       temperature: 0.4,
