@@ -12,7 +12,7 @@ type Step =
   | 'route-ambulance'
   | 'route-psychiatrist';
 
-// Scripts stay in Hebrew always — they are read aloud to Israeli dispatchers.
+// Scripts stay in Hebrew always — read aloud to Israeli dispatchers.
 const POLICE_SCRIPT =
   'שלום, בן משפחתי נמצא בפסיכוזה אקוטית ויש סכנת אלימות. על פי נוהל אדם עם מוגבלות נפשית, אני מבקש שהצוות יגיע ללא סירנות ויצויד בטייזר בלבד ולא בנשק חם.';
 
@@ -27,18 +27,28 @@ const PSYCH_CHECKLIST = [
   { key: 'verify', labelKey: 'emergency.psych.verify.label', hintKey: 'emergency.psych.verify.hint' },
 ] as const;
 
-function YesNo({ onYes, onNo, yesLabel, noLabel }: { onYes: () => void; onNo: () => void; yesLabel: string; noLabel: string }) {
+function YesNo({
+  onYes,
+  onNo,
+  yesLabel,
+  noLabel,
+}: {
+  onYes: () => void;
+  onNo: () => void;
+  yesLabel: string;
+  noLabel: string;
+}) {
   return (
-    <div className="grid grid-cols-2 gap-3 mt-6">
+    <div className="grid grid-cols-2 gap-3 mt-5">
       <button
         onClick={onNo}
-        className="bg-white rounded-2xl py-6 text-xl font-bold text-ink hover:bg-sand-100 transition-colors border-2 border-transparent"
+        className="mz-btn mz-btn-ghost text-lg h-16 rounded-2xl"
       >
         {noLabel}
       </button>
       <button
         onClick={onYes}
-        className="bg-crimson-deep text-white rounded-2xl py-6 text-xl font-bold hover:bg-crimson transition-colors"
+        className="mz-btn mz-btn-crimson text-lg h-16 rounded-2xl"
       >
         {yesLabel}
       </button>
@@ -48,9 +58,13 @@ function YesNo({ onYes, onNo, yesLabel, noLabel }: { onYes: () => void; onNo: ()
 
 function ScriptCard({ text, label }: { text: string; label: string }) {
   return (
-    <div className="rounded-2xl bg-white/10 border-s-4 border-white p-4 mt-3">
-      <div className="text-xs font-bold uppercase tracking-wide opacity-70">{label}</div>
-      <p className="text-base leading-relaxed mt-2" dir="rtl">&ldquo;{text}&rdquo;</p>
+    <div className="rounded-2xl bg-sand-50 border-s-4 border-crimson p-4">
+      <div className="text-[10px] font-bold uppercase tracking-widest text-ink-mute mb-2">
+        {label}
+      </div>
+      <p className="text-base leading-relaxed text-ink" dir="rtl">
+        &ldquo;{text}&rdquo;
+      </p>
     </div>
   );
 }
@@ -63,23 +77,23 @@ function ShortcutButton({
 }: {
   title: string;
   hint: string;
-  tone: 'crimson' | 'amber' | 'muted';
+  tone: 'crimson' | 'amber' | 'ghost';
   onClick: () => void;
 }) {
-  const toneClass =
+  const cls =
     tone === 'crimson'
-      ? 'bg-crimson-deep hover:bg-crimson text-white'
+      ? 'bg-crimson text-white hover:bg-crimson-deep'
       : tone === 'amber'
-      ? 'bg-amber_ hover:bg-amber_/90 text-amber_-ink'
-      : 'bg-white/12 hover:bg-white/20 text-white border border-white/20';
+      ? 'bg-amber_ text-amber_-ink hover:bg-amber_/90'
+      : 'bg-white text-ink hover:bg-sand-100 border border-sand-100';
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`w-full text-start rounded-2xl px-5 py-4 transition-colors ${toneClass}`}
+      className={`w-full text-start rounded-2xl px-5 py-4 transition-colors shadow-soft ${cls}`}
     >
-      <div className="text-lg font-bold leading-tight">{title}</div>
-      <div className="text-xs opacity-80 mt-1">{hint}</div>
+      <div className="text-base font-bold leading-tight">{title}</div>
+      <div className="text-xs opacity-75 mt-1">{hint}</div>
     </button>
   );
 }
@@ -88,16 +102,33 @@ function DialButton({ number, label }: { number: string; label: string }) {
   return (
     <a
       href={`tel:${number.replace(/[^\d]/g, '')}`}
-      className="flex items-center gap-3 bg-white text-crimson-deep rounded-2xl px-5 py-4 shadow-card hover:bg-sand-50 transition-colors"
+      className="flex items-center gap-4 mz-card px-5 py-4 hover:bg-sand-50 transition-colors"
     >
-      <div className="w-12 h-12 rounded-full bg-crimson-deep text-white flex items-center justify-center">
+      <div className="w-12 h-12 rounded-full bg-crimson text-white flex items-center justify-center shrink-0">
         <PhoneIcon size={22} />
       </div>
-      <div className="flex-1">
-        <div className="text-xs font-semibold opacity-70">{label}</div>
-        <div className="text-2xl font-extrabold tabular-nums tracking-tight">{number}</div>
+      <div className="flex-1 min-w-0">
+        <div className="text-xs font-semibold text-ink-mute">{label}</div>
+        <div className="text-3xl font-extrabold tabular-nums tracking-tight text-crimson-deep">
+          {number}
+        </div>
       </div>
     </a>
+  );
+}
+
+function StepBadge({ current, total }: { current: number; total: number }) {
+  return (
+    <div className="flex items-center gap-1.5" aria-hidden>
+      {Array.from({ length: total }).map((_, i) => (
+        <span
+          key={i}
+          className={`h-1.5 rounded-full transition-all ${
+            i < current ? 'bg-clay w-6' : 'bg-sand-100 w-3'
+          }`}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -111,182 +142,198 @@ export default function EmergencyPage() {
     setChecked({});
   };
 
-  // Position of each step in the decision tree (translated at render time).
   const STEP_DEPTH: Record<Step, { current: number; total: number; trailKey: string }> = {
-    'q-violence': { current: 1, total: 2, trailKey: 'emergency.crumb.violence' },
-    'route-police': { current: 2, total: 2, trailKey: 'emergency.crumb.police' },
-    'q-evacuation': { current: 2, total: 3, trailKey: 'emergency.crumb.evacuation' },
-    'route-ambulance': { current: 3, total: 3, trailKey: 'emergency.crumb.ambulance' },
-    'route-psychiatrist': { current: 3, total: 3, trailKey: 'emergency.crumb.psych' },
+    'q-violence':        { current: 1, total: 2, trailKey: 'emergency.crumb.violence' },
+    'route-police':      { current: 2, total: 2, trailKey: 'emergency.crumb.police' },
+    'q-evacuation':      { current: 2, total: 3, trailKey: 'emergency.crumb.evacuation' },
+    'route-ambulance':   { current: 3, total: 3, trailKey: 'emergency.crumb.ambulance' },
+    'route-psychiatrist':{ current: 3, total: 3, trailKey: 'emergency.crumb.psych' },
   };
 
   const depth = STEP_DEPTH[step];
 
   return (
-    <div
-      className="dark-surface min-h-[calc(100dvh-6rem)] bg-gradient-to-b from-[#1a0e0c] via-[#2a1410] to-[#3a1812] text-white"
-      data-focus-on-dark
-    >
-      <div className="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12">
-        <header className="flex items-start justify-between mb-4">
-          <div>
-            <div className="text-xs uppercase tracking-widest opacity-60 font-semibold">
-              {t('emergency.kicker')}
-            </div>
-            <h1 className="text-3xl font-extrabold mt-1">{t('emergency.title')}</h1>
-          </div>
-          {step !== 'q-violence' && (
-            <button
-              onClick={reset}
-              className="text-xs px-3 py-2 rounded-full bg-white/10 hover:bg-white/20"
-            >
-              {t('emergency.reset')}
-            </button>
-          )}
-        </header>
-
-        <nav
-          aria-label={t('emergency.breadcrumbAriaLabel')}
-          className="mb-6 flex items-center gap-2 text-xs text-white/70"
-        >
-          <div className="flex items-center gap-1" aria-hidden>
-            {Array.from({ length: depth.total }).map((_, i) => (
-              <span
-                key={i}
-                className={`h-1.5 rounded-full transition-all ${
-                  i < depth.current ? 'bg-white w-6' : 'bg-white/25 w-3'
-                }`}
-              />
-            ))}
-          </div>
-          <span className="font-semibold">
-            {t('emergency.stepCount', { current: depth.current, total: depth.total })}
-          </span>
-          <span className="opacity-60 truncate">· {t(depth.trailKey)}</span>
-        </nav>
-
-        <div className="rounded-2xl bg-white/5 border border-white/10 p-4 mb-6 flex items-start gap-3">
-          <ShieldIcon size={20} className="mt-0.5 shrink-0" />
-          <p className="text-sm opacity-90 leading-relaxed">{t('emergency.calm')}</p>
+    <div className="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-6">
+      {/* Header */}
+      <header className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-sm text-ink-mute">{t('emergency.kicker')}</p>
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mt-1">
+            {t('emergency.title')}
+          </h1>
         </div>
+        {step !== 'q-violence' && (
+          <button
+            onClick={reset}
+            className="mz-btn mz-btn-ghost h-9 px-3 text-sm shrink-0 mt-1"
+          >
+            {t('emergency.reset')}
+          </button>
+        )}
+      </header>
 
-        {step === 'q-violence' && (
-          <section className="space-y-7">
-            <div>
-              <h3 className="text-xs uppercase tracking-widest font-semibold opacity-70 mb-3">
-                {t('emergency.shortcutsTitle')}
-              </h3>
-              <div className="grid gap-2.5">
-                <ShortcutButton
-                  title={t('emergency.shortcut.violence')}
-                  hint={t('emergency.shortcut.violenceHint')}
-                  tone="crimson"
-                  onClick={() => setStep('route-police')}
-                />
-                <ShortcutButton
-                  title={t('emergency.shortcut.suicide')}
-                  hint={t('emergency.shortcut.suicideHint')}
-                  tone="amber"
-                  onClick={() => setStep('route-ambulance')}
-                />
-                <ShortcutButton
-                  title={t('emergency.shortcut.involuntary')}
-                  hint={t('emergency.shortcut.involuntaryHint')}
-                  tone="muted"
-                  onClick={() => setStep('route-psychiatrist')}
-                />
-              </div>
-            </div>
+      {/* Breadcrumb progress */}
+      <nav
+        aria-label={t('emergency.breadcrumbAriaLabel')}
+        className="flex items-center gap-2.5 text-xs text-ink-mute"
+      >
+        <StepBadge current={depth.current} total={depth.total} />
+        <span className="font-semibold text-ink">
+          {t('emergency.stepCount', { current: depth.current, total: depth.total })}
+        </span>
+        <span className="truncate">· {t(depth.trailKey)}</span>
+      </nav>
 
-            <div className="relative">
-              <div className="absolute inset-x-0 top-1/2 h-px bg-white/15" />
-              <div className="relative text-center text-[11px] uppercase tracking-widest text-white/60">
-                <span className="bg-[#2a1410] px-3">{t('emergency.orQuestions')}</span>
-              </div>
-            </div>
+      {/* Calm notice */}
+      <div className="mz-card p-4 flex items-start gap-3 border border-sand-100">
+        <ShieldIcon size={18} className="mt-0.5 shrink-0 text-clay" />
+        <p className="text-sm text-ink-soft leading-relaxed">{t('emergency.calm')}</p>
+      </div>
 
-            <div>
-              <h2 className="text-2xl font-bold leading-tight">{t('emergency.qViolence')}</h2>
-              <p className="text-sm opacity-75 mt-2">{t('emergency.qViolenceHelp')}</p>
-              <YesNo
-                onYes={() => setStep('route-police')}
-                onNo={() => setStep('q-evacuation')}
-                yesLabel={t('common.yes')}
-                noLabel={t('common.no')}
+      {/* ── Step: q-violence ──────────────────────────────────────────────── */}
+      {step === 'q-violence' && (
+        <section className="space-y-6">
+          <div>
+            <p className="mz-section-title">{t('emergency.shortcutsTitle')}</p>
+            <div className="grid gap-2.5">
+              <ShortcutButton
+                title={t('emergency.shortcut.violence')}
+                hint={t('emergency.shortcut.violenceHint')}
+                tone="crimson"
+                onClick={() => setStep('route-police')}
+              />
+              <ShortcutButton
+                title={t('emergency.shortcut.suicide')}
+                hint={t('emergency.shortcut.suicideHint')}
+                tone="amber"
+                onClick={() => setStep('route-ambulance')}
+              />
+              <ShortcutButton
+                title={t('emergency.shortcut.involuntary')}
+                hint={t('emergency.shortcut.involuntaryHint')}
+                tone="ghost"
+                onClick={() => setStep('route-psychiatrist')}
               />
             </div>
-          </section>
-        )}
+          </div>
 
-        {step === 'route-police' && (
-          <section className="space-y-5 animate-slide-up">
+          <div className="relative flex items-center gap-3">
+            <div className="flex-1 h-px bg-sand-100" />
+            <span className="text-[11px] uppercase tracking-widest text-ink-mute whitespace-nowrap">
+              {t('emergency.orQuestions')}
+            </span>
+            <div className="flex-1 h-px bg-sand-100" />
+          </div>
+
+          <div className="mz-card p-5 md:p-6 space-y-1">
+            <h2 className="text-xl font-bold text-ink leading-snug">
+              {t('emergency.qViolence')}
+            </h2>
+            <p className="text-sm text-ink-mute leading-relaxed">
+              {t('emergency.qViolenceHelp')}
+            </p>
+            <YesNo
+              onYes={() => setStep('route-police')}
+              onNo={() => setStep('q-evacuation')}
+              yesLabel={t('common.yes')}
+              noLabel={t('common.no')}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* ── Step: route-police ────────────────────────────────────────────── */}
+      {step === 'route-police' && (
+        <section className="space-y-4 animate-slide-up">
+          <div className="mz-card p-5 md:p-6 space-y-4 border-t-4 border-crimson">
             <div>
-              <div className="text-xs uppercase tracking-widest opacity-60 font-semibold">
+              <p className="text-xs font-semibold uppercase tracking-widest text-crimson mb-1">
                 {t('emergency.recommendedRoute')}
-              </div>
-              <h2 className="text-3xl font-extrabold mt-1">{t('emergency.routePoliceTitle')}</h2>
-              <p className="opacity-80 mt-2 leading-relaxed">{t('emergency.routePoliceBody')}</p>
+              </p>
+              <h2 className="text-2xl font-extrabold text-ink">
+                {t('emergency.routePoliceTitle')}
+              </h2>
+              <p className="text-sm text-ink-soft mt-2 leading-relaxed">
+                {t('emergency.routePoliceBody')}
+              </p>
             </div>
             <DialButton number="100" label={t('emergency.dial.emergency')} />
             <ScriptCard label={t('emergency.scriptLabel')} text={POLICE_SCRIPT} />
-            <div className="rounded-2xl bg-white/6 p-4 text-sm leading-relaxed">
-              <strong className="block mb-1">{t('emergency.beforeTeam')}</strong>
-              <ul className="list-disc ps-5 space-y-1 opacity-90">
+            <div className="rounded-2xl bg-sand-50 p-4 text-sm leading-relaxed">
+              <strong className="block mb-2 text-ink">{t('emergency.beforeTeam')}</strong>
+              <ul className="list-disc ps-5 space-y-1 text-ink-soft">
                 <li>{t('emergency.policeStep1')}</li>
                 <li>{t('emergency.policeStep2')}</li>
                 <li>{t('emergency.policeStep3')}</li>
                 <li>{t('emergency.policeStep4')}</li>
               </ul>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {step === 'q-evacuation' && (
-          <section>
-            <h2 className="text-2xl font-bold leading-tight">{t('emergency.qEvacuation')}</h2>
-            <p className="text-sm opacity-75 mt-2">{t('emergency.qEvacuationHelp')}</p>
-            <YesNo
-              onYes={() => setStep('route-ambulance')}
-              onNo={() => setStep('route-psychiatrist')}
-              yesLabel={t('common.yes')}
-              noLabel={t('common.no')}
-            />
-          </section>
-        )}
+      {/* ── Step: q-evacuation ───────────────────────────────────────────── */}
+      {step === 'q-evacuation' && (
+        <section className="mz-card p-5 md:p-6 space-y-1 animate-slide-up">
+          <h2 className="text-xl font-bold text-ink leading-snug">
+            {t('emergency.qEvacuation')}
+          </h2>
+          <p className="text-sm text-ink-mute leading-relaxed">
+            {t('emergency.qEvacuationHelp')}
+          </p>
+          <YesNo
+            onYes={() => setStep('route-ambulance')}
+            onNo={() => setStep('route-psychiatrist')}
+            yesLabel={t('common.yes')}
+            noLabel={t('common.no')}
+          />
+        </section>
+      )}
 
-        {step === 'route-ambulance' && (
-          <section className="space-y-5 animate-slide-up">
+      {/* ── Step: route-ambulance ────────────────────────────────────────── */}
+      {step === 'route-ambulance' && (
+        <section className="space-y-4 animate-slide-up">
+          <div className="mz-card p-5 md:p-6 space-y-4 border-t-4 border-amber_">
             <div>
-              <div className="text-xs uppercase tracking-widest opacity-60 font-semibold">
+              <p className="text-xs font-semibold uppercase tracking-widest text-amber_-ink mb-1">
                 {t('emergency.recommendedRoute')}
-              </div>
-              <h2 className="text-3xl font-extrabold mt-1">{t('emergency.routeAmbulanceTitle')}</h2>
-              <p className="opacity-80 mt-2 leading-relaxed">{t('emergency.routeAmbulanceBody')}</p>
+              </p>
+              <h2 className="text-2xl font-extrabold text-ink">
+                {t('emergency.routeAmbulanceTitle')}
+              </h2>
+              <p className="text-sm text-ink-soft mt-2 leading-relaxed">
+                {t('emergency.routeAmbulanceBody')}
+              </p>
             </div>
             <DialButton number="101" label={t('emergency.dial.mda')} />
             <ScriptCard label={t('emergency.scriptLabel')} text={AMBULANCE_SCRIPT} />
-            <div className="rounded-2xl bg-white/6 p-4 text-sm leading-relaxed">
-              <strong className="block mb-1">{t('emergency.ambulanceNoteTitle')}</strong>
-              <p className="opacity-90">{t('emergency.ambulanceNoteBody')}</p>
+            <div className="rounded-2xl bg-sand-50 p-4 text-sm leading-relaxed">
+              <strong className="block mb-1 text-ink">{t('emergency.ambulanceNoteTitle')}</strong>
+              <p className="text-ink-soft">{t('emergency.ambulanceNoteBody')}</p>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        {step === 'route-psychiatrist' && (
-          <section className="space-y-5 animate-slide-up">
+      {/* ── Step: route-psychiatrist ─────────────────────────────────────── */}
+      {step === 'route-psychiatrist' && (
+        <section className="space-y-4 animate-slide-up">
+          <div className="mz-card p-5 md:p-6 space-y-4 border-t-4 border-clay">
             <div>
-              <div className="text-xs uppercase tracking-widest opacity-60 font-semibold">
+              <p className="text-xs font-semibold uppercase tracking-widest text-clay mb-1">
                 {t('emergency.recommendedRoute')}
-              </div>
-              <h2 className="text-3xl font-extrabold mt-1">{t('emergency.routePsychTitle')}</h2>
-              <p className="opacity-80 mt-2 leading-relaxed">{t('emergency.routePsychBody')}</p>
+              </p>
+              <h2 className="text-2xl font-extrabold text-ink">
+                {t('emergency.routePsychTitle')}
+              </h2>
+              <p className="text-sm text-ink-soft mt-2 leading-relaxed">
+                {t('emergency.routePsychBody')}
+              </p>
             </div>
 
-            <div className="rounded-2xl bg-white/10 p-4">
-              <div className="text-xs uppercase tracking-widest opacity-70 font-semibold mb-3">
-                {t('emergency.psychChecklistTitle')}
-              </div>
-              <ul className="space-y-3">
+            <div className="rounded-2xl bg-sand-50 p-4">
+              <p className="mz-section-title">{t('emergency.psychChecklistTitle')}</p>
+              <ul className="space-y-3 mt-2">
                 {PSYCH_CHECKLIST.map((item, idx) => {
                   const on = checked[item.key] ?? false;
                   return (
@@ -298,19 +345,19 @@ export default function EmergencyPage() {
                           onClick={() =>
                             setChecked((p) => ({ ...p, [item.key]: !p[item.key] }))
                           }
-                          className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 border-2 transition-colors ${
+                          className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 border-2 transition-colors mt-0.5 ${
                             on
-                              ? 'bg-white border-white text-crimson-deep'
-                              : 'bg-transparent border-white/40 text-transparent'
+                              ? 'bg-clay border-clay text-white'
+                              : 'bg-white border-sand-100 text-transparent hover:border-clay/50'
                           }`}
                         >
-                          <CheckIcon size={18} strokeWidth={3} />
+                          <CheckIcon size={16} strokeWidth={3} />
                         </button>
                         <div className="flex-1">
-                          <div className="font-semibold text-base leading-snug">
+                          <div className="font-semibold text-sm text-ink leading-snug">
                             {idx + 1}. {t(item.labelKey)}
                           </div>
-                          <div className="text-xs opacity-70 mt-0.5">{t(item.hintKey)}</div>
+                          <div className="text-xs text-ink-mute mt-0.5">{t(item.hintKey)}</div>
                         </div>
                       </label>
                     </li>
@@ -319,20 +366,17 @@ export default function EmergencyPage() {
               </ul>
             </div>
 
-            <div className="rounded-2xl bg-white/6 p-4 text-sm leading-relaxed flex gap-3">
-              <AlertIcon size={18} className="mt-0.5 shrink-0" />
-              <span className="opacity-90">{t('emergency.psychEscalate')}</span>
+            <div className="rounded-2xl bg-crimson-bg border border-crimson/20 p-4 text-sm leading-relaxed flex gap-3">
+              <AlertIcon size={18} className="mt-0.5 shrink-0 text-crimson-deep" />
+              <span className="text-crimson-deep">{t('emergency.psychEscalate')}</span>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+      )}
 
-        <Link
-          href="/"
-          className="mt-10 inline-block text-sm opacity-70 hover:opacity-100"
-        >
-          {t('emergency.backToDashboard')}
-        </Link>
-      </div>
+      <Link href="/" className="inline-block text-sm text-ink-mute hover:text-ink mt-2">
+        {t('emergency.backToDashboard')}
+      </Link>
     </div>
   );
 }
