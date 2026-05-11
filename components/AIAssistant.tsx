@@ -11,7 +11,7 @@ interface Props {
 
 export function AIAssistant({ variant = 'page' }: Props) {
   const { t } = useT();
-  const { messages, sendMessage, status, error } = useChat();
+  const { messages, sendMessage, status, error, clearError } = useChat();
   const [input, setInput] = useState('');
   const scrollerRef = useRef<HTMLDivElement>(null);
 
@@ -71,8 +71,15 @@ export function AIAssistant({ variant = 'page' }: Props) {
         )}
 
         {error && (
-          <div className="rounded-2xl bg-crimson/10 text-crimson text-sm px-4 py-3 leading-relaxed">
-            {t('assistant.error')}
+          <div className="rounded-2xl bg-crimson/10 border border-crimson/20 text-crimson-deep text-sm px-4 py-3 leading-relaxed flex items-center justify-between gap-3">
+            <span>{t('assistant.error')}</span>
+            <button
+              type="button"
+              onClick={clearError}
+              className="shrink-0 text-xs font-semibold underline hover:no-underline"
+            >
+              {t('assistant.errorRetry')}
+            </button>
           </div>
         )}
       </div>

@@ -323,6 +323,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'assistant.disclaimer':
       'מצפן AI אינו תחליף לייעוץ רפואי או משפטי. בעת סכנה מיידית: חייגו 100 או 101.',
     'assistant.error': 'התקבלה שגיאה מהשירות. נסו שוב בעוד רגע.',
+    'assistant.errorRetry': 'נסה שוב',
     'assistant.starter.involuntary': 'מה התהליך לאשפוז כפוי בישראל?',
     'assistant.starter.bituachLeumi': 'איך מגישים תביעה לביטוח לאומי?',
     'assistant.starter.refusesMeds': 'הוא מסרב לקחת תרופות, מה לעשות?',
@@ -826,6 +827,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'assistant.disclaimer':
       'Matzpen AI is not a substitute for medical or legal advice. In immediate danger: call 100 or 101.',
     'assistant.error': 'The service returned an error. Please try again.',
+    'assistant.errorRetry': 'Retry',
     'assistant.starter.involuntary': 'What is the involuntary hospitalization process in Israel?',
     'assistant.starter.bituachLeumi': 'How do I file a Bituach Leumi claim?',
     'assistant.starter.refusesMeds': 'He refuses to take his meds — what should I do?',
