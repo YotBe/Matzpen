@@ -87,8 +87,15 @@ export function AIAssistant({ variant = 'page' }: Props) {
         )}
 
         {error && (
-          <div className="rounded-2xl bg-crimson/10 border border-crimson/20 text-crimson-deep text-sm px-4 py-3 leading-relaxed flex items-center justify-between gap-3">
-            <span>{t('assistant.error')}</span>
+          <div className="rounded-2xl bg-crimson/10 border border-crimson/20 text-crimson-deep text-sm px-4 py-3 leading-relaxed flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0 space-y-1">
+              <div>{t('assistant.error')}</div>
+              {error.message && (
+                <div className="text-[11px] opacity-80 break-words font-mono leading-snug">
+                  {error.message}
+                </div>
+              )}
+            </div>
             <button
               type="button"
               onClick={clearError}
