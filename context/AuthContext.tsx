@@ -9,15 +9,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut as fbSignOut,
-  type User,
-} from 'firebase/auth';
-import { firebaseConfigured, getFirebaseAuth, googleProvider } from '@/lib/firebaseConfig';
+import type { User } from '@supabase/supabase-js';
+import { supabase, supabaseConfigured } from '@/lib/supabaseClient';
 
 interface AuthContextValue {
   user: User | null;
@@ -36,51 +29,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!firebaseConfigured) {
+    if (!supabaseConfigured || !supabase) {
       setLoading(false);
       return;
     }
-    const auth = getFirebaseAuth();
-    if (!auth) {
-      setLoading(false);
-      return;
-    }
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
+
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
       setLoading(false);
     });
-    return () => unsub();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => listener.subscription.unsubscribe();
   }, []);
 
   const signInEmail = useCallback(async (email: string, password: string) => {
-    const auth = getFirebaseAuth();
-    if (!auth) throw new Error('Firebase auth not configured');
-    await signInWithEmailAndPassword(auth, email, password);
+    if (!supabase) throw new Error('Supabase not configured');
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
   }, []);
 
   const signUpEmail = useCallback(async (email: string, password: string) => {
-    const auth = getFirebaseAuth();
-    if (!auth) throw new Error('Firebase auth not configured');
-    await createUserWithEmailAndPassword(auth, email, password);
+    if (!supabase) throw new Error('Supabase not configured');
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
   }, []);
 
   const signInGoogle = useCallback(async () => {
-    const auth = getFirebaseAuth();
-    if (!auth) throw new Error('Firebase auth not configured');
-    await signInWithPopup(auth, googleProvider);
+    if (!supabase) throw new Error('Supabase not configured');
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined },
+    });
+    if (error) throw error;
   }, []);
 
   const signOut = useCallback(async () => {
-    const auth = getFirebaseAuth();
-    if (!auth) return;
-    await fbSignOut(auth);
+    if (!supabase) return;
+    await supabase.auth.signOut();
   }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       loading,
-      configured: firebaseConfigured,
+      configured: supabaseConfigured,
       signInEmail,
       signUpEmail,
       signInGoogle,

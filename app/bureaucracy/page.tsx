@@ -6,7 +6,7 @@ import { MOCK_PATIENT_ID } from '@/lib/constants';
 import {
   getChecklist,
   setChecklistItem,
-} from '@/services/firestoreService';
+} from '@/services/supabaseService';
 import type { BureaucracyChecklist, BureaucracySection } from '@/lib/types';
 import { CheckIcon, ChevronEnd, ChevronStart } from '@/components/icons';
 
@@ -292,7 +292,7 @@ export default function BureaucracyPage() {
 
       {!configured && (
         <p className="text-xs text-ink-mute text-center">
-          מצב תצוגה: ההתקדמות נשמרת רק לאחר חיבור Firebase.
+          מצב תצוגה: ההתקדמות נשמרת רק לאחר חיבור Supabase.
         </p>
       )}
     </div>

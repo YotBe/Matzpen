@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { addDailyLog } from '@/services/firestoreService';
+import { addDailyLog } from '@/services/supabaseService';
 import { useAuth } from '@/context/AuthContext';
 import { AFFECTIVE_LABELS, type AffectiveState, type DailyLog } from '@/lib/types';
 import { MOCK_PATIENT_ID } from '@/lib/constants';
@@ -45,8 +45,8 @@ export function DailyLogForm({ onSubmitted }: Props) {
       psychomotorSpeed,
       impulsivityEvent,
       notes: notes.trim() || undefined,
-      loggedBy: user?.uid ?? 'mock-caregiver',
-      loggedByName: user?.displayName ?? user?.email ?? 'בן/בת משפחה',
+      loggedBy: user?.id ?? 'mock-caregiver',
+      loggedByName: (user?.user_metadata?.full_name as string | undefined) ?? user?.email ?? 'בן/בת משפחה',
     };
 
     try {
@@ -249,7 +249,7 @@ export function DailyLogForm({ onSubmitted }: Props) {
 
       {!configured && (
         <p className="text-xs text-ink-mute text-center -mt-2">
-          מצב תצוגה: הדיווח לא נשמר עד שהגדרות Firebase יוזנו ב־<code className="font-mono">.env.local</code>.
+          מצב תצוגה: הדיווח לא נשמר עד שהגדרות Supabase יוזנו ב־<code className="font-mono">.env.local</code>.
         </p>
       )}
     </form>

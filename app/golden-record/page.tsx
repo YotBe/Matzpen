@@ -8,7 +8,7 @@ import { MOCK_PATIENT_ID } from '@/lib/constants';
 import {
   getGoldenRecord,
   saveGoldenRecord,
-} from '@/services/firestoreService';
+} from '@/services/supabaseService';
 import type { GoldenRecord } from '@/lib/types';
 
 const EMPTY_LOCAL: GoldenRecord = {

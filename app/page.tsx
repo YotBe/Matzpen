@@ -5,7 +5,7 @@ import { AlertBanner } from '@/components/AlertBanner';
 import { DailyLogForm } from '@/components/DailyLogForm';
 import { useAuth } from '@/context/AuthContext';
 import { MOCK_PATIENT_ID, MOCK_PATIENT_NAME } from '@/lib/constants';
-import { getRecentLogs } from '@/services/firestoreService';
+import { getRecentLogs } from '@/services/supabaseService';
 import type { DailyLog } from '@/lib/types';
 
 // Mock recent logs used when Firebase isn't configured so the AlertBanner

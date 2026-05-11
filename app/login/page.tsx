@@ -56,7 +56,7 @@ export default function LoginPage() {
 
         {!configured && (
           <div className="rounded-xl bg-amber_-bg text-amber_-ink text-sm p-3 mb-5">
-            Firebase לא מוגדר. ההתחברות תיכשל עד שיוזנו משתני סביבה ב־
+            Supabase לא מוגדר. ההתחברות תיכשל עד שיוזנו משתני סביבה ב־
             <code className="font-mono">.env.local</code>.
           </div>
         )}
