@@ -61,6 +61,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.bureaucracy': 'זכויות ובירוקרטיה',
     'nav.bureaucracyShort': 'זכויות',
     'nav.bureaucracyHelper': 'מסלול וצ׳קליסטים',
+    'nav.assistant': 'מצפן AI',
+    'nav.assistantShort': 'עוזר',
+    'nav.assistantHelper': 'מענה חי לשאלות בירוקרטיה ומשבר',
     'nav.signIn': 'כניסה',
     'nav.signOut': 'יציאה',
     'nav.privacy': 'פרטיות',
@@ -292,6 +295,37 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.form.contacts.hint':
       'פסיכיאטר מטפל, מסגרת שיקומית, רופא משפחה — שם וטלפון.',
     'gr.form.submit': 'שמירת התיק',
+
+    // AI extraction dropzone (Golden Record)
+    'gr.extract.title': 'העלה סיכום אשפוז או ביקור רופא (PDF/תמונה) למילוי אוטומטי של התיק',
+    'gr.extract.subtitle':
+      'גררו לכאן קובץ או בחרו ידנית. הקובץ מעובד בזיכרון בלבד ואינו נשמר על השרת.',
+    'gr.extract.choose': 'בחירת קובץ',
+    'gr.extract.loading': 'פענוח מסמך רפואי בעזרת בינה מלאכותית…',
+    'gr.extract.done': 'המסמך פוענח — בדקו ועדכנו את השדות לפני שמירה',
+    'gr.extract.reviewHint': 'עברו על השדות הממולאים, תקנו במידת הצורך, ולחצו שמירה.',
+    'gr.extract.another': 'העלאת מסמך נוסף',
+    'gr.extract.failed': 'הפענוח נכשל. נסו שוב או מלאו ידנית.',
+    'gr.extract.rejected': 'סוג קובץ לא נתמך או גדול מ־15MB.',
+
+    // ── AI Assistant ───────────────────────────────────────────────────────
+    'assistant.kicker': 'עוזר חכם',
+    'assistant.title': 'מצפן AI',
+    'assistant.pageSubtitle':
+      'שאלו אותי על אשפוז כפוי, ביטוח לאומי, סל שיקום, או כל בלבול בירוקרטי אחר. אני לא רופא — אך אדע להפנות אתכם נכון.',
+    'assistant.welcomeTitle': 'במה אפשר לעזור?',
+    'assistant.welcomeSubtitle':
+      'שאלות על בירוקרטיה, זכויות, אשפוז ומשבר — באופן רגוע וברור. בעת סכנה מיידית: 100 / 101.',
+    'assistant.inputPlaceholder': 'כתבו שאלה… (Enter לשליחה, Shift+Enter לשורה חדשה)',
+    'assistant.send': 'שליחה',
+    'assistant.openLabel': 'פתח את מצפן AI',
+    'assistant.close': 'סגירה',
+    'assistant.disclaimer':
+      'מצפן AI אינו תחליף לייעוץ רפואי או משפטי. בעת סכנה מיידית: חייגו 100 או 101.',
+    'assistant.error': 'התקבלה שגיאה מהשירות. נסו שוב בעוד רגע.',
+    'assistant.starter.involuntary': 'מה התהליך לאשפוז כפוי בישראל?',
+    'assistant.starter.bituachLeumi': 'איך מגישים תביעה לביטוח לאומי?',
+    'assistant.starter.refusesMeds': 'הוא מסרב לקחת תרופות, מה לעשות?',
 
     // ── Bureaucracy ────────────────────────────────────────────────────────
     'bur.kicker': 'מעקב ארוך טווח',
@@ -528,6 +562,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.bureaucracy': 'Rights & paperwork',
     'nav.bureaucracyShort': 'Rights',
     'nav.bureaucracyHelper': 'Tracks and checklists',
+    'nav.assistant': 'Matzpen AI',
+    'nav.assistantShort': 'Assistant',
+    'nav.assistantHelper': 'Live answers on bureaucracy & crisis',
     'nav.signIn': 'Sign in',
     'nav.signOut': 'Sign out',
     'nav.privacy': 'Privacy',
@@ -760,6 +797,38 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.form.contacts.hint':
       'Treating psychiatrist, rehab framework, family physician — name and phone.',
     'gr.form.submit': 'Save record',
+
+    'gr.extract.title':
+      'Upload a hospital summary or doctor’s letter (PDF/image) to auto-fill the record',
+    'gr.extract.subtitle':
+      'Drop a file here or pick one. It is processed in memory only — never stored on the server.',
+    'gr.extract.choose': 'Choose file',
+    'gr.extract.loading': 'Reading the medical document with AI…',
+    'gr.extract.done': 'Document parsed — review and edit the fields before saving',
+    'gr.extract.reviewHint':
+      'Look over the auto-filled fields, correct anything that looks off, then save.',
+    'gr.extract.another': 'Upload another document',
+    'gr.extract.failed': 'Extraction failed. Try again or fill in manually.',
+    'gr.extract.rejected': 'Unsupported file type or larger than 15MB.',
+
+    'assistant.kicker': 'Smart assistant',
+    'assistant.title': 'Matzpen AI',
+    'assistant.pageSubtitle':
+      'Ask about involuntary hospitalization, Bituach Leumi, the rehab basket, or anything else that feels overwhelming. I’m not a doctor — but I’ll point you the right way.',
+    'assistant.welcomeTitle': 'How can I help?',
+    'assistant.welcomeSubtitle':
+      'Questions about rights, bureaucracy, hospitalization and crisis — calmly and clearly. In immediate danger: call 100 / 101.',
+    'assistant.inputPlaceholder':
+      'Type a question… (Enter to send, Shift+Enter for newline)',
+    'assistant.send': 'Send',
+    'assistant.openLabel': 'Open Matzpen AI',
+    'assistant.close': 'Close',
+    'assistant.disclaimer':
+      'Matzpen AI is not a substitute for medical or legal advice. In immediate danger: call 100 or 101.',
+    'assistant.error': 'The service returned an error. Please try again.',
+    'assistant.starter.involuntary': 'What is the involuntary hospitalization process in Israel?',
+    'assistant.starter.bituachLeumi': 'How do I file a Bituach Leumi claim?',
+    'assistant.starter.refusesMeds': 'He refuses to take his meds — what should I do?',
 
     'bur.kicker': 'Long-term tracking',
     'bur.title': 'Rights & paperwork',
