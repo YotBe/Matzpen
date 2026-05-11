@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
 import { useT } from '@/lib/i18n/LocaleProvider';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Props {
   /** Render in a fixed-height container (for the floating widget) vs flowing full-page. */
@@ -11,7 +13,21 @@ interface Props {
 
 export function AIAssistant({ variant = 'page' }: Props) {
   const { t } = useT();
-  const { messages, sendMessage, status, error, clearError } = useChat();
+
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        headers: async (): Promise<Record<string, string>> => {
+          if (!supabase) return {};
+          const { data } = await supabase.auth.getSession();
+          const token = data.session?.access_token;
+          return token ? { 'x-supabase-token': token } : {};
+        },
+      }),
+    [],
+  );
+
+  const { messages, sendMessage, status, error, clearError } = useChat({ transport });
   const [input, setInput] = useState('');
   const scrollerRef = useRef<HTMLDivElement>(null);
 
