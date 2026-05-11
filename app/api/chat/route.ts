@@ -207,7 +207,14 @@ export async function POST(req: Request) {
     });
   }
 
-  const messages = Array.isArray(body.messages) ? body.messages : [];
+  // Only accept user/assistant turns from the client. A malicious caller could
+  // otherwise inject a fake `system` role to override our prompt, or a `tool`
+  // role to fake tool results. The real system prompt is set via streamText's
+  // `system` option below.
+  const rawMessages = Array.isArray(body.messages) ? body.messages : [];
+  const messages = rawMessages.filter(
+    (m): m is UIMessage => m?.role === 'user' || m?.role === 'assistant',
+  );
 
   const token = req.headers.get('x-supabase-token');
   let patientContext = '';

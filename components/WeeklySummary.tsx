@@ -10,7 +10,7 @@ const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 function classifyDay(log: DailyLog): 'stable' | 'risk' {
   // Single-day risk flag (mirrors the rules used by the alert algorithm, but
   // standalone so each day gets its own classification).
-  const lowSleep = log.sleepHours < 4.5;
+  const lowSleep = Number.isFinite(log.sleepHours) && log.sleepHours < 4.5;
   const hot = log.psychomotorSpeed >= 4;
   if ((lowSleep && hot) || log.impulsivityEvent) return 'risk';
   if (log.affectiveState === 'euphoria' || log.affectiveState === 'depression') return 'risk';
@@ -91,11 +91,11 @@ export function WeeklySummary({ logs }: Props) {
         {t('dashboard.weekStable', { stable: stableCount, total })}
       </p>
       <div className="mt-3 flex items-center gap-1.5" aria-hidden>
-        {dotsOldestFirst.map((log, i) => {
+        {dotsOldestFirst.map((log) => {
           const cls = classifyDay(log);
           return (
             <span
-              key={i}
+              key={log.id ?? log.createdAt}
               className={`h-2.5 flex-1 rounded-full ${
                 cls === 'stable' ? 'bg-sage/70' : 'bg-crimson/60'
               }`}

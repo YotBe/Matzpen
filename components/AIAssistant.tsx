@@ -115,7 +115,7 @@ export function AIAssistant({ variant = 'page' }: Props) {
                 key={s}
                 type="button"
                 onClick={() => sendStarter(s)}
-                className="text-xs md:text-sm rounded-full bg-sand-100 hover:bg-sand-50 text-ink-soft hover:text-ink px-3 py-1.5 transition-colors text-right leading-snug"
+                className="text-xs md:text-sm rounded-full bg-sand-100 hover:bg-sand-50 text-ink-soft hover:text-ink px-3 py-1.5 transition-colors text-start leading-snug"
               >
                 {s}
               </button>
