@@ -45,6 +45,7 @@ export function AlertBanner({ logs }: Props) {
               ))}
             </ul>
           )}
+          <NonClinicalDisclosure />
         </div>
       </div>
     );
@@ -68,6 +69,7 @@ export function AlertBanner({ logs }: Props) {
               ))}
             </ul>
           )}
+          <NonClinicalDisclosure />
         </div>
       </div>
       <Link
@@ -78,5 +80,17 @@ export function AlertBanner({ logs }: Props) {
         <ChevronEnd size={20} />
       </Link>
     </div>
+  );
+}
+
+function NonClinicalDisclosure() {
+  const { t } = useT();
+  return (
+    <details className="mt-3 text-[11px] leading-relaxed opacity-80">
+      <summary className="cursor-pointer font-semibold underline underline-offset-2">
+        {t('alert.howCalculated')}
+      </summary>
+      <p className="mt-1.5">{t('alert.nonClinicalNote')}</p>
+    </details>
   );
 }

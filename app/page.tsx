@@ -9,12 +9,18 @@ import { OnboardingOverlay } from '@/components/OnboardingOverlay';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { usePatientId } from '@/lib/usePatientId';
-import { MOCK_PATIENT_ID, MOCK_PATIENT_NAME } from '@/lib/constants';
+import {
+  MOCK_PATIENT_ID,
+  MOCK_PATIENT_NAME,
+  PREVIEW_MODE_ENABLED,
+} from '@/lib/constants';
 import { getGoldenRecord, getRecentLogs } from '@/services/supabaseService';
 import type { DailyLog } from '@/lib/types';
 
-// Mock recent logs used when Supabase isn't configured so the AlertBanner
-// has something realistic to render in the live preview.
+// Demo logs are only ever shown when the operator explicitly opts into
+// preview mode via NEXT_PUBLIC_ENABLE_PREVIEW_MODE=true. Without that flag
+// the AuthGate now blocks the unconfigured app entirely, so these values
+// can't leak into a real caregiver's view.
 const MOCK_LOGS: DailyLog[] = [
   {
     patientId: MOCK_PATIENT_ID,
@@ -49,7 +55,7 @@ export default function DashboardPage() {
   const { user, configured } = useAuth();
   const { t } = useT();
   const patientId = usePatientId();
-  const [logs, setLogs] = useState<DailyLog[]>(MOCK_LOGS);
+  const [logs, setLogs] = useState<DailyLog[]>(PREVIEW_MODE_ENABLED ? MOCK_LOGS : []);
   const [logsLoading, setLogsLoading] = useState<boolean>(configured);
   // Patient name from the Golden Record. `undefined` while loading, empty
   // string when the caregiver hasn't filled it in yet, real name otherwise.
@@ -62,8 +68,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!configured) {
-      // Preview mode: show the placeholder name so the dashboard isn't blank.
-      setPatientName(MOCK_PATIENT_NAME);
+      // Preview mode (explicitly opted in) shows the placeholder name so the
+      // dashboard isn't blank for marketing screenshots. Otherwise leave the
+      // name unset — but AuthGate won't render us at all in that case.
+      setPatientName(PREVIEW_MODE_ENABLED ? MOCK_PATIENT_NAME : '');
       return;
     }
     let cancelled = false;

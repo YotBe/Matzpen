@@ -2,10 +2,17 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { generateObject } from 'ai';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { authenticateRequest } from '@/lib/server/auth';
+import { callerKey, rateLimit } from '@/lib/server/rateLimit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+// Caregivers shouldn't be extracting more than a handful of documents per
+// session. 10 uploads per hour per user is generous and keeps Gemini bill
+// bounded if a bug retries on every keystroke.
+const EXTRACT_LIMIT = 10;
+const EXTRACT_WINDOW_MS = 60 * 60 * 1000;
 const MAX_BYTES = 15 * 1024 * 1024;
 const ALLOWED = new Set([
   'application/pdf',
@@ -42,6 +49,26 @@ export async function POST(req: Request) {
     return NextResponse.json(
       { error: 'GOOGLE_GENERATIVE_AI_API_KEY חסר. הגדר את המפתח ב־.env.local.' },
       { status: 503 },
+    );
+  }
+
+  // Authenticated only. This endpoint forwards arbitrary user-supplied files
+  // to Gemini and returns parsed PII; leaving it open would let anyone on
+  // the internet burn the API key and exfiltrate documents they upload.
+  const auth = await authenticateRequest(req);
+  if (!auth) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const rl = rateLimit({
+    key: callerKey(req, auth.user.id),
+    limit: EXTRACT_LIMIT,
+    windowMs: EXTRACT_WINDOW_MS,
+  });
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: 'יותר מדי העלאות. נסה שוב בעוד שעה.' },
+      { status: 429, headers: { 'retry-after': String(Math.ceil(rl.resetMs / 1000)) } },
     );
   }
 

@@ -3,6 +3,7 @@
 import { useCallback, useState, type FormEvent } from 'react';
 import { useDropzone, type FileRejection } from 'react-dropzone';
 import { useT } from '@/lib/i18n/LocaleProvider';
+import { supabase } from '@/lib/supabaseClient';
 import type { GoldenRecord } from '@/lib/types';
 
 interface Props {
@@ -188,9 +189,13 @@ function ExtractionDropzone({
       try {
         const fd = new FormData();
         fd.append('file', file);
+        const session = supabase ? (await supabase.auth.getSession()).data.session : null;
+        const headers: Record<string, string> = {};
+        if (session?.access_token) headers.authorization = `Bearer ${session.access_token}`;
         const res = await fetch('/api/extract-medical', {
           method: 'POST',
           body: fd,
+          headers,
         });
         const data = (await res.json().catch(() => ({}))) as {
           diagnosis?: string;

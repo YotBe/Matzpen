@@ -18,6 +18,10 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'common.yes': 'כן',
     'common.no': 'לא',
     'common.previewMode': 'תצוגה',
+    'configBanner.kicker': 'המערכת אינה מוגדרת',
+    'configBanner.title': 'נדרשת הגדרת Supabase',
+    'configBanner.body':
+      'כדי להפעיל את מצפן יש להגדיר את משתני הסביבה NEXT_PUBLIC_SUPABASE_URL ו־NEXT_PUBLIC_SUPABASE_ANON_KEY. כל עוד הם חסרים האפליקציה לא תציג נתונים, כדי שלא יוצגו נתוני דמו כאילו היו אמיתיים.',
     'common.langName': 'EN',
     'common.skip': 'דלג',
     'common.next': 'הבא',
@@ -93,6 +97,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'login.toSignUp': 'הירשמו כאן',
     'login.toSignIn': 'התחברו',
     'login.unknownError': 'שגיאה לא ידועה',
+    'login.consentLabel':
+      'אני מבין/ה ש"מצפן" הוא כלי תיעוד לעזרה עצמית למשפחות ואינו תחליף לטיפול רפואי, אבחון או החלטה קלינית. ההתראות הן היוריסטיקה שלא קיבלה אישור קליני. במצבי חירום פניתי קודם ל-101 (מד״א), 100 (משטרה) או 1201 (ער״ן). אני מאשר/ת שמידע שאזין (כולל תיק רפואי ושיחות עם העוזר החכם) יעובד גם אצל ספק הבינה המלאכותית (Google Gemini) לצורך מתן התשובה.',
+    'login.consentRequired': 'אנא אשרו את ההצהרה כדי להמשיך.',
 
     // ── Dashboard ──────────────────────────────────────────────────────────
     'dashboard.greeting': 'שלום, {{name}}',
@@ -199,6 +206,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       '{{days}} ימים רצופים שבהם המטופל לא נטל את התרופות',
     'alert.reason.medsMissedLowSleep':
       'במהלך הימים שלא ניטלו תרופות, השינה ירדה מתחת ל-{{hours}} שעות — סיכון מוגבר',
+    'alert.howCalculated': 'איך חושבה ההתראה?',
+    'alert.nonClinicalNote':
+      'ההתראה היא היוריסטיקה שמבוססת על דפוסים שדווחו על־ידי משפחות (שינה קצרה מתמשכת, פעילות מואצת, חוסר היענות לטיפול). היא אינה הנחיה רפואית, לא קיבלה אישור קליני, ולא מתחשבת במצב הבסיס של המתמודד שלכם (למשל נדודי שינה כרוניים). השתמשו בה רק כתזכורת לבדוק את המצב ולעדכן את הצוות המטפל — לא כאבחון.',
 
     // ── Emergency ──────────────────────────────────────────────────────────
     'emergency.kicker': 'מצב חירום',
@@ -540,6 +550,10 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'common.yes': 'Yes',
     'common.no': 'No',
     'common.previewMode': 'Preview',
+    'configBanner.kicker': 'App not configured',
+    'configBanner.title': 'Supabase configuration required',
+    'configBanner.body':
+      'To run Matzpen, set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY. The app will not render any data until these are provided, so demo records are never mistaken for real medical history.',
     'common.langName': 'עב',
     'common.skip': 'Skip',
     'common.next': 'Next',
@@ -611,6 +625,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'login.toSignUp': 'Register here',
     'login.toSignIn': 'Sign in',
     'login.unknownError': 'Unknown error',
+    'login.consentLabel':
+      'I understand that Matzpen is a self-help documentation tool for families and is not a substitute for medical care, diagnosis, or clinical judgement. Alerts are heuristics and have not been clinically validated. In an emergency I will call 101 (MDA), 100 (police), or 1201 (ERAN) first. I acknowledge that data I enter (including the medical record and AI assistant conversations) is processed by an AI provider (Google Gemini) to generate responses.',
+    'login.consentRequired': 'Please confirm the disclosure to continue.',
 
     'dashboard.greeting': 'Hello, {{name}}',
     'dashboard.defaultName': 'family member',
@@ -716,6 +733,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       '{{days}} consecutive days of missed medication',
     'alert.reason.medsMissedLowSleep':
       'On days medication was missed, sleep dropped below {{hours}} hours — elevated risk',
+    'alert.howCalculated': 'How was this calculated?',
+    'alert.nonClinicalNote':
+      'This alert is a heuristic based on patterns commonly reported by families (sustained short sleep, accelerated activity, missed medication). It is not a clinical guideline, has not been validated, and does not account for your loved one\'s personal baseline (e.g. chronic insomnia). Treat it only as a reminder to check in and update the treating team — not as a diagnosis.',
 
     'emergency.kicker': 'Emergency',
     'emergency.title': 'Decision tree',

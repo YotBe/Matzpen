@@ -1,9 +1,32 @@
 import type { AlertReason, AlertResult, DailyLog } from '@/lib/types';
 
-const SLEEP_THRESHOLD = 4.5;
-const SLEEP_RED_WITH_MEDS_THRESHOLD = 4;
-const PSYCHO_THRESHOLD = 4;
-const YELLOW_DAYS_FOR_RED = 5;
+// IMPORTANT: these thresholds are NOT clinical guidelines.
+//
+// They are observational heuristics derived from caregiver-reported patterns
+// commonly associated with mood-episode prodromes in bipolar I (sustained
+// short sleep + accelerated psychomotor activity; medication non-adherence
+// preceding relapse). They have not been validated against any psychiatric
+// study, do not account for individual baselines (chronic insomniacs,
+// shift workers, post-partum), and are intended only as a nudge to call the
+// treating clinician — never as a diagnostic or triage signal.
+//
+// Any change to these numbers should be reviewed by a clinician and the
+// rationale recorded here. They are also surfaced in the UI (see the
+// "How is this calculated?" panel in AlertBanner) so caregivers can judge
+// the alert against their patient's normal baseline.
+export const ALERT_THRESHOLDS = {
+  sleepHours: 4.5,
+  sleepHoursWithMissedMeds: 4,
+  psychomotorActivity: 4,
+  yellowDaysForRed: 5,
+  consecutiveImpulsivityDaysForRed: 2,
+  consecutiveMissedMedDaysForYellow: 2,
+} as const;
+
+const SLEEP_THRESHOLD = ALERT_THRESHOLDS.sleepHours;
+const SLEEP_RED_WITH_MEDS_THRESHOLD = ALERT_THRESHOLDS.sleepHoursWithMissedMeds;
+const PSYCHO_THRESHOLD = ALERT_THRESHOLDS.psychomotorActivity;
+const YELLOW_DAYS_FOR_RED = ALERT_THRESHOLDS.yellowDaysForRed;
 
 function newestFirst(logs: DailyLog[]): DailyLog[] {
   return [...logs].sort((a, b) => b.createdAt - a.createdAt);

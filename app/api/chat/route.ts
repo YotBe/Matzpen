@@ -1,10 +1,22 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { convertToModelMessages, streamText, type UIMessage } from 'ai';
-import { createClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { authenticateRequest } from '@/lib/server/auth';
+import { callerKey, rateLimit } from '@/lib/server/rateLimit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
+
+// 20 chat requests per authenticated user per 10 minutes. Tuned to allow a
+// normal back-and-forth (one caregiver session ≈ 5-10 turns) while blocking
+// scripted abuse that would burn the Gemini quota.
+const CHAT_LIMIT = 20;
+const CHAT_WINDOW_MS = 10 * 60 * 1000;
+// Cap the per-request prompt size so a hostile client can't ship megabytes
+// of "user" text and pay our Gemini bill.
+const MAX_MESSAGES = 40;
+const MAX_TEXT_CHARS = 16_000;
 
 const SYSTEM_PROMPT = `אתה "מצפן AI" — עוזר מומחה, סבלני וחומל למשפחות של מתמודדים פסיכיאטריים בישראל.
 
@@ -88,15 +100,9 @@ const SECTION_LABELS: Record<string, string> = {
   legal: 'משפטי',
 };
 
-async function buildPatientContext(token: string): Promise<string> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anonKey) return '';
-
-  const db = createClient(url, anonKey, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
-  });
-
+async function buildPatientContext(db: SupabaseClient): Promise<string> {
+  // patient_id is resolved server-side via a SECURITY DEFINER RPC. The client
+  // never gets to pick whose data we read — auth.uid() is the only input.
   const { data: patientId } = await db.rpc('get_my_patient_id');
   if (!patientId) return '';
 
@@ -190,26 +196,57 @@ async function buildPatientContext(token: string): Promise<string> {
   );
 }
 
+function jsonError(message: string, status: number, extraHeaders?: Record<string, string>) {
+  return new Response(JSON.stringify({ error: message }), {
+    status,
+    headers: { 'content-type': 'application/json', ...(extraHeaders ?? {}) },
+  });
+}
+
+function approximateSize(messages: UIMessage[]): number {
+  let total = 0;
+  for (const m of messages) {
+    const parts = (m as { parts?: { type?: string; text?: string }[] }).parts;
+    if (Array.isArray(parts)) {
+      for (const p of parts) {
+        if (p?.type === 'text' && typeof p.text === 'string') total += p.text.length;
+      }
+    }
+    const content = (m as { content?: unknown }).content;
+    if (typeof content === 'string') total += content.length;
+  }
+  return total;
+}
+
 export async function POST(req: Request) {
   const googleApiKey =
     process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GOOGLE_API_KEY;
   if (!googleApiKey) {
-    return new Response(
-      JSON.stringify({
-        error: 'GOOGLE_GENERATIVE_AI_API_KEY חסר. הגדר את המפתח ב־.env.local.',
-      }),
-      { status: 503, headers: { 'content-type': 'application/json' } },
-    );
+    return jsonError('GOOGLE_GENERATIVE_AI_API_KEY חסר. הגדר את המפתח ב־.env.local.', 503);
+  }
+
+  // Auth is required. The chat assistant talks about the caller's patient,
+  // so we won't serve it to anonymous callers — both for privacy and to
+  // keep the LLM bill bound to identifiable accounts.
+  const auth = await authenticateRequest(req);
+  if (!auth) return jsonError('Unauthorized', 401);
+
+  const rl = rateLimit({
+    key: callerKey(req, auth.user.id),
+    limit: CHAT_LIMIT,
+    windowMs: CHAT_WINDOW_MS,
+  });
+  if (!rl.ok) {
+    return jsonError('יותר מדי בקשות. נסה שוב בעוד כמה דקות.', 429, {
+      'retry-after': String(Math.ceil(rl.resetMs / 1000)),
+    });
   }
 
   let body: { messages?: UIMessage[] };
   try {
     body = (await req.json()) as { messages?: UIMessage[] };
   } catch {
-    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
-      status: 400,
-      headers: { 'content-type': 'application/json' },
-    });
+    return jsonError('Invalid JSON body', 400);
   }
 
   // Only accept user/assistant turns from the client. A malicious caller could
@@ -217,18 +254,19 @@ export async function POST(req: Request) {
   // role to fake tool results. The real system prompt is set via streamText's
   // `system` option below.
   const rawMessages = Array.isArray(body.messages) ? body.messages : [];
-  const messages = rawMessages.filter(
-    (m): m is UIMessage => m?.role === 'user' || m?.role === 'assistant',
-  );
+  const messages = rawMessages
+    .filter((m): m is UIMessage => m?.role === 'user' || m?.role === 'assistant')
+    .slice(-MAX_MESSAGES);
 
-  const token = req.headers.get('x-supabase-token');
+  if (approximateSize(messages) > MAX_TEXT_CHARS) {
+    return jsonError('הבקשה ארוכה מדי. קצרו את ההודעה ונסו שוב.', 413);
+  }
+
   let patientContext = '';
-  if (token) {
-    try {
-      patientContext = await buildPatientContext(token);
-    } catch (err) {
-      console.error('[chat] buildPatientContext failed:', err);
-    }
+  try {
+    patientContext = await buildPatientContext(auth.db);
+  } catch (err) {
+    console.error('[chat] buildPatientContext failed:', err);
   }
 
   const google = createGoogleGenerativeAI({ apiKey: googleApiKey });
