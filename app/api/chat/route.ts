@@ -116,7 +116,9 @@ async function buildPatientContext(token: string): Promise<string> {
       .limit(7),
     db
       .from('golden_records')
-      .select('diagnosis, comorbidities, medications, allergies, risk_vectors')
+      .select(
+        'patient_name, relationship, diagnosis, comorbidities, medications, allergies, risk_vectors',
+      )
       .eq('patient_id', patientId)
       .maybeSingle(),
     db.from('checklist_items').select('section, item_key, done').eq('patient_id', patientId),
@@ -127,6 +129,9 @@ async function buildPatientContext(token: string): Promise<string> {
   const golden = goldenRes.data;
   if (golden) {
     const lines: string[] = ['=== רשומה רפואית ==='];
+    if (golden.patient_name) lines.push(`שם המתמודד: ${golden.patient_name}`);
+    if (golden.relationship)
+      lines.push(`הקשר של המשתמש: ${golden.relationship}`);
     if (golden.diagnosis) lines.push(`אבחנה: ${golden.diagnosis}`);
     if (golden.comorbidities) lines.push(`תחלואה נלווית: ${golden.comorbidities}`);
     if (golden.medications?.length) {

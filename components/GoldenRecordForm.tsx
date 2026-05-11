@@ -14,6 +14,8 @@ type ExtractStatus = 'idle' | 'uploading' | 'done' | 'error';
 
 export function GoldenRecordForm({ initial, onSave }: Props) {
   const { t } = useT();
+  const [patientName, setPatientName] = useState(initial?.patientName ?? '');
+  const [relationship, setRelationship] = useState(initial?.relationship ?? '');
   const [diagnosis, setDiagnosis] = useState(initial?.diagnosis ?? '');
   const [comorbidities, setComorbidities] = useState(initial?.comorbidities ?? '');
   const [medicationsText, setMedicationsText] = useState(
@@ -43,6 +45,8 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
       .filter(Boolean);
     try {
       await onSave({
+        patientName: patientName.trim() || undefined,
+        relationship: relationship.trim() || undefined,
         diagnosis,
         comorbidities,
         medications,
@@ -57,6 +61,40 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
 
   return (
     <form onSubmit={submit} className="space-y-5">
+      <div className="rounded-card border border-sand-100 bg-sand-50/40 p-4 md:p-5 space-y-4">
+        <div className="text-[11px] font-bold uppercase tracking-widest text-ink-mute">
+          {t('gr.form.identity.kicker')}
+        </div>
+        <Field
+          label={t('gr.form.patientName.label')}
+          hint={t('gr.form.patientName.hint')}
+        >
+          <input
+            type="text"
+            value={patientName}
+            onChange={(e) => setPatientName(e.target.value)}
+            placeholder={t('gr.form.patientName.placeholder')}
+            className="mz-input"
+            autoComplete="off"
+            maxLength={120}
+          />
+        </Field>
+        <Field
+          label={t('gr.form.relationship.label')}
+          hint={t('gr.form.relationship.hint')}
+        >
+          <input
+            type="text"
+            value={relationship}
+            onChange={(e) => setRelationship(e.target.value)}
+            placeholder={t('gr.form.relationship.placeholder')}
+            className="mz-input"
+            autoComplete="off"
+            maxLength={60}
+          />
+        </Field>
+      </div>
+
       <ExtractionDropzone onExtracted={handleExtracted} />
 
       <Field label={t('gr.form.diagnosis.label')} hint={t('gr.form.diagnosis.hint')}>

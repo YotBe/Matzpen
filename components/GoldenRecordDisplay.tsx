@@ -2,7 +2,6 @@
 
 import { PrintIcon } from '@/components/icons';
 import type { GoldenRecord } from '@/lib/types';
-import { MOCK_PATIENT_NAME } from '@/lib/constants';
 import { useT } from '@/lib/i18n/LocaleProvider';
 
 export function GoldenRecordDisplay({
@@ -28,8 +27,13 @@ export function GoldenRecordDisplay({
             {t('gr.docHeader')}
           </div>
           <h1 className="text-2xl md:text-3xl font-extrabold mt-1">
-            {MOCK_PATIENT_NAME}
+            {record.patientName?.trim() || t('gr.unnamedPatient')}
           </h1>
+          {record.relationship && (
+            <div className="text-xs text-ink-mute mt-1">
+              {t('gr.relationshipLine', { relationship: record.relationship })}
+            </div>
+          )}
           <div className="text-xs text-ink-mute mt-1">{t('gr.updated', { when: updated })}</div>
         </div>
         <div className="flex gap-2 mz-no-print">

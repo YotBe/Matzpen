@@ -100,6 +100,13 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'dashboard.title': 'דיווח מעקב יומי',
     'dashboard.subtitle':
       'המצפן של {{patient}} · המעקב היומי לוקח כדקה ועוזר לזהות סימני אזהרה מוקדמים.',
+    'dashboard.subtitleGeneric':
+      'המעקב היומי לוקח כדקה ועוזר לזהות סימני אזהרה מוקדמים.',
+    'dashboard.setup.kicker': 'בואו נתחיל',
+    'dashboard.setup.title': 'מי האדם שאתם מלווים?',
+    'dashboard.setup.body':
+      'הוסיפו שם וקשר בסיסי כדי שהמצפן יהיה אישי וגם כדי שלצוות המיון יהיה את המידע הדרוש ברגע האמת.',
+    'dashboard.setup.cta': 'מילוי פרטים בתיק הרפואי',
     'dashboard.valueProp':
       'מרכז ניהול משבר למשפחות — מעקב, חירום, תיק למיון וזכויות במקום אחד.',
     'dashboard.disclaimer':
@@ -268,6 +275,8 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.cancelEdit': 'ביטול ושמירת הגרסה הקיימת',
     'gr.docHeader': 'תיק רפואי למיון',
     'gr.updated': 'עודכן: {{when}}',
+    'gr.unnamedPatient': 'ללא שם',
+    'gr.relationshipLine': 'הקשר למלא/ה: {{relationship}}',
     'gr.section.diagnosis': 'אבחנה בסיסית',
     'gr.section.comorbidities': 'מחלות רקע',
     'gr.section.medications': 'רשימת תרופות נוכחית',
@@ -278,6 +287,15 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.empty': 'לא הוזן.',
     'gr.disclaimer':
       'מסמך זה הופק על ידי משפחת המטופל על מנת לספק רקע רפואי קריטי לצוות המיון ולשמור על רצף טיפולי, גם במקרים של התנגדות המטופל למסירת מידע.',
+    'gr.form.identity.kicker': 'פרטי המתמודד',
+    'gr.form.patientName.label': 'שם פרטי',
+    'gr.form.patientName.hint':
+      'השם שיופיע על מסמך המיון ובברכת הפתיחה במצפן. ניתן להזין רק שם פרטי כדי לשמור על פרטיות.',
+    'gr.form.patientName.placeholder': 'למשל: דורון',
+    'gr.form.relationship.label': 'הקשר אליכם',
+    'gr.form.relationship.hint':
+      'מי האדם עבורכם? עוזר למצפן ולעוזר ה־AI להתייחס בהקשר הנכון.',
+    'gr.form.relationship.placeholder': 'למשל: בני, אחותי, בן/בת זוגי, אמא',
     'gr.form.diagnosis.label': 'אבחנה בסיסית',
     'gr.form.diagnosis.hint': 'לדוגמה: Bipolar 1 Disorder.',
     'gr.form.comorbidities.label': 'מחלות רקע',
@@ -599,6 +617,13 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'dashboard.title': 'Daily check-in',
     'dashboard.subtitle':
       "{{patient}}'s compass · the daily log takes about a minute and helps surface early warning signs.",
+    'dashboard.subtitleGeneric':
+      'The daily log takes about a minute and helps surface early warning signs.',
+    'dashboard.setup.kicker': "Let's get started",
+    'dashboard.setup.title': 'Who are you caring for?',
+    'dashboard.setup.body':
+      'Add a name and your relationship so the Compass feels personal — and so the triage team has what they need when it matters.',
+    'dashboard.setup.cta': 'Fill in the medical record',
     'dashboard.valueProp':
       'A crisis-management home base for families — tracking, emergency, triage record, and rights in one place.',
     'dashboard.disclaimer':
@@ -771,6 +796,8 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.cancelEdit': 'Cancel and keep the current version',
     'gr.docHeader': 'Triage medical file',
     'gr.updated': 'Updated: {{when}}',
+    'gr.unnamedPatient': 'Unnamed',
+    'gr.relationshipLine': 'Caregiver relationship: {{relationship}}',
     'gr.section.diagnosis': 'Primary diagnosis',
     'gr.section.comorbidities': 'Comorbidities',
     'gr.section.medications': 'Current medications',
@@ -781,6 +808,15 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.empty': 'Not provided.',
     'gr.disclaimer':
       "This document was produced by the patient's family to provide critical medical context to the triage team and preserve continuity of care, even when the patient refuses to share information.",
+    'gr.form.identity.kicker': 'About the person',
+    'gr.form.patientName.label': 'First name',
+    'gr.form.patientName.hint':
+      "The name that appears on the triage record and in the Compass greeting. First name only is fine — keeps things private.",
+    'gr.form.patientName.placeholder': 'e.g., Doron',
+    'gr.form.relationship.label': 'Your relationship',
+    'gr.form.relationship.hint':
+      'Who is this person to you? Helps the Compass and the AI assistant talk in the right context.',
+    'gr.form.relationship.placeholder': 'e.g., my son, my sister, my partner, my mom',
     'gr.form.diagnosis.label': 'Primary diagnosis',
     'gr.form.diagnosis.hint': 'e.g. Bipolar 1 Disorder.',
     'gr.form.comorbidities.label': 'Comorbidities',

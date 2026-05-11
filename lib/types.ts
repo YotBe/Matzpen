@@ -64,6 +64,12 @@ export interface BureaucracyChecklist {
 export interface GoldenRecord {
   id?: string;
   patientId: string;
+  // The person being cared for. Optional because legacy rows predate this
+  // field — the UI prompts the caregiver to fill it on first visit.
+  patientName?: string;
+  // Free-text relationship of the caregiver to the patient (e.g. "בני",
+  // "אחותי", "בן זוגי"). Helps personalize AI responses.
+  relationship?: string;
   diagnosis: string;
   comorbidities: string;
   medications: string[];

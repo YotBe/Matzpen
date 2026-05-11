@@ -102,6 +102,8 @@ export async function saveGoldenRecord(
   const { error } = await db.from('golden_records').upsert(
     {
       patient_id: patientId,
+      patient_name: data.patientName?.trim() || null,
+      relationship: data.relationship?.trim() || null,
       diagnosis: data.diagnosis,
       comorbidities: data.comorbidities,
       medications: data.medications,
@@ -127,6 +129,8 @@ export async function getGoldenRecord(patientId: string): Promise<GoldenRecord |
   return {
     id: data.id,
     patientId: data.patient_id,
+    patientName: data.patient_name ?? undefined,
+    relationship: data.relationship ?? undefined,
     diagnosis: data.diagnosis ?? '',
     comorbidities: data.comorbidities ?? '',
     medications: data.medications ?? [],
