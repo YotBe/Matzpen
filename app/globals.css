@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    background-color: #f5efe6;
+    color: #2b241c;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer components {
+  .mz-card {
+    @apply bg-white rounded-card shadow-card;
+  }
+
+  .mz-tile {
+    @apply bg-white rounded-tile shadow-soft p-4;
+  }
+
+  .mz-pill {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-sand-100 text-ink-soft;
+  }
+
+  .mz-btn {
+    @apply inline-flex items-center justify-center gap-2 h-12 px-4 rounded-2xl font-semibold text-base bg-ink text-white transition-transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .mz-btn-ghost {
+    @apply bg-sand-100 text-ink;
+  }
+
+  .mz-btn-clay {
+    @apply bg-clay text-white;
+  }
+
+  .mz-btn-sage {
+    @apply bg-sage text-white;
+  }
+
+  .mz-btn-crimson {
+    @apply bg-crimson text-white;
+  }
+
+  .mz-btn-big {
+    @apply h-16 text-lg rounded-[18px];
+  }
+
+  .mz-section-title {
+    @apply text-xs font-semibold text-ink-mute uppercase tracking-wide pb-2 pt-1 px-1;
+  }
+
+  .mz-chip {
+    @apply inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-sand-100 text-ink text-sm font-medium cursor-pointer border-2 border-transparent transition-all;
+  }
+
+  .mz-chip-active {
+    @apply bg-white border-clay text-clay;
+  }
+
+  .mz-field-label {
+    @apply text-sm font-semibold text-ink-soft;
+  }
+
+  .mz-input {
+    @apply w-full rounded-2xl border border-sand-100 bg-white px-4 py-3 text-base text-ink placeholder:text-ink-mute focus:outline-none focus:ring-2 focus:ring-clay/40 focus:border-clay;
+  }
+
+  .mz-print-only {
+    @apply hidden;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .mz-no-print {
+    display: none !important;
+  }
+  .mz-print-only {
+    display: block !important;
+  }
+  .print-page {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+/* Hide native number-input spinners for a calmer feel */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Range slider styling for the Matzpen palette */
+input[type='range'] {
+  accent-color: #c4663d;
+  direction: ltr;
+}
