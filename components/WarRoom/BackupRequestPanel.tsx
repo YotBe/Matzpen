@@ -9,6 +9,11 @@ import {
   resolveBackupRequest,
 } from '@/services/warRoomService';
 import { track } from '@/lib/analytics';
+import {
+  dispatchPushNotification,
+  pushStatus,
+  subscribeToBackupPush,
+} from '@/lib/pushClient';
 import type { BackupRequest, EnvelopeMember } from '@/lib/types';
 
 interface Props {
@@ -73,6 +78,15 @@ export function BackupRequestPanel({ patientId, currentUserId, members }: Props)
     try {
       await createBackupRequest(patientId, message.trim() || null);
       track('backup_request_sent', { has_message: message.trim().length > 0 });
+      // Fire push to the rest of the envelope. Best-effort — the row is
+      // already in the DB and the realtime subscription will show it in
+      // any open tab. Push only matters for members with the app closed.
+      void dispatchPushNotification(patientId, {
+        title: t('push.sos.title'),
+        body: message.trim() || t('push.sos.fallbackBody'),
+        url: '/war-room',
+        tag: 'matzpen-sos',
+      });
       setMessage('');
       setConfirming(false);
     } catch (err) {
@@ -196,6 +210,50 @@ export function BackupRequestPanel({ patientId, currentUserId, members }: Props)
       <p className="text-xs text-ink-mute mt-3 leading-relaxed">
         {t('warRoom.backup.disclaimer')}
       </p>
+
+      <PushOptIn patientId={patientId} />
     </section>
+  );
+}
+
+function PushOptIn({ patientId }: { patientId: string }) {
+  const { t } = useT();
+  const [status, setStatus] = useState<ReturnType<typeof pushStatus>>('unsupported');
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    setStatus(pushStatus());
+  }, []);
+
+  if (status === 'unsupported' || status === 'unconfigured' || status === 'granted') {
+    return null;
+  }
+
+  async function enable() {
+    setBusy(true);
+    try {
+      const ok = await subscribeToBackupPush(patientId);
+      if (ok) setStatus('granted');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="mt-3 rounded-xl bg-sand-50 border border-sand-100 px-3 py-2 flex items-center justify-between gap-3">
+      <p className="text-xs text-ink-soft leading-relaxed">
+        {status === 'denied' ? t('push.optIn.denied') : t('push.optIn.body')}
+      </p>
+      {status !== 'denied' && (
+        <button
+          type="button"
+          onClick={enable}
+          disabled={busy}
+          className="mz-btn mz-btn-clay h-8 px-3 text-xs whitespace-nowrap"
+        >
+          {t('push.optIn.cta')}
+        </button>
+      )}
+    </div>
   );
 }

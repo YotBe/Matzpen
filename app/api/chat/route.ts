@@ -240,7 +240,7 @@ export async function POST(req: Request) {
   const auth = await authenticateRequest(req);
   if (!auth) return jsonError('Unauthorized', 401);
 
-  const rl = rateLimit({
+  const rl = await rateLimit({
     key: callerKey(req, auth.user.id),
     limit: CHAT_LIMIT,
     windowMs: CHAT_WINDOW_MS,

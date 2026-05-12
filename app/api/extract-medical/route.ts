@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const rl = rateLimit({
+  const rl = await rateLimit({
     key: callerKey(req, auth.user.id),
     limit: EXTRACT_LIMIT,
     windowMs: EXTRACT_WINDOW_MS,

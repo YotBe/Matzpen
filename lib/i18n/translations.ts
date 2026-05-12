@@ -949,6 +949,13 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'warRoom.backup.resolve': 'טופל',
     'warRoom.backup.disclaimer':
       'הבקשה גלויה רק לבני המעטפת. היא לא מתחלפת לשירות חירום — להוזעה דחופה חייגו 101/100.',
+    'push.sos.title': '⚡ בקשת חילוץ במצפן',
+    'push.sos.fallbackBody': 'בני משפחה זקוקים לעזרה כרגע. פתח את חדר המבצעים.',
+    'push.optIn.body':
+      'הפעלת התראות דחיפה תאפשר לכם לקבל סימן גם כשהאפליקציה סגורה. מומלץ למי שאחראי/ת על המעטפת.',
+    'push.optIn.cta': 'הפעלת התראות',
+    'push.optIn.denied':
+      'התראות חסומות לדפדפן הזה. כדי להפעיל — עברו להגדרות האתר ואפשרו "Notifications".',
 
     'warRoom.envelope.heading': 'המעטפת — מי איתי',
     'warRoom.envelope.intro':
@@ -2144,6 +2151,13 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'warRoom.backup.resolve': 'Resolved',
     'warRoom.backup.disclaimer':
       'Visible only to envelope members. Not a substitute for emergency services — for immediate danger call 101/100.',
+    'push.sos.title': '⚡ Matzpen backup request',
+    'push.sos.fallbackBody': 'Family member needs help now. Open the war room.',
+    'push.optIn.body':
+      'Enable push so you receive alerts even when the app is closed. Recommended for envelope owners.',
+    'push.optIn.cta': 'Enable notifications',
+    'push.optIn.denied':
+      'Notifications are blocked for this browser. Open site settings and allow "Notifications" to enable.',
 
     'warRoom.envelope.heading': 'The envelope — who is with me',
     'warRoom.envelope.intro':
