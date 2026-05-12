@@ -112,6 +112,11 @@ export async function saveGoldenRecord(
       allergies: data.allergies,
       risk_vectors: data.riskVectors,
       contacts: data.contacts,
+      discharge_date: data.dischargeDate || null,
+      next_refill_date: data.nextRefillDate || null,
+      when_well_loves: data.whenWellLoves?.trim() || null,
+      when_well_calms: data.whenWellCalms?.trim() || null,
+      when_well_never_say: data.whenWellNeverSay?.trim() || null,
       updated_at: new Date().toISOString(),
     },
     { onConflict: 'patient_id' },
@@ -141,6 +146,88 @@ export async function getGoldenRecord(patientId: string): Promise<GoldenRecord |
     allergies: data.allergies ?? '',
     riskVectors: data.risk_vectors ?? '',
     contacts: data.contacts ?? '',
+    dischargeDate: data.discharge_date ?? undefined,
+    nextRefillDate: data.next_refill_date ?? undefined,
+    whenWellLoves: data.when_well_loves ?? undefined,
+    whenWellCalms: data.when_well_calms ?? undefined,
+    whenWellNeverSay: data.when_well_never_say ?? undefined,
     updatedAt: new Date(data.updated_at).getTime(),
+  };
+}
+
+// ── Share tokens ────────────────────────────────────────────────────────────
+//
+// Time-bound, read-only links to a caregiver's golden record. Used by ER
+// staff and outpatient psychiatrists who don't have a Matzpen login. The
+// /share/[token] page reads via a SECURITY DEFINER RPC so the anon role
+// never gets direct table access.
+
+export interface ShareToken {
+  token: string;
+  patientId: string;
+  expiresAt: number;
+  revokedAt: number | null;
+  createdAt: number;
+}
+
+function randomToken(len = 24): string {
+  const bytes = new Uint8Array(len);
+  crypto.getRandomValues(bytes);
+  // URL-safe base64 without padding.
+  return btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+export async function createShareToken(
+  patientId: string,
+  ttlHours: number,
+): Promise<ShareToken> {
+  const db = requireClient();
+  const token = randomToken();
+  const expiresAt = new Date(Date.now() + ttlHours * 60 * 60 * 1000).toISOString();
+  const { data, error } = await db
+    .from('share_tokens')
+    .insert({ token, patient_id: patientId, expires_at: expiresAt })
+    .select()
+    .single();
+  if (error) throw error;
+  return mapToken(data);
+}
+
+export async function listShareTokens(patientId: string): Promise<ShareToken[]> {
+  const db = requireClient();
+  const { data, error } = await db
+    .from('share_tokens')
+    .select('*')
+    .eq('patient_id', patientId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map(mapToken);
+}
+
+export async function revokeShareToken(token: string): Promise<void> {
+  const db = requireClient();
+  const { error } = await db
+    .from('share_tokens')
+    .update({ revoked_at: new Date().toISOString() })
+    .eq('token', token);
+  if (error) throw error;
+}
+
+function mapToken(row: {
+  token: string;
+  patient_id: string;
+  expires_at: string;
+  revoked_at: string | null;
+  created_at: string;
+}): ShareToken {
+  return {
+    token: row.token,
+    patientId: row.patient_id,
+    expiresAt: new Date(row.expires_at).getTime(),
+    revokedAt: row.revoked_at ? new Date(row.revoked_at).getTime() : null,
+    createdAt: new Date(row.created_at).getTime(),
   };
 }

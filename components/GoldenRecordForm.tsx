@@ -30,6 +30,11 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
   const [allergies, setAllergies] = useState(initial?.allergies ?? '');
   const [riskVectors, setRiskVectors] = useState(initial?.riskVectors ?? '');
   const [contacts, setContacts] = useState(initial?.contacts ?? '');
+  const [dischargeDate, setDischargeDate] = useState(initial?.dischargeDate ?? '');
+  const [nextRefillDate, setNextRefillDate] = useState(initial?.nextRefillDate ?? '');
+  const [whenWellLoves, setWhenWellLoves] = useState(initial?.whenWellLoves ?? '');
+  const [whenWellCalms, setWhenWellCalms] = useState(initial?.whenWellCalms ?? '');
+  const [whenWellNeverSay, setWhenWellNeverSay] = useState(initial?.whenWellNeverSay ?? '');
   const [busy, setBusy] = useState(false);
 
   const handleExtracted = useCallback(
@@ -61,6 +66,11 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
         allergies,
         riskVectors,
         contacts,
+        dischargeDate: dischargeDate || undefined,
+        nextRefillDate: nextRefillDate || undefined,
+        whenWellLoves: whenWellLoves.trim() || undefined,
+        whenWellCalms: whenWellCalms.trim() || undefined,
+        whenWellNeverSay: whenWellNeverSay.trim() || undefined,
       });
     } finally {
       setBusy(false);
@@ -182,6 +192,74 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
           className="mz-input resize-none"
         />
       </Field>
+
+      <div className="rounded-card border border-sand-100 bg-sand-50/40 p-4 md:p-5 space-y-4">
+        <div className="text-[11px] font-bold uppercase tracking-widest text-ink-mute">
+          {t('gr.form.dates.kicker')}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Field
+            label={t('gr.form.dischargeDate.label')}
+            hint={t('gr.form.dischargeDate.hint')}
+          >
+            <input
+              type="date"
+              value={dischargeDate}
+              onChange={(e) => setDischargeDate(e.target.value)}
+              className="mz-input"
+            />
+          </Field>
+          <Field
+            label={t('gr.form.nextRefillDate.label')}
+            hint={t('gr.form.nextRefillDate.hint')}
+          >
+            <input
+              type="date"
+              value={nextRefillDate}
+              onChange={(e) => setNextRefillDate(e.target.value)}
+              className="mz-input"
+            />
+          </Field>
+        </div>
+      </div>
+
+      <div className="rounded-card border border-sand-100 bg-sand-50/40 p-4 md:p-5 space-y-4">
+        <div>
+          <div className="text-[11px] font-bold uppercase tracking-widest text-ink-mute">
+            {t('whenWell.kicker')}
+          </div>
+          <p className="text-xs text-ink-mute mt-1 leading-relaxed">
+            {t('whenWell.intro')}
+          </p>
+        </div>
+        <Field label={t('whenWell.loves.label')} hint={t('whenWell.loves.hint')}>
+          <textarea
+            rows={2}
+            value={whenWellLoves}
+            onChange={(e) => setWhenWellLoves(e.target.value)}
+            className="mz-input resize-none"
+            placeholder={t('whenWell.loves.placeholder')}
+          />
+        </Field>
+        <Field label={t('whenWell.calms.label')} hint={t('whenWell.calms.hint')}>
+          <textarea
+            rows={2}
+            value={whenWellCalms}
+            onChange={(e) => setWhenWellCalms(e.target.value)}
+            className="mz-input resize-none"
+            placeholder={t('whenWell.calms.placeholder')}
+          />
+        </Field>
+        <Field label={t('whenWell.neverSay.label')} hint={t('whenWell.neverSay.hint')}>
+          <textarea
+            rows={2}
+            value={whenWellNeverSay}
+            onChange={(e) => setWhenWellNeverSay(e.target.value)}
+            className="mz-input resize-none"
+            placeholder={t('whenWell.neverSay.placeholder')}
+          />
+        </Field>
+      </div>
 
       <button type="submit" disabled={busy} className="mz-btn mz-btn-clay w-full">
         {busy ? t('common.saving') : t('gr.form.submit')}

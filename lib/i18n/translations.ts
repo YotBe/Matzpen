@@ -44,6 +44,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
 
     // Emergency shortcuts
     'emergency.shortcutsTitle': 'יודעים מה צריך? עברו ישר',
+    'emergency.safetyLink': 'מדריך הגבלת אמצעים בבית →',
     'emergency.shortcut.violence': 'סכנה מיידית או אלימות',
     'emergency.shortcut.violenceHint': 'משטרה — חיוג 100',
     'emergency.shortcut.suicide': 'אובדנות / סכנה לעצמו',
@@ -718,6 +719,165 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'cases.trigger.postpartum': 'לאחר לידה',
     'cases.trigger.unknown': 'לא ידוע',
 
+    // ── Trend chart ────────────────────────────────────────────────────────
+    'trend.kicker': 'מגמת השבועיים האחרונים',
+    'trend.title': 'שינה, מצב רגשי ותרופות · {{days}} ימים',
+    'trend.empty': 'אין מספיק דיווחים יומיים כדי להציג מגמה. דווחו לכמה ימים והגרף יופיע כאן.',
+    'trend.legend.sleep': 'שינה',
+    'trend.legend.missed': 'תרופות שדולגו',
+    'trend.today': 'היום',
+
+    // ── Refill banner ──────────────────────────────────────────────────────
+    'refill.kicker': 'תזכורת תרופות',
+    'refill.overdue': 'מועד החידוש היה ב־{{date}} ({{n}} ימים אחורה). הפסקת תרופות אצור היא טריגר ידוע — צרו קשר עם הרוקח/ת או הפסיכיאטר/ית כעת.',
+    'refill.dueToday': 'מועד חידוש המרשם הוא היום ({{date}}).',
+    'refill.upcoming': 'מועד חידוש המרשם הוא ב־{{date}} (בעוד {{n}} ימים).',
+    'refill.updateCta': 'עדכון מועד',
+
+    // ── Post-discharge timeline ────────────────────────────────────────────
+    'postDischarge.kicker': '30 הימים שאחרי',
+    'postDischarge.title': 'מסלול שיקום ראשוני',
+    'postDischarge.intro':
+      'החודש הראשון אחרי אשפוז הוא תקופת הסיכון הגבוהה ביותר לאשפוז חוזר. הצ׳קליסט מסודר לפי שלבים — סמנו את מה שכבר נעשה.',
+    'postDischarge.bannerBody': 'יום {{day}} אחרי השחרור — בדקו את המשימות לתקופה הזאת.',
+    'postDischarge.bannerCta': 'פתח מסלול',
+    'postDischarge.dischargeOn': 'תאריך שחרור: {{date}}',
+    'postDischarge.dayLabel': 'יום {{day}}',
+    'postDischarge.progress': '{{done}} מתוך {{total}} הושלמו',
+    'postDischarge.currentPhase': 'שלב נוכחי',
+    'postDischarge.pastPhase': 'הסתיים',
+    'postDischarge.disclaimer':
+      'הצ׳קליסט אינו תחליף להוראות שחרור רפואיות. תמיד הולכים לפי ההמלצות של הצוות המטפל. הוא נועד לעזור לזכור מה לשאול ולמתי לתאם.',
+    'postDischarge.noDate.title': 'אין תאריך שחרור שמור',
+    'postDischarge.noDate.body':
+      'הוסיפו את תאריך השחרור בתיק הרפואי כדי לקבל מסלול מותאם לימים שעברו מאז.',
+    'postDischarge.noDate.cta': 'עדכון בתיק הרפואי',
+    'postDischarge.phase.day0.title': 'יום 0–2',
+    'postDischarge.phase.day0.intent': 'יציאה בטוחה הביתה',
+    'postDischarge.phase.day3.title': 'יום 3–6',
+    'postDischarge.phase.day3.intent': 'בניית שגרה',
+    'postDischarge.phase.day7.title': 'יום 7–13',
+    'postDischarge.phase.day7.intent': 'מעקב ראשון בקהילה',
+    'postDischarge.phase.day14.title': 'יום 14–20',
+    'postDischarge.phase.day14.intent': 'חידוש מרשמים וביקור שני',
+    'postDischarge.phase.day21.title': 'יום 21–29',
+    'postDischarge.phase.day21.intent': 'חזרה הדרגתית לתפקוד',
+    'postDischarge.phase.day30.title': 'יום 30+',
+    'postDischarge.phase.day30.intent': 'סיכום ראשון ותכנון המשך',
+    'postDischarge.item.dischargeSummary': 'איסוף סיכום שחרור (מודפס + דיגיטלי).',
+    'postDischarge.item.meds7day': 'ודאו אספקת תרופות ל־7 ימים הראשונים.',
+    'postDischarge.item.bookNextAppt': 'תיאום ביקור מעקב ראשון (פסיכיאטר/ית בקהילה) תוך 7 ימים.',
+    'postDischarge.item.homeSafety': 'מעבר על הבית — הוצאת אמצעים מסכנים.',
+    'postDischarge.item.homeSafetyHint': 'תרופות במנעול, אקדח/סכין מחוץ לבית, אלכוהול בכמות מוגבלת.',
+    'postDischarge.item.followUpConfirmed': 'אישור הביקור אצל הפסיכיאטר/ית בטלפון.',
+    'postDischarge.item.familyRoutine': 'הקצאת תפקידים במשפחה (מי נוסע לביקור, מי דואג לתרופות).',
+    'postDischarge.item.sleepLogged': 'הדיווח היומי במצפן רץ במשך 3 ימים רצופים.',
+    'postDischarge.item.firstOutpatient': 'הביקור הראשון בקהילה התקיים.',
+    'postDischarge.item.escalationScript': 'אם הביקור לא התקיים — הפעלת תסריט ההסלמה.',
+    'postDischarge.item.escalationScriptHint':
+      'תקשרו לפסיכיאטר המחוזי, וציינו: "שוחרר ביום X ולא נקבע מעקב". הוא יסייע לתאם תור דחוף.',
+    'postDischarge.item.sideEffects': 'תיעוד תופעות לוואי מהתרופות החדשות.',
+    'postDischarge.item.refillScheduled': 'תאריך חידוש המרשם הבא נקבע ועודכן במצפן.',
+    'postDischarge.item.secondVisit': 'תיאום ביקור מעקב שני (יום 21–30).',
+    'postDischarge.item.communityReengage': 'חזרה הדרגתית למוקדי תמיכה (קבוצה, מועדון).',
+    'postDischarge.item.sickLeave': 'הגשת אישורי מחלה למקום העבודה / לימודים.',
+    'postDischarge.item.insuranceClaim': 'פתיחת תיק בביטוח לאומי אם רלוונטי (טופס 7801).',
+    'postDischarge.item.returnPlan': 'תכנון חזרה הדרגתית לעבודה / לימודים עם הצוות המטפל.',
+    'postDischarge.item.threeMonthReview': 'תיאום ביקור סיכום ב־3 חודשים.',
+    'postDischarge.item.familyDebrief': 'שיחת משפחה: מה עבד, מה היינו עושים אחרת.',
+    'postDischarge.item.warningSignsUpdated': 'עדכון סימני האזהרה האישיים בתיק.',
+
+    // ── Safety / lethal means ──────────────────────────────────────────────
+    'safety.kicker': 'בטיחות בבית',
+    'safety.title': 'הגבלת גישה לאמצעים מסכנים',
+    'safety.intro':
+      'במצבי משבר, צמצום הגישה לאמצעים שעלולים לשמש לפגיעה עצמית הוא הצעד המוכח ביותר במניעת אובדנות. השיחה לא קלה — וזה בסדר. הדף הזה מסביר מה לעשות, ואיך לדבר על זה בלי להפיל את האמון.',
+    'safety.why.title': 'למה זה עובד',
+    'safety.why.body':
+      'מחקרים עקביים מראים שצמצום נגישות לאמצעים קטלניים מוריד תמותה — גם בלי טיפול נוסף. מצבי אובדנות לרוב חולפים תוך שעות; אם האמצעי לא בהישג יד באותו רגע, רוב האנשים שורדים.',
+    'safety.scriptLabel': 'מה אפשר לומר',
+    'safety.item.meds': 'תרופות',
+    'safety.item.medsBody':
+      'אחסנו את כל התרופות (כולל משככי כאבים, שינה, ואנטי־דיכאון) בארון נעול. רק מבוגר אחד מחזיק את המפתח. הוציאו תרופות ישנות / לא בשימוש מהבית.',
+    'safety.item.medsScript':
+      'אני שם את התרופות בארון נעול לחודש הקרוב — לא כי אני לא סומך/ת, אלא כי בזמן משבר זה כלל יסוד. אעזור לך לקחת אותן בכל בוקר.',
+    'safety.item.firearms': 'נשק חם',
+    'safety.item.firearmsBody':
+      'אם יש נשק בבית — הוציאו אותו לאחסון אצל קרוב/ה, שכן/ה אחראי/ת, או בתחנת המשטרה. בעלי רישיון יכולים לבקש "החזקה זמנית" אצל ספק רישיונות. אם הוצאה אינה אפשרית מיידית — נעלו במנעול שונה מהתחמושת.',
+    'safety.item.firearmsScript':
+      'הנשק שלך יישאר אצל [שם] לכמה שבועות. ברגע שתחזור/י לעצמך נחזיר אותו. אני רוצה שתישאר/י בטוח/ה.',
+    'safety.item.sharps': 'סכינים וחפצים חדים',
+    'safety.item.sharpsBody':
+      'במצב אובדנות חריף — הוציאו סכינים גדולים, סכיני גילוח, וחבלים ארוכים מתחום הגישה. לא חייבים לעשות "בית סטרילי" — רק להעביר את החפצים הספציפיים שצוינו על־ידי הצוות המטפל.',
+    'safety.item.car': 'רכב ומפתחות',
+    'safety.item.carBody':
+      'אם המתמודד/ת נוהג/ת בזמן אפיזודה לא יציבה — שמרו את המפתחות בארון נעול או החזיקו אותם איתכם. נסיעה מסוכנת היא טריגר לאירועים פיזיים.',
+    'safety.item.disposal': 'השלכת תרופות עודפות',
+    'safety.item.disposalBody':
+      'בתי המרקחת בקופות החולים מקבלים תרופות לא בשימוש להשמדה. אל תזרקו לזבל ביתי או לאסלה. הוצאת תרופות מיותרות מהבית מורידה סיכון במידה משמעותית.',
+    'safety.crisis.title': 'אם הסיכון נראה מיידי',
+    'safety.crisis.body':
+      'אם המתמודד/ת אמר/ה משהו על פגיעה עצמית, אובדנות, או אם מצאתם תיק עם תרופות / סכין מוסתרים — אל תחכו. חייגו 101.',
+    'safety.crisis.callMDA': 'חייגו 101 (מד״א)',
+    'safety.crisis.callEran': 'חייגו 1201 (ער״ן)',
+    'safety.crisis.openEmergency': 'פתח מצב חירום',
+    'safety.disclaimer':
+      'הדף הזה מבוסס על המלצות פתוחות בתחום מניעת אובדנות (Means Matter, משרד הבריאות). הוא אינו ייעוץ קליני. אם יש סיכון מיידי — חיוג 101 קודם לכל.',
+
+    // ── "Who is my person when well" ───────────────────────────────────────
+    'whenWell.kicker': 'מי זה המתמודד/ת כשהוא/היא בריא/ה',
+    'whenWell.heading': 'מי הוא/היא כשהוא/היא בריא/ה',
+    'whenWell.intro':
+      'מסמך קצר שעוזר לצוות במיון או לפסיכיאטר/ית חדש/ה לראות אדם, לא רק תיק. ממלאים פעם אחת, מדפיסים, נוטלים איתכם.',
+    'whenWell.loves.label': 'מה הוא/היא אוהב/ת',
+    'whenWell.loves.hint': 'מוזיקה, אוכל, אנשים, מקומות — דברים שמרגיעים ומחברים.',
+    'whenWell.loves.placeholder': 'לדוגמה: ארץ נהדרת, כלבים, פלאפל, סבתא',
+    'whenWell.calms.label': 'מה מרגיע',
+    'whenWell.calms.hint': 'דברים שעוזרים במצב מתח — מוזיקה, שתיקה, להחזיק יד.',
+    'whenWell.calms.placeholder': 'לדוגמה: לשמוע מוזיקה שקטה, לצאת לאוויר, חיבוק',
+    'whenWell.neverSay.label': 'מה לעולם לא להגיד',
+    'whenWell.neverSay.hint': 'משפטים או נושאים שמסלימים מצב — חשוב לצוות המיון לדעת.',
+    'whenWell.neverSay.placeholder': 'לדוגמה: "תירגע!", "אתה מגזים", להזכיר את האקס',
+
+    // ── Golden record: dates + refill section ──────────────────────────────
+    'gr.form.dates.kicker': 'תאריכים קליניים (אופציונלי)',
+    'gr.form.dischargeDate.label': 'תאריך שחרור אחרון',
+    'gr.form.dischargeDate.hint': 'משמש לתכנון מסלול 30 הימים שאחרי האשפוז.',
+    'gr.form.nextRefillDate.label': 'תאריך חידוש מרשם הבא',
+    'gr.form.nextRefillDate.hint': 'תזכורת תופיע בלוח הראשי 3 ימים לפני.',
+
+    // ── Share manager + share viewer ───────────────────────────────────────
+    'share.title': 'שיתוף עם צוות מטפל',
+    'share.kicker': 'קישור שיתוף זמני',
+    'share.intro':
+      'יצירת קישור לקריאה־בלבד של הרשומה הרפואית. שלחו אותו לפסיכיאטר/ית או הראו במיון. הקישור פג אוטומטית במועד שתבחרו, וניתן לבטל ידנית בכל עת.',
+    'share.ttlLabel': 'תוקף',
+    'share.ttl.24h': '24 שעות',
+    'share.ttl.7d': '7 ימים',
+    'share.ttl.30d': '30 ימים',
+    'share.createCta': 'צור קישור',
+    'share.copy': 'העתקה',
+    'share.copied': 'הועתק ✓',
+    'share.revoke': 'ביטול',
+    'share.expiresAt': 'פג ב־{{when}}',
+    'share.disclaimer':
+      'מי שיש לו את הקישור יכול לקרוא את הרשומה. שלחו רק לכתובות אמינות (פסיכיאטר/ית, חדר מיון) ובטלו את הקישור כשלא צריך יותר.',
+    'share.notConfigured': 'אי אפשר ליצור קישור — Supabase אינו מוגדר.',
+    'share.viewer.kicker': 'רשומה רפואית — לעיון',
+    'share.viewer.unnamed': 'מתמודד/ת',
+    'share.viewer.relationship': 'מטפל/ת ראשי/ת: {{rel}}',
+    'share.viewer.updated': 'עודכן: {{when}}',
+    'share.viewer.dischargeDate': 'תאריך שחרור אחרון',
+    'share.viewer.empty': '—',
+    'share.viewer.loading': 'טוען רשומה…',
+    'share.viewer.expiredTitle': 'הקישור אינו תקף',
+    'share.viewer.expiredBody':
+      'הקישור פג, בוטל, או אינו קיים. בקשו מהמשפחה ליצור קישור חדש.',
+    'share.viewer.errorTitle': 'שגיאה בטעינת הרשומה',
+    'share.viewer.notConfigured': 'השירות אינו מוגדר.',
+    'share.viewer.disclaimer':
+      'הרשומה מוצגת לעיון בלבד. אינה תחליף לתיק רפואי מלא ואינה מתועדכת בזמן אמת.',
+
     // ── Privacy ────────────────────────────────────────────────────────────
     'privacy.kicker': 'שקיפות ואמון',
     'privacy.title': 'פרטיות ואבטחת מידע',
@@ -771,6 +931,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       'The "Triage record" holds the medical information an ER team needs. "Rights & paperwork" tracks your progress with National Insurance and the rehab basket.',
 
     'emergency.shortcutsTitle': 'Know what you need? Skip ahead',
+    'emergency.safetyLink': 'Lethal-means restriction guide →',
     'emergency.shortcut.violence': 'Immediate danger or violence',
     'emergency.shortcut.violenceHint': 'Police — dial 100',
     'emergency.shortcut.suicide': 'Suicidality / danger to self',
@@ -1436,6 +1597,161 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'cases.trigger.major_life_event': 'Major life event',
     'cases.trigger.postpartum': 'Postpartum',
     'cases.trigger.unknown': 'Unknown',
+
+    'trend.kicker': 'Last two weeks',
+    'trend.title': 'Sleep, mood, meds · {{days}} days',
+    'trend.empty': "Not enough daily logs to draw a trend yet. Log for a few days and the chart will appear here.",
+    'trend.legend.sleep': 'Sleep',
+    'trend.legend.missed': 'Missed meds',
+    'trend.today': 'Today',
+
+    'refill.kicker': 'Refill reminder',
+    'refill.overdue':
+      'Refill date was {{date}} ({{n}} days ago). Sudden discontinuation is a known relapse trigger — call the pharmacist or psychiatrist now.',
+    'refill.dueToday': 'Refill is due today ({{date}}).',
+    'refill.upcoming': 'Refill is due on {{date}} (in {{n}} days).',
+    'refill.updateCta': 'Update date',
+
+    'postDischarge.kicker': 'First 30 days',
+    'postDischarge.title': 'Post-discharge timeline',
+    'postDischarge.intro':
+      'The first month after admission carries the highest re-admit risk. The checklist is organized by phase — check off what is already done.',
+    'postDischarge.bannerBody': 'Day {{day}} after discharge — check the tasks for this phase.',
+    'postDischarge.bannerCta': 'Open timeline',
+    'postDischarge.dischargeOn': 'Discharge date: {{date}}',
+    'postDischarge.dayLabel': 'Day {{day}}',
+    'postDischarge.progress': '{{done}} of {{total}} done',
+    'postDischarge.currentPhase': 'Current phase',
+    'postDischarge.pastPhase': 'Complete',
+    'postDischarge.disclaimer':
+      'This checklist does not replace your discharge instructions. Follow the treating team. It is a memory aid for what to ask and when to schedule.',
+    'postDischarge.noDate.title': 'No discharge date saved',
+    'postDischarge.noDate.body':
+      'Add the discharge date to the medical record to get a timeline anchored to the days since.',
+    'postDischarge.noDate.cta': 'Update medical record',
+    'postDischarge.phase.day0.title': 'Day 0–2',
+    'postDischarge.phase.day0.intent': 'A safe arrival home',
+    'postDischarge.phase.day3.title': 'Day 3–6',
+    'postDischarge.phase.day3.intent': 'Building routine',
+    'postDischarge.phase.day7.title': 'Day 7–13',
+    'postDischarge.phase.day7.intent': 'First outpatient visit',
+    'postDischarge.phase.day14.title': 'Day 14–20',
+    'postDischarge.phase.day14.intent': 'Refills and second visit',
+    'postDischarge.phase.day21.title': 'Day 21–29',
+    'postDischarge.phase.day21.intent': 'Gradual return to function',
+    'postDischarge.phase.day30.title': 'Day 30+',
+    'postDischarge.phase.day30.intent': 'Wrap-up and next plan',
+    'postDischarge.item.dischargeSummary': 'Collect discharge summary (printed + digital).',
+    'postDischarge.item.meds7day': 'Verify 7-day medication supply at home.',
+    'postDischarge.item.bookNextAppt': 'Book first follow-up (community psychiatrist) within 7 days.',
+    'postDischarge.item.homeSafety': 'Walk through the home — remove dangerous items.',
+    'postDischarge.item.homeSafetyHint':
+      'Meds locked, firearm out of the home, alcohol limited.',
+    'postDischarge.item.followUpConfirmed': 'Confirm the psychiatrist appointment by phone.',
+    'postDischarge.item.familyRoutine':
+      'Assign family roles (who drives to the appointment, who handles meds).',
+    'postDischarge.item.sleepLogged': 'Daily log in Matzpen for 3 consecutive days.',
+    'postDischarge.item.firstOutpatient': 'First outpatient visit happened.',
+    'postDischarge.item.escalationScript': "If the visit didn't happen — run the escalation script.",
+    'postDischarge.item.escalationScriptHint':
+      'Call the district psychiatrist. Say: "discharged on X, no follow-up booked." They will help arrange an urgent slot.',
+    'postDischarge.item.sideEffects': 'Log side effects from any new medication.',
+    'postDischarge.item.refillScheduled': "Next refill date set and updated in Matzpen.",
+    'postDischarge.item.secondVisit': 'Book second follow-up (day 21–30).',
+    'postDischarge.item.communityReengage': 'Gradual return to support groups / clubs.',
+    'postDischarge.item.sickLeave': 'Submit sick-leave paperwork to employer / school.',
+    'postDischarge.item.insuranceClaim':
+      'Open a National Insurance file if relevant (form 7801).',
+    'postDischarge.item.returnPlan': 'Plan a gradual return to work / studies with the treating team.',
+    'postDischarge.item.threeMonthReview': 'Book a 3-month review.',
+    'postDischarge.item.familyDebrief': 'Family debrief: what worked, what we would do differently.',
+    'postDischarge.item.warningSignsUpdated': 'Update personal warning signs in the record.',
+
+    'safety.kicker': 'Home safety',
+    'safety.title': 'Restricting access to lethal means',
+    'safety.intro':
+      'In crisis, reducing access to items that could be used for self-harm is the single most-proven suicide-prevention action. The conversation is hard — and that is OK. This page covers what to do and how to talk about it without losing trust.',
+    'safety.why.title': 'Why this works',
+    'safety.why.body':
+      'Consistent research shows that reducing access to lethal means lowers mortality — even without additional treatment. Suicidal moments usually pass within hours; if the means are not at hand at that moment, most people survive.',
+    'safety.scriptLabel': 'What you can say',
+    'safety.item.meds': 'Medications',
+    'safety.item.medsBody':
+      'Store all medication (including pain-killers, sleep aids, antidepressants) in a locked cabinet. Only one adult holds the key. Take old / unused meds out of the home.',
+    'safety.item.medsScript':
+      "I'm putting the meds in a locked cabinet for the next month — not because I don't trust you, but because in a crisis this is basic. I will help you take them every morning.",
+    'safety.item.firearms': 'Firearms',
+    'safety.item.firearmsBody':
+      'If there is a firearm in the home — store it with a relative, a responsible neighbor, or at the police station. License holders can request temporary storage with their licensing provider. If immediate removal is not possible — lock with a different lock from the ammunition.',
+    'safety.item.firearmsScript':
+      "Your firearm will stay with [name] for a few weeks. As soon as you are back to yourself we will bring it back. I want you to be safe.",
+    'safety.item.sharps': 'Knives and sharp objects',
+    'safety.item.sharpsBody':
+      'During acute suicidality — remove large knives, razor blades, and long cords from immediate reach. You do not need a "sterile home" — just move the specific items the treating team flagged.',
+    'safety.item.car': 'Car and keys',
+    'safety.item.carBody':
+      'If your loved one drives during an unstable episode — keep keys in a locked drawer or on you. Unsafe driving is a real-world trigger.',
+    'safety.item.disposal': 'Disposing of leftover medication',
+    'safety.item.disposalBody':
+      'Pharmacies at the HMOs accept unused medication for safe disposal. Do not throw in household trash or down the toilet. Removing surplus meds materially lowers risk.',
+    'safety.crisis.title': 'If risk appears immediate',
+    'safety.crisis.body':
+      "If your loved one mentioned self-harm or suicide, or you found hidden meds or a knife — don't wait. Call 101.",
+    'safety.crisis.callMDA': 'Call 101 (MDA)',
+    'safety.crisis.callEran': 'Call 1201 (ERAN)',
+    'safety.crisis.openEmergency': 'Open emergency',
+    'safety.disclaimer':
+      'This page is based on open suicide-prevention guidance (Means Matter, Israeli Ministry of Health). Not clinical advice. If risk is immediate — calling 101 comes first.',
+
+    'whenWell.kicker': "When they're well — who is my person",
+    'whenWell.heading': "Who they are when they're well",
+    'whenWell.intro':
+      'A short document so the ER team or a new psychiatrist sees a person, not just a chart. Fill in once, print, take with you.',
+    'whenWell.loves.label': 'What they love',
+    'whenWell.loves.hint': 'Music, food, people, places — anything that calms or connects.',
+    'whenWell.loves.placeholder': 'e.g. dogs, falafel, my grandmother, jazz',
+    'whenWell.calms.label': 'What helps calm them',
+    'whenWell.calms.hint': 'Things that help in tense moments — music, silence, holding a hand.',
+    'whenWell.calms.placeholder': 'e.g. quiet music, going outside, a hug',
+    'whenWell.neverSay.label': "What NEVER to say",
+    'whenWell.neverSay.hint': 'Phrases or topics that escalate — important for ER staff.',
+    'whenWell.neverSay.placeholder': 'e.g. "calm down!", "you\'re exaggerating", mention the ex',
+
+    'gr.form.dates.kicker': 'Clinical dates (optional)',
+    'gr.form.dischargeDate.label': 'Last discharge date',
+    'gr.form.dischargeDate.hint': 'Anchors the post-discharge 30-day timeline.',
+    'gr.form.nextRefillDate.label': 'Next refill date',
+    'gr.form.nextRefillDate.hint': 'A reminder appears on the dashboard 3 days before.',
+
+    'share.title': 'Share with the treating team',
+    'share.kicker': 'Temporary share link',
+    'share.intro':
+      'Create a read-only link to the medical record. Send it to a psychiatrist or show in the ER. The link expires automatically at the time you choose and can be revoked manually any time.',
+    'share.ttlLabel': 'Valid for',
+    'share.ttl.24h': '24 hours',
+    'share.ttl.7d': '7 days',
+    'share.ttl.30d': '30 days',
+    'share.createCta': 'Create link',
+    'share.copy': 'Copy',
+    'share.copied': 'Copied ✓',
+    'share.revoke': 'Revoke',
+    'share.expiresAt': 'Expires {{when}}',
+    'share.disclaimer':
+      'Anyone with the link can read the record. Send only to trusted addresses (psychiatrist, ER) and revoke when no longer needed.',
+    'share.notConfigured': "Can't create a link — Supabase isn't configured.",
+    'share.viewer.kicker': 'Medical record — view',
+    'share.viewer.unnamed': 'Patient',
+    'share.viewer.relationship': 'Primary caregiver: {{rel}}',
+    'share.viewer.updated': 'Updated: {{when}}',
+    'share.viewer.dischargeDate': 'Last discharge date',
+    'share.viewer.empty': '—',
+    'share.viewer.loading': 'Loading record…',
+    'share.viewer.expiredTitle': 'Link no longer valid',
+    'share.viewer.expiredBody': 'The link has expired, been revoked, or never existed. Ask the family for a new one.',
+    'share.viewer.errorTitle': 'Failed to load record',
+    'share.viewer.notConfigured': 'The service is not configured.',
+    'share.viewer.disclaimer':
+      'This record is for reference only. Not a substitute for a full medical record and not updated in real time.',
 
     'privacy.kicker': 'Transparency & trust',
     'privacy.title': 'Privacy & data security',

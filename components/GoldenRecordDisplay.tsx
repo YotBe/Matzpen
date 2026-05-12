@@ -77,6 +77,39 @@ export function GoldenRecordDisplay({
         <div className="md:col-span-2">
           <Section title={t('gr.section.contacts')} value={record.contacts} emptyText={t('gr.empty')} />
         </div>
+        {(record.whenWellLoves || record.whenWellCalms || record.whenWellNeverSay) && (
+          <div className="md:col-span-2 rounded-2xl bg-sand-50/60 border border-sand-100 p-4 md:p-5">
+            <h2 className="text-sm font-bold text-ink-mute uppercase tracking-wide mb-3">
+              {t('whenWell.heading')}
+            </h2>
+            <dl className="space-y-2 text-base leading-relaxed">
+              {record.whenWellLoves && (
+                <div>
+                  <dt className="font-semibold text-ink-soft text-sm">
+                    {t('whenWell.loves.label')}
+                  </dt>
+                  <dd>{record.whenWellLoves}</dd>
+                </div>
+              )}
+              {record.whenWellCalms && (
+                <div>
+                  <dt className="font-semibold text-ink-soft text-sm">
+                    {t('whenWell.calms.label')}
+                  </dt>
+                  <dd>{record.whenWellCalms}</dd>
+                </div>
+              )}
+              {record.whenWellNeverSay && (
+                <div>
+                  <dt className="font-semibold text-ink-soft text-sm">
+                    {t('whenWell.neverSay.label')}
+                  </dt>
+                  <dd>{record.whenWellNeverSay}</dd>
+                </div>
+              )}
+            </dl>
+          </div>
+        )}
       </div>
 
       <aside className="mt-8 rounded-2xl bg-amber_-bg text-amber_-ink p-4 text-sm leading-relaxed border border-amber_/30">

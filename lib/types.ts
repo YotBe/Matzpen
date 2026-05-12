@@ -39,8 +39,9 @@ export interface AlertResult {
 }
 
 // Section IDs are used as DB keys for `checklist_items.section`. The first three
-// are legacy (institution-grouped); the latter five are the situation-based
-// reorganization. Old rows in the DB remain valid but no longer shown in the UI.
+// are legacy (institution-grouped); the latter are situation-based.
+// `post_discharge_30day` reuses the checklist_items table for the new
+// post-discharge timeline page so we don't need a separate table.
 export type BureaucracySection =
   | 'national_insurance'
   | 'rehab_basket'
@@ -49,7 +50,8 @@ export type BureaucracySection =
   | 'discharge_followup'
   | 'deterioration'
   | 'disability_claim'
-  | 'advance_planning';
+  | 'advance_planning'
+  | 'post_discharge_30day';
 
 export interface BureaucracyChecklist {
   id?: string;
@@ -80,5 +82,16 @@ export interface GoldenRecord {
   allergies: string;
   riskVectors: string;
   contacts: string;
+  // Most recent discharge date — anchors the post-discharge 30-day timeline.
+  // ISO date string (YYYY-MM-DD).
+  dischargeDate?: string;
+  // Next expected medication refill date. Anchors the refill SLA banner.
+  nextRefillDate?: string;
+  // "Who is my person when they're well" — three short free-text fields the
+  // caregiver fills in once. Surfaces alongside the golden record so ER
+  // staff see a person, not just a chart.
+  whenWellLoves?: string;
+  whenWellCalms?: string;
+  whenWellNeverSay?: string;
   updatedAt: number;
 }

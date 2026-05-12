@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { GoldenRecordDisplay } from '@/components/GoldenRecordDisplay';
 import { GoldenRecordForm } from '@/components/GoldenRecordForm';
+import { ShareManager } from '@/components/ShareManager';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { usePatientId } from '@/lib/usePatientId';
@@ -105,6 +106,13 @@ export default function GoldenRecordPage() {
             {t('gr.mode.edit')}
           </button>
         </div>
+      )}
+
+      {mode === 'view' && hasSavedRecord && configured && (
+        <section className="mz-no-print">
+          <h2 className="text-lg font-bold mb-3">{t('share.title')}</h2>
+          <ShareManager patientId={patientId} configured={configured} />
+        </section>
       )}
     </div>
   );
