@@ -13,6 +13,7 @@ import {
   MoreIcon,
   NoteIcon,
   ScrollIcon,
+  ShieldIcon,
   SparklesIcon,
 } from '@/components/icons';
 import type { SVGProps } from 'react';
@@ -32,6 +33,7 @@ export function BottomNav() {
   ];
 
   const more: { href: string; label: string; Icon: IconCmp }[] = [
+    { href: '/war-room', label: t('nav.warRoom'), Icon: ShieldIcon },
     { href: '/legal-shield', label: t('nav.legal'), Icon: GavelIcon },
     { href: '/hospitalization', label: t('nav.hospitalization'), Icon: HospitalIcon },
     { href: '/case-studies', label: t('nav.cases'), Icon: BookIcon },

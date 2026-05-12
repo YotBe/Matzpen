@@ -71,6 +71,8 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.assistantHelper': 'מענה חי לשאלות בירוקרטיה ומשבר',
     'nav.tools': 'כלים',
     'nav.toolsHelper': 'משפט, אשפוז, מקרי בוחן',
+    'nav.warRoom': 'חדר מבצעים',
+    'nav.warRoomHelper': 'משמרות, משימות, חילוץ',
     'nav.legal': 'מגן משפטי',
     'nav.legalHelper': 'אפוטרופסות, חסימת אשראי, עיכוב יציאה',
     'nav.hospitalization': 'חלופות ואשפוז',
@@ -878,6 +880,71 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'share.viewer.disclaimer':
       'הרשומה מוצגת לעיון בלבד. אינה תחליף לתיק רפואי מלא ואינה מתועדכת בזמן אמת.',
 
+    // ── War Room ───────────────────────────────────────────────────────────
+    'warRoom.kicker': 'חדר מבצעים',
+    'warRoom.title': 'ניהול משבר משותף',
+    'warRoom.intro':
+      'מקום אחד שבו כל המעטפת רואה את אותו דבר: מי במשמרת, מה צריך לעשות, ומי זקוק לחילוץ עכשיו. עדכונים מסונכרנים בזמן אמת.',
+    'warRoom.disclaimer':
+      'חדר המבצעים נועד לתיאום משפחתי, לא להחלפת הצוות הרפואי. במצב חירום מיידי חיוג 100/101 קודם לכל.',
+    'warRoom.notConfigured': 'חדר המבצעים זמין רק לאחר חיבור ל־Supabase.',
+    'warRoom.tab.shifts': 'משמרות',
+    'warRoom.tab.tasks': 'משימות',
+    'warRoom.tab.envelope': 'המעטפת',
+
+    'warRoom.shifts.heading': 'לוח משמרות השגחה',
+    'warRoom.shifts.startAt': 'תחילת המשמרת',
+    'warRoom.shifts.endAt': 'סוף המשמרת',
+    'warRoom.shifts.note': 'הערה למשמרת (אופציונלי)',
+    'warRoom.shifts.notePlaceholder': 'למשל: לוקח לטיפול בשעה 17:00',
+    'warRoom.shifts.signUp': 'הרשמה למשמרת',
+    'warRoom.shifts.empty': 'אף משמרת לא נרשמה עדיין. מי לוקח את הראשונה?',
+    'warRoom.shifts.activeNow': 'במשמרת כעת',
+    'warRoom.shifts.unnamedMember': 'בן משפחה',
+    'warRoom.shifts.errorBadDate': 'תאריך לא תקין.',
+    'warRoom.shifts.errorEndBeforeStart': 'סוף המשמרת חייב להיות אחרי תחילתה.',
+
+    'warRoom.tasks.heading': 'משימות המעטפת',
+    'warRoom.tasks.placeholder': 'משימה חדשה (למשל: לקנות תרופות)',
+    'warRoom.tasks.add': 'הוסף',
+    'warRoom.tasks.empty': 'אין משימות פתוחות. הוסיפו את הראשונה.',
+    'warRoom.tasks.completed': 'משימות שהושלמו ({{n}})',
+    'warRoom.tasks.doneBy': 'הושלם · {{name}} · {{when}}',
+    'warRoom.tasks.createdBy': 'נוסף · {{name}}',
+    'warRoom.tasks.remove': 'הסר',
+
+    'warRoom.backup.heading': 'בקשת חילוץ',
+    'warRoom.backup.sosCta': '⚡ צריך/ה חילוץ — קרא/י לעזרה',
+    'warRoom.backup.activeBanner': 'בקשת חילוץ פעילה',
+    'warRoom.backup.requestedBy': '{{name}} מבקש/ת חילוץ',
+    'warRoom.backup.yoursWaiting': 'הבקשה שלך פעילה — בני המשפחה רואים אותה',
+    'warRoom.backup.confirmIntro':
+      'הבקשה תופיע מיד אצל כל מי שמחובר עכשיו לחדר המבצעים. השתמשו רק כשבאמת צריך — שמירת אמינות הסימן חשובה.',
+    'warRoom.backup.messageLabel': 'הודעה (אופציונלי)',
+    'warRoom.backup.messagePlaceholder': 'למשל: צריך מישהו בבית עוד שעה',
+    'warRoom.backup.send': 'שלח/י בקשה',
+    'warRoom.backup.resolve': 'טופל',
+    'warRoom.backup.disclaimer':
+      'הבקשה גלויה רק לבני המעטפת. היא לא מתחלפת לשירות חירום — להוזעה דחופה חייגו 101/100.',
+
+    'warRoom.envelope.heading': 'המעטפת — מי איתי',
+    'warRoom.envelope.intro':
+      'הוסיפו בני משפחה וחברים לחדר המבצעים. רק חברי המעטפת רואים את המשמרות, המשימות ובקשות החילוץ. בני המעטפת לא רואים את הדיווחים היומיים הפרטיים שלכם.',
+    'warRoom.envelope.inviteCta': 'יצירת קישור הזמנה',
+    'warRoom.envelope.ownerTag': 'בעלים',
+    'warRoom.envelope.disclaimer':
+      'מי שיש לו את הקישור יכול להצטרף לחדר המבצעים. שלחו רק לאנשים שאתם סומכים עליהם, ובטלו קישורים שלא נוצלו.',
+
+    'warRoom.envelope.join.title': 'הצטרפות למעטפת',
+    'warRoom.envelope.join.needsLogin':
+      'כדי להצטרף יש להתחבר או להירשם. אחרי ההתחברות תוחזרו לכאן אוטומטית.',
+    'warRoom.envelope.join.redeeming': 'מצטרפים לחדר המבצעים…',
+    'warRoom.envelope.join.ok': 'הצטרפתם בהצלחה ✓',
+    'warRoom.envelope.join.redirecting': 'מעבירים אתכם לחדר המבצעים…',
+    'warRoom.envelope.join.errorTitle': 'הקישור אינו תקף',
+    'warRoom.envelope.join.notConfigured': 'השירות אינו מוגדר.',
+    'warRoom.envelope.join.backHome': 'חזרה לבית',
+
     // ── Privacy ────────────────────────────────────────────────────────────
     'privacy.kicker': 'שקיפות ואמון',
     'privacy.title': 'פרטיות ואבטחת מידע',
@@ -957,6 +1024,8 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.assistantHelper': 'Live answers on bureaucracy & crisis',
     'nav.tools': 'Tools',
     'nav.toolsHelper': 'Legal, hospitals, case studies',
+    'nav.warRoom': 'War room',
+    'nav.warRoomHelper': 'Shifts, tasks, backup',
     'nav.legal': 'Legal shield',
     'nav.legalHelper': 'Guardianship, credit freeze, exit ban',
     'nav.hospitalization': 'Hospitalization',
@@ -1752,6 +1821,70 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'share.viewer.notConfigured': 'The service is not configured.',
     'share.viewer.disclaimer':
       'This record is for reference only. Not a substitute for a full medical record and not updated in real time.',
+
+    'warRoom.kicker': 'War room',
+    'warRoom.title': 'Coordinated crisis management',
+    'warRoom.intro':
+      "One place where the whole envelope sees the same thing: who's on shift, what needs doing, and who needs backup right now. Updates sync in real time.",
+    'warRoom.disclaimer':
+      'The war room is for family coordination, not a substitute for the treating team. In immediate danger call 100/101 first.',
+    'warRoom.notConfigured': 'The war room is available only after connecting to Supabase.',
+    'warRoom.tab.shifts': 'Shifts',
+    'warRoom.tab.tasks': 'Tasks',
+    'warRoom.tab.envelope': 'Envelope',
+
+    'warRoom.shifts.heading': 'Observation shift board',
+    'warRoom.shifts.startAt': 'Shift starts',
+    'warRoom.shifts.endAt': 'Shift ends',
+    'warRoom.shifts.note': 'Shift note (optional)',
+    'warRoom.shifts.notePlaceholder': 'e.g. driving to therapy at 17:00',
+    'warRoom.shifts.signUp': 'Sign up for shift',
+    'warRoom.shifts.empty': 'No shifts yet. Who takes the first one?',
+    'warRoom.shifts.activeNow': 'On shift now',
+    'warRoom.shifts.unnamedMember': 'Family member',
+    'warRoom.shifts.errorBadDate': 'Invalid date.',
+    'warRoom.shifts.errorEndBeforeStart': 'End must be after start.',
+
+    'warRoom.tasks.heading': 'Envelope task list',
+    'warRoom.tasks.placeholder': 'New task (e.g. pick up medication)',
+    'warRoom.tasks.add': 'Add',
+    'warRoom.tasks.empty': 'No open tasks. Add the first one.',
+    'warRoom.tasks.completed': 'Completed tasks ({{n}})',
+    'warRoom.tasks.doneBy': 'Done · {{name}} · {{when}}',
+    'warRoom.tasks.createdBy': 'Added · {{name}}',
+    'warRoom.tasks.remove': 'Remove',
+
+    'warRoom.backup.heading': 'Backup request',
+    'warRoom.backup.sosCta': '⚡ I need backup — call for help',
+    'warRoom.backup.activeBanner': 'Active backup request',
+    'warRoom.backup.requestedBy': '{{name}} is asking for backup',
+    'warRoom.backup.yoursWaiting': 'Your request is active — the family can see it',
+    'warRoom.backup.confirmIntro':
+      'The request will appear immediately for everyone currently connected to the war room. Use only when truly needed — keep the signal trustworthy.',
+    'warRoom.backup.messageLabel': 'Message (optional)',
+    'warRoom.backup.messagePlaceholder': 'e.g. need someone here in an hour',
+    'warRoom.backup.send': 'Send request',
+    'warRoom.backup.resolve': 'Resolved',
+    'warRoom.backup.disclaimer':
+      'Visible only to envelope members. Not a substitute for emergency services — for immediate danger call 101/100.',
+
+    'warRoom.envelope.heading': 'The envelope — who is with me',
+    'warRoom.envelope.intro':
+      'Add family and friends to the war room. Only envelope members can see shifts, tasks, and backup requests. They do NOT see your private daily log entries.',
+    'warRoom.envelope.inviteCta': 'Create invite link',
+    'warRoom.envelope.ownerTag': 'owner',
+    'warRoom.envelope.disclaimer':
+      'Anyone with the link can join the war room. Share only with people you trust, and revoke unused links.',
+
+    'warRoom.envelope.join.title': 'Join the envelope',
+    'warRoom.envelope.join.needsLogin':
+      "Sign in or create an account to join. You'll be redirected back here automatically.",
+    'warRoom.envelope.join.redeeming': 'Joining the war room…',
+    'warRoom.envelope.join.ok': 'Joined successfully ✓',
+    'warRoom.envelope.join.redirecting': 'Taking you to the war room…',
+    'warRoom.envelope.join.errorTitle': 'This invite is no longer valid',
+    'warRoom.envelope.join.notConfigured': 'The service is not configured.',
+    'warRoom.envelope.join.backHome': 'Back home',
 
     'privacy.kicker': 'Transparency & trust',
     'privacy.title': 'Privacy & data security',

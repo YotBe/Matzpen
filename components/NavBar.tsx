@@ -24,6 +24,7 @@ export function NavBar() {
   ] as const;
 
   const tools = [
+    { href: '/war-room', label: t('nav.warRoom'), helper: t('nav.warRoomHelper') },
     { href: '/legal-shield', label: t('nav.legal'), helper: t('nav.legalHelper') },
     { href: '/hospitalization', label: t('nav.hospitalization'), helper: t('nav.hospitalizationHelper') },
     { href: '/case-studies', label: t('nav.cases'), helper: t('nav.casesHelper') },

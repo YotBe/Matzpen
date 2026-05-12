@@ -63,6 +63,57 @@ export interface BureaucracyChecklist {
   updatedBy?: string;
 }
 
+// War-room / envelope-membership types.
+
+export interface EnvelopeMember {
+  patientId: string;
+  caregiverId: string;
+  role: string;
+  displayName?: string;
+  joinedAt: number;
+}
+
+export interface EnvelopeInvite {
+  token: string;
+  patientId: string;
+  inviterCaregiverId: string;
+  expiresAt: number;
+  redeemedBy: string | null;
+  redeemedAt: number | null;
+  createdAt: number;
+}
+
+export interface Shift {
+  id: string;
+  patientId: string;
+  caregiverId: string;
+  startAt: number;
+  endAt: number;
+  note?: string;
+  createdAt: number;
+}
+
+export interface SharedTask {
+  id: string;
+  patientId: string;
+  title: string;
+  done: boolean;
+  doneByCaregiver?: string;
+  doneAt?: number;
+  createdByCaregiver: string;
+  createdAt: number;
+}
+
+export interface BackupRequest {
+  id: string;
+  patientId: string;
+  requesterCaregiverId: string;
+  message?: string;
+  createdAt: number;
+  resolvedAt?: number;
+  resolvedByCaregiver?: string;
+}
+
 export interface GoldenRecord {
   id?: string;
   patientId: string;
