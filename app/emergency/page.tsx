@@ -215,6 +215,12 @@ export default function EmergencyPage() {
                 onClick={() => setStep('route-psychiatrist')}
               />
             </div>
+            <Link
+              href="/safety"
+              className="mt-3 inline-block text-sm text-clay font-semibold underline"
+            >
+              {t('emergency.safetyLink')}
+            </Link>
           </div>
 
           <div className="relative flex items-center gap-3">

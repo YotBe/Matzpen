@@ -13,11 +13,18 @@ export default function LoginPage() {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [consent, setConsent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  const requiresConsent = mode === 'signup';
+
   async function submit(e: FormEvent) {
     e.preventDefault();
+    if (requiresConsent && !consent) {
+      setError(t('login.consentRequired'));
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -32,6 +39,10 @@ export default function LoginPage() {
   }
 
   async function google() {
+    if (requiresConsent && !consent) {
+      setError(t('login.consentRequired'));
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -103,6 +114,19 @@ export default function LoginPage() {
             />
           </div>
 
+          {requiresConsent && (
+            <label className="flex items-start gap-2 text-sm text-ink-soft leading-relaxed">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                className="mt-1 shrink-0"
+                aria-describedby="consent-detail"
+              />
+              <span id="consent-detail">{t('login.consentLabel')}</span>
+            </label>
+          )}
+
           {error && (
             <div
               id="login-error"
@@ -114,7 +138,11 @@ export default function LoginPage() {
             </div>
           )}
 
-          <button type="submit" disabled={busy} className="mz-btn mz-btn-clay w-full">
+          <button
+            type="submit"
+            disabled={busy || (requiresConsent && !consent)}
+            className="mz-btn mz-btn-clay w-full"
+          >
             {busy ? t('login.busy') : mode === 'signin' ? t('login.signIn') : t('login.signUp')}
           </button>
         </form>

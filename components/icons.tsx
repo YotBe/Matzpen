@@ -91,3 +91,38 @@ export const SignOutIcon = (p: IconProps) => (
     <path d="M16 17l5-5-5-5M21 12H9" />
   </Base>
 );
+
+export const GavelIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="m14.5 8.5-4-4M7 11l4-4M11 15l4 4M3 21l3-3" />
+    <path d="M16 5l3 3-3 3-3-3 3-3zM12 9l3 3-3 3-3-3 3-3z" />
+  </Base>
+);
+
+export const HospitalIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M3 21h18M5 21V7l7-4 7 4v14" />
+    <path d="M12 9v6M9 12h6" />
+  </Base>
+);
+
+export const BookIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5a2.5 2.5 0 0 0-2.5 2.5V4.5z" />
+    <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20" />
+  </Base>
+);
+
+export const MoreIcon = (p: IconProps) => (
+  <Base {...p}>
+    <circle cx="5" cy="12" r="1.5" fill="currentColor" />
+    <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+    <circle cx="19" cy="12" r="1.5" fill="currentColor" />
+  </Base>
+);
+
+export const SparklesIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M12 3l1.7 4.6L18.4 9.3 13.8 11l-1.8 4.7L10.3 11 5.6 9.3l4.7-1.7L12 3z" />
+  </Base>
+);

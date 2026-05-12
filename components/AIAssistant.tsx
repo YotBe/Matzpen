@@ -9,9 +9,11 @@ import { supabase } from '@/lib/supabaseClient';
 interface Props {
   /** Render in a fixed-height container (for the floating widget) vs flowing full-page. */
   variant?: 'panel' | 'page';
+  /** Optional prefilled prompt that is auto-sent once on mount. */
+  initialPrompt?: string;
 }
 
-export function AIAssistant({ variant = 'page' }: Props) {
+export function AIAssistant({ variant = 'page', initialPrompt }: Props) {
   const { t } = useT();
 
   const transport = useMemo(
@@ -30,9 +32,18 @@ export function AIAssistant({ variant = 'page' }: Props) {
   const { messages, sendMessage, status, error, clearError } = useChat({ transport });
   const [input, setInput] = useState('');
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const autosentRef = useRef(false);
 
   const isStreaming = status === 'submitted' || status === 'streaming';
   const hasMessages = messages.length > 0;
+
+  useEffect(() => {
+    if (autosentRef.current) return;
+    const text = initialPrompt?.trim();
+    if (!text) return;
+    autosentRef.current = true;
+    sendMessage({ text });
+  }, [initialPrompt, sendMessage]);
 
   useEffect(() => {
     const el = scrollerRef.current;

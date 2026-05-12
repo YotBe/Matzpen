@@ -1,10 +1,23 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { AIAssistant } from '@/components/AIAssistant';
 import { useT } from '@/lib/i18n/LocaleProvider';
 
 export default function AssistantPage() {
+  return (
+    <Suspense fallback={null}>
+      <AssistantPageInner />
+    </Suspense>
+  );
+}
+
+function AssistantPageInner() {
   const { t } = useT();
+  const searchParams = useSearchParams();
+  const initialPrompt = searchParams.get('prompt') ?? undefined;
+
   return (
     <div className="max-w-3xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-6">
       <header>
@@ -18,7 +31,7 @@ export default function AssistantPage() {
       </header>
 
       <div className="mz-card overflow-hidden">
-        <AIAssistant variant="page" />
+        <AIAssistant variant="page" initialPrompt={initialPrompt} />
       </div>
     </div>
   );

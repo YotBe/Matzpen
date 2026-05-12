@@ -18,6 +18,10 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'common.yes': 'כן',
     'common.no': 'לא',
     'common.previewMode': 'תצוגה',
+    'configBanner.kicker': 'המערכת אינה מוגדרת',
+    'configBanner.title': 'נדרשת הגדרת Supabase',
+    'configBanner.body':
+      'כדי להפעיל את מצפן יש להגדיר את משתני הסביבה NEXT_PUBLIC_SUPABASE_URL ו־NEXT_PUBLIC_SUPABASE_ANON_KEY. כל עוד הם חסרים האפליקציה לא תציג נתונים, כדי שלא יוצגו נתוני דמו כאילו היו אמיתיים.',
     'common.langName': 'EN',
     'common.skip': 'דלג',
     'common.next': 'הבא',
@@ -40,6 +44,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
 
     // Emergency shortcuts
     'emergency.shortcutsTitle': 'יודעים מה צריך? עברו ישר',
+    'emergency.safetyLink': 'מדריך הגבלת אמצעים בבית →',
     'emergency.shortcut.violence': 'סכנה מיידית או אלימות',
     'emergency.shortcut.violenceHint': 'משטרה — חיוג 100',
     'emergency.shortcut.suicide': 'אובדנות / סכנה לעצמו',
@@ -64,6 +69,16 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.assistant': 'מצפן AI',
     'nav.assistantShort': 'עוזר',
     'nav.assistantHelper': 'מענה חי לשאלות בירוקרטיה ומשבר',
+    'nav.tools': 'כלים',
+    'nav.toolsHelper': 'משפט, אשפוז, מקרי בוחן',
+    'nav.legal': 'מגן משפטי',
+    'nav.legalHelper': 'אפוטרופסות, חסימת אשראי, עיכוב יציאה',
+    'nav.hospitalization': 'חלופות ואשפוז',
+    'nav.hospitalizationHelper': 'בתי חולים, בתים מאזנים, אשפוז יום',
+    'nav.cases': 'מקרי בוחן',
+    'nav.casesHelper': 'איך משפחות אחרות התמודדו',
+    'nav.moreShort': 'עוד',
+    'nav.moreSheetTitle': 'כלים נוספים',
     'nav.signIn': 'כניסה',
     'nav.signOut': 'יציאה',
     'nav.privacy': 'פרטיות',
@@ -93,6 +108,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'login.toSignUp': 'הירשמו כאן',
     'login.toSignIn': 'התחברו',
     'login.unknownError': 'שגיאה לא ידועה',
+    'login.consentLabel':
+      'אני מבין/ה ש"מצפן" הוא כלי תיעוד לעזרה עצמית למשפחות ואינו תחליף לטיפול רפואי, אבחון או החלטה קלינית. ההתראות הן היוריסטיקה שלא קיבלה אישור קליני. במצבי חירום פניתי קודם ל-101 (מד״א), 100 (משטרה) או 1201 (ער״ן). אני מאשר/ת שמידע שאזין (כולל תיק רפואי ושיחות עם העוזר החכם) יעובד גם אצל ספק הבינה המלאכותית (Google Gemini) לצורך מתן התשובה.',
+    'login.consentRequired': 'אנא אשרו את ההצהרה כדי להמשיך.',
 
     // ── Dashboard ──────────────────────────────────────────────────────────
     'dashboard.greeting': 'שלום, {{name}}',
@@ -199,6 +217,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       '{{days}} ימים רצופים שבהם המטופל לא נטל את התרופות',
     'alert.reason.medsMissedLowSleep':
       'במהלך הימים שלא ניטלו תרופות, השינה ירדה מתחת ל-{{hours}} שעות — סיכון מוגבר',
+    'alert.howCalculated': 'איך חושבה ההתראה?',
+    'alert.nonClinicalNote':
+      'ההתראה היא היוריסטיקה שמבוססת על דפוסים שדווחו על־ידי משפחות (שינה קצרה מתמשכת, פעילות מואצת, חוסר היענות לטיפול). היא אינה הנחיה רפואית, לא קיבלה אישור קליני, ולא מתחשבת במצב הבסיס של המתמודד שלכם (למשל נדודי שינה כרוניים). השתמשו בה רק כתזכורת לבדוק את המצב ולעדכן את הצוות המטפל — לא כאבחון.',
 
     // ── Emergency ──────────────────────────────────────────────────────────
     'emergency.kicker': 'מצב חירום',
@@ -296,6 +317,21 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.form.relationship.hint':
       'מי האדם עבורכם? עוזר למצפן ולעוזר ה־AI להתייחס בהקשר הנכון.',
     'gr.form.relationship.placeholder': 'למשל: בני, אחותי, בן/בת זוגי, אמא',
+    'gr.form.region.label': 'אזור מגורים',
+    'gr.form.region.hint':
+      'הבחירה משמשת רק לניתוב אוטומטי לבית החולים הפסיכיאטרי הקרוב ולחלופות אשפוז באזורכם.',
+    'gr.form.region.placeholder': 'בחרו אזור',
+    'gr.form.city.label': 'עיר / יישוב',
+    'gr.form.city.hint': 'עיר המגורים המדויקת — מופיעה גם בתיק למיון.',
+    'gr.form.city.placeholder': 'למשל: רמת גן, באר שבע',
+    'region.north': 'גליל וגולן',
+    'region.haifa': 'חיפה והקריות',
+    'region.sharon': 'השרון',
+    'region.center': 'מרכז',
+    'region.telaviv': 'תל אביב והסביבה',
+    'region.jerusalem': 'ירושלים והסביבה',
+    'region.shfela': 'שפלה',
+    'region.south': 'דרום והנגב',
     'gr.form.diagnosis.label': 'אבחנה בסיסית',
     'gr.form.diagnosis.hint': 'לדוגמה: Bipolar 1 Disorder.',
     'gr.form.comorbidities.label': 'מחלות רקע',
@@ -512,6 +548,336 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'bur.planning.lawyer.hint':
       'עו״ד המכיר את חוק הטיפול בחולי נפש (תשנ״א-1991).',
 
+    // ── Legal & Financial Shield ──────────────────────────────────────────
+    'legal.kicker': 'מגן משפטי ופיננסי',
+    'legal.title': 'הגנה משפטית במצב משבר',
+    'legal.intro':
+      'במצבי משבר נדרשת לעיתים פעולה משפטית דחופה כדי למנוע נזק בלתי הפיך — מינוי אפוטרופוס, חסימת אשראי, או עיכוב יציאה מהארץ. כאן תוכלו להכין מסמכי בקשה לבית המשפט ולמצוא עורך/ת דין מתאים/ה לליווי. אין מדובר בייעוץ משפטי.',
+    'legal.disclaimer':
+      'תבניות אלה הן עזר ולא תחליף לייעוץ משפטי. כל בקשה כפופה לבדיקת עו"ד המתמחה בתחום, ולהוראות בית המשפט באזורכם. הגישו את המסמך רק לאחר שעו"ד אישר/ה את תוכנו.',
+
+    'legal.actions.title': 'פעולות זמינות',
+    'legal.actions.cta': 'מילוי בקשה',
+
+    'legal.template.guardianship_property.kicker': 'אפוטרופסות',
+    'legal.template.guardianship.summary':
+      'בקשה דחופה למינוי אפוטרופוס/ה זמני/ת לרכוש למקרה שבו המתמודד/ת אינו/ה מסוגל/ת לנהל את ענייניו/ה הכלכליים והפעולות שלו/ה גורמות נזק מתמשך.',
+    'legal.template.block_finance.kicker': 'חסימת אשראי',
+    'legal.template.blockFinance.summary':
+      'צו זמני לבנק ולחברות האשראי שמטרתו להגביל משיכות והקפאת מסגרות אשראי עד התייצבות.',
+    'legal.template.exit_ban.kicker': 'עיכוב יציאה',
+    'legal.template.exitBan.summary':
+      'בקשה לעיכוב יציאה מהארץ כאשר יש חשש ממשי שהמתמודד/ת יעזוב/תעזוב את הארץ במצב לא יציב.',
+
+    'legal.form.kicker': 'הכנת בקשה דחופה',
+    'legal.form.preview': 'הצגת תצוגת הדפסה',
+    'legal.form.patientSection': 'פרטי המתמודד/ת',
+    'legal.form.patientName': 'שם מלא',
+    'legal.form.patientId': 'תעודת זהות',
+    'legal.form.patientAddress': 'כתובת מגורים',
+    'legal.form.applicantSection': 'פרטי המבקש/ת',
+    'legal.form.applicantName': 'שם מלא',
+    'legal.form.applicantId': 'תעודת זהות',
+    'legal.form.applicantRelation': 'קרבה למתמודד/ת',
+    'legal.form.applicantRelationPlaceholder': 'למשל: אם, אח, בן זוג',
+    'legal.form.applicantPhone': 'טלפון נייד',
+    'legal.form.applicantAddress': 'כתובת',
+    'legal.form.incidentSection': 'תיאור האירוע',
+    'legal.form.incidentDate': 'תאריך האירוע / תחילת ההידרדרות',
+    'legal.form.incidentSummary': 'תיאור עובדתי קצר',
+    'legal.form.incidentSummaryHint':
+      'מה קרה, ממתי, מי היה נוכח. עובדות ולא רגשות — בית המשפט קורא עובדות.',
+    'legal.form.riskDescription': 'הסיכון הקונקרטי כעת',
+    'legal.form.riskDescriptionHint':
+      'איזה נזק מתמשך נגרם או צפוי להיגרם אם לא תינתן החלטה דחופה (כספי, פיזי, יציאה מהארץ).',
+    'legal.form.evidence': 'ראיות שיוגשו',
+    'legal.form.evidenceHint':
+      'רשימת מסמכים מצורפים (סיכומים רפואיים, צילומי תנועות בנק, תכתובות).',
+    'legal.form.requestedRelief': 'הסעדים המבוקשים (אופציונלי — אם תשאירו ריק יוצג נוסח ברירת מחדל)',
+    'legal.form.requestedReliefHint':
+      'אפשר להתאים את הצווים הזמניים המבוקשים לנסיבות הספציפיות שלכם.',
+
+    'legal.printable.print': 'הדפסה / שמירה כ-PDF',
+    'legal.printable.dateLabel': 'תאריך',
+    'legal.printable.signatureLabel': 'בכבוד רב,',
+    'legal.printable.idLabel': 'ת"ז',
+    'legal.printable.signatureLine': 'חתימה: ____________________',
+    'legal.printable.disclaimer':
+      'מסמך זה הוא טיוטה שהוכנה על־ידי המבקש/ת באמצעות מצפן. הוא אינו מהווה ייעוץ משפטי. מומלץ להעבירו לעיון עו"ד לפני הגשה לבית המשפט.',
+
+    'legal.lawyers.title': 'עורכי/ות דין מומחים לבריאות הנפש',
+    'legal.lawyers.filters': 'סינון',
+    'legal.lawyers.region': 'אזור',
+    'legal.lawyers.allRegions': 'כל הארץ',
+    'legal.lawyers.specialty': 'תחום',
+    'legal.lawyers.allSpecialties': 'כל התחומים',
+    'legal.lawyers.proBonoOnly': 'רק ייצוג ללא תשלום',
+    'legal.lawyers.proBonoTag': 'ללא תשלום',
+    'legal.lawyers.feeUnit': 'ייעוץ ראשוני',
+    'legal.lawyers.website': 'אתר',
+    'legal.lawyers.empty': 'אין תוצאות לסינון. נסו להרחיב את החיפוש.',
+    'legal.lawyers.disclaimer':
+      'המידע מובא לעזרה בלבד. אין למצפן זיקה לעורכי/ות הדין ברשימה ואין כאן המלצה אישית. ודאו תעריפים וסמכות במשרד הרלוונטי לפני התקשרות.',
+    'legal.lawyers.specialty.guardianship': 'אפוטרופסות',
+    'legal.lawyers.specialty.involuntary': 'אשפוז כפוי וועדות פסיכיאטריות',
+    'legal.lawyers.specialty.criminal_mental_health': 'פלילי בריאות הנפש',
+    'legal.lawyers.specialty.national_insurance': 'ביטוח לאומי',
+    'legal.lawyers.specialty.rehab_basket': 'סל שיקום',
+    'legal.lawyers.specialty.financial_protection': 'הגנה פיננסית',
+
+    // ── Hospitalization & alternative care ────────────────────────────────
+    'hosp.kicker': 'אשפוז וחלופות',
+    'hosp.title': 'איפה לפנות עכשיו',
+    'hosp.intro':
+      'במצב משבר, ברגע שמחליטים שיש צורך באשפוז או בהתערבות אינטנסיבית, הזמן והמרחק קריטיים. הרשימה הזו מציגה את בתי החולים הפסיכיאטריים הקרובים לאזור המגורים, ולצידם חלופות אשפוז ואשפוזי יום.',
+    'hosp.disclaimer':
+      'הפרטים נאספו ממקורות פומביים והם עשויים להשתנות. ודאו את מספר הטלפון באתר בית החולים לפני התקשרות במצב חירום. במקרה של סכנת חיים מיידית — חיוג 101 (מד״א) או 100 (משטרה) עדיף תמיד על הגעה עצמית.',
+
+    'hosp.regionPicker': 'אזור המגורים',
+    'hosp.regionHint': 'לא מצאנו אזור שמור בתיק הרפואי.',
+    'hosp.regionHintCta': 'הוסיפו אזור בתיק הרפואי',
+    'hosp.clearRegion': 'נקה',
+
+    'hosp.tab.hospitals': 'בתי חולים פסיכיאטריים',
+    'hosp.tab.alternative': 'חלופות אשפוז ואשפוז יום',
+
+    'hosp.nearbyHeading': 'באזורכם וקרוב',
+    'hosp.otherHeading': 'אזורים נוספים',
+    'hosp.allHeading': 'כל בתי החולים הפסיכיאטריים',
+
+    'hosp.callSwitchboard': 'מרכזיה',
+    'hosp.callER': 'חדר מיון',
+    'hosp.openWaze': 'פתח ב-Waze',
+    'hosp.openMaps': 'פתח ב-Google Maps',
+    'hosp.website': 'אתר בית החולים',
+
+    'hosp.tag.psychER': 'חדר מיון פסיכיאטרי 24/7',
+    'hosp.tag.noPsychER': 'אין מיון פסיכיאטרי — קבלה בתיאום',
+    'hosp.tag.minors': 'מקבל נוער',
+    'hosp.tag.commitment': 'מוסמך לאשפוז כפוי',
+
+    'hosp.altFilter.all': 'הכל',
+    'hosp.altFilter.balancing': 'בתים מאזנים',
+    'hosp.altFilter.day': 'אשפוז יום',
+    'hosp.altEmpty': 'לא נמצאו חלופות לסינון הזה.',
+
+    'hosp.altAI.title': 'לבדוק עכשיו עם העוזר',
+    'hosp.altAI.body':
+      'העוזר יכול לעזור לבדוק זמינות, התאמה לקופת החולים שלכם, וקריטריוני קבלה לפני שמתקשרים.',
+    'hosp.altAI.cta': 'חפש עבורי בתים מאזנים שמתאימים',
+    'hosp.altAIPromptRegion':
+      'אני מחפש/ת בית מאזן או אשפוז יום פסיכיאטרי באזור {{region}} שמתאים לקופת החולים שלנו. אילו אפשרויות פנויות כיום ולמי כדאי לפנות קודם?',
+    'hosp.altAIPromptGeneric':
+      'אני מחפש/ת בית מאזן או אשפוז יום פסיכיאטרי שמתאים לקופת החולים שלנו. אילו אפשרויות פנויות כיום ולמי כדאי לפנות קודם?',
+
+    'altCare.kind.balancing_home': 'בית מאזן',
+    'altCare.kind.day_hospital': 'אשפוז יום',
+    'altCare.capacity': 'עד {{n}} מקומות',
+    'altCare.dailyCost': 'עלות יומית משוערת',
+    'altCare.notAccepted': 'לא מתאים ל:',
+    'altCare.funding.kupat_holim': 'בכיסוי קופת חולים',
+    'altCare.funding.rehab_basket': 'במסגרת סל שיקום',
+    'altCare.funding.private': 'פרטי',
+    'altCare.funding.subsidized': 'בסבסוד / סקאלה',
+
+    // ── Case studies ──────────────────────────────────────────────────────
+    'cases.kicker': 'מקרי בוחן',
+    'cases.title': 'איך משפחות אחרות התמודדו',
+    'cases.intro':
+      'תרחישים אנונימיים שמשפחות אחרות חוו — מה הצליח, מה הן היו עושות אחרת. השתמשו בזה כמקור השראה, לא כתוכנית טיפול. כל מקרה ייחודי.',
+    'cases.disclaimer':
+      'הסיפורים הם תרכיב חינוכי המבוסס על דיווחי משפחות וספרות פתוחה. הם לא תחליף לייעוץ פסיכיאטרי או משפטי, והצעדים שהובילו להצלחה אצל משפחה אחת לא בהכרח יעבדו אצל אחרת.',
+    'cases.filters': 'סינון',
+    'cases.diagnosis': 'אבחנה',
+    'cases.age': 'גיל',
+    'cases.trigger': 'טריגר',
+    'cases.allDiagnoses': 'כל האבחנות',
+    'cases.allAges': 'כל הגילאים',
+    'cases.allTriggers': 'כל הטריגרים',
+    'cases.count': '{{n}} מקרים מתאימים',
+    'cases.empty': 'לא נמצאו מקרים לסינון. נסו להרחיב.',
+    'cases.clearFilters': 'איפוס סינון',
+    'cases.situation': 'המצב',
+    'cases.action': 'מה נעשה',
+    'cases.takeaway': 'הלקח למשפחה',
+    'cases.durationLabel': 'משך הטיפול',
+    'cases.diagnosis.bipolar_mania': 'מאניה (Bipolar 1)',
+    'cases.diagnosis.bipolar_depression': 'דיכאון ביפולרי',
+    'cases.diagnosis.psychotic_break': 'התקף פסיכוטי',
+    'cases.diagnosis.postpartum_psychosis': 'פסיכוזה פוסט-פרטום',
+    'cases.diagnosis.major_depression': 'דיכאון מאז\'ורי',
+    'cases.diagnosis.suicidality_crisis': 'משבר אובדנות',
+    'cases.diagnosis.eating_disorder': 'הפרעת אכילה',
+    'cases.age.adolescent': 'נוער (13–17)',
+    'cases.age.young_adult': 'צעיר (18–29)',
+    'cases.age.adult': 'בוגר (30–55)',
+    'cases.age.older_adult': 'מבוגר (55+)',
+    'cases.trigger.med_noncompliance': 'הפסקת תרופות',
+    'cases.trigger.sleep_disruption': 'הפרעת שינה',
+    'cases.trigger.substance_use': 'שימוש בחומרים',
+    'cases.trigger.major_life_event': 'אירוע חיים משמעותי',
+    'cases.trigger.postpartum': 'לאחר לידה',
+    'cases.trigger.unknown': 'לא ידוע',
+
+    // ── Trend chart ────────────────────────────────────────────────────────
+    'trend.kicker': 'מגמת השבועיים האחרונים',
+    'trend.title': 'שינה, מצב רגשי ותרופות · {{days}} ימים',
+    'trend.empty': 'אין מספיק דיווחים יומיים כדי להציג מגמה. דווחו לכמה ימים והגרף יופיע כאן.',
+    'trend.legend.sleep': 'שינה',
+    'trend.legend.missed': 'תרופות שדולגו',
+    'trend.today': 'היום',
+
+    // ── Refill banner ──────────────────────────────────────────────────────
+    'refill.kicker': 'תזכורת תרופות',
+    'refill.overdue': 'מועד החידוש היה ב־{{date}} ({{n}} ימים אחורה). הפסקת תרופות אצור היא טריגר ידוע — צרו קשר עם הרוקח/ת או הפסיכיאטר/ית כעת.',
+    'refill.dueToday': 'מועד חידוש המרשם הוא היום ({{date}}).',
+    'refill.upcoming': 'מועד חידוש המרשם הוא ב־{{date}} (בעוד {{n}} ימים).',
+    'refill.updateCta': 'עדכון מועד',
+
+    // ── Post-discharge timeline ────────────────────────────────────────────
+    'postDischarge.kicker': '30 הימים שאחרי',
+    'postDischarge.title': 'מסלול שיקום ראשוני',
+    'postDischarge.intro':
+      'החודש הראשון אחרי אשפוז הוא תקופת הסיכון הגבוהה ביותר לאשפוז חוזר. הצ׳קליסט מסודר לפי שלבים — סמנו את מה שכבר נעשה.',
+    'postDischarge.bannerBody': 'יום {{day}} אחרי השחרור — בדקו את המשימות לתקופה הזאת.',
+    'postDischarge.bannerCta': 'פתח מסלול',
+    'postDischarge.dischargeOn': 'תאריך שחרור: {{date}}',
+    'postDischarge.dayLabel': 'יום {{day}}',
+    'postDischarge.progress': '{{done}} מתוך {{total}} הושלמו',
+    'postDischarge.currentPhase': 'שלב נוכחי',
+    'postDischarge.pastPhase': 'הסתיים',
+    'postDischarge.disclaimer':
+      'הצ׳קליסט אינו תחליף להוראות שחרור רפואיות. תמיד הולכים לפי ההמלצות של הצוות המטפל. הוא נועד לעזור לזכור מה לשאול ולמתי לתאם.',
+    'postDischarge.noDate.title': 'אין תאריך שחרור שמור',
+    'postDischarge.noDate.body':
+      'הוסיפו את תאריך השחרור בתיק הרפואי כדי לקבל מסלול מותאם לימים שעברו מאז.',
+    'postDischarge.noDate.cta': 'עדכון בתיק הרפואי',
+    'postDischarge.phase.day0.title': 'יום 0–2',
+    'postDischarge.phase.day0.intent': 'יציאה בטוחה הביתה',
+    'postDischarge.phase.day3.title': 'יום 3–6',
+    'postDischarge.phase.day3.intent': 'בניית שגרה',
+    'postDischarge.phase.day7.title': 'יום 7–13',
+    'postDischarge.phase.day7.intent': 'מעקב ראשון בקהילה',
+    'postDischarge.phase.day14.title': 'יום 14–20',
+    'postDischarge.phase.day14.intent': 'חידוש מרשמים וביקור שני',
+    'postDischarge.phase.day21.title': 'יום 21–29',
+    'postDischarge.phase.day21.intent': 'חזרה הדרגתית לתפקוד',
+    'postDischarge.phase.day30.title': 'יום 30+',
+    'postDischarge.phase.day30.intent': 'סיכום ראשון ותכנון המשך',
+    'postDischarge.item.dischargeSummary': 'איסוף סיכום שחרור (מודפס + דיגיטלי).',
+    'postDischarge.item.meds7day': 'ודאו אספקת תרופות ל־7 ימים הראשונים.',
+    'postDischarge.item.bookNextAppt': 'תיאום ביקור מעקב ראשון (פסיכיאטר/ית בקהילה) תוך 7 ימים.',
+    'postDischarge.item.homeSafety': 'מעבר על הבית — הוצאת אמצעים מסכנים.',
+    'postDischarge.item.homeSafetyHint': 'תרופות במנעול, אקדח/סכין מחוץ לבית, אלכוהול בכמות מוגבלת.',
+    'postDischarge.item.followUpConfirmed': 'אישור הביקור אצל הפסיכיאטר/ית בטלפון.',
+    'postDischarge.item.familyRoutine': 'הקצאת תפקידים במשפחה (מי נוסע לביקור, מי דואג לתרופות).',
+    'postDischarge.item.sleepLogged': 'הדיווח היומי במצפן רץ במשך 3 ימים רצופים.',
+    'postDischarge.item.firstOutpatient': 'הביקור הראשון בקהילה התקיים.',
+    'postDischarge.item.escalationScript': 'אם הביקור לא התקיים — הפעלת תסריט ההסלמה.',
+    'postDischarge.item.escalationScriptHint':
+      'תקשרו לפסיכיאטר המחוזי, וציינו: "שוחרר ביום X ולא נקבע מעקב". הוא יסייע לתאם תור דחוף.',
+    'postDischarge.item.sideEffects': 'תיעוד תופעות לוואי מהתרופות החדשות.',
+    'postDischarge.item.refillScheduled': 'תאריך חידוש המרשם הבא נקבע ועודכן במצפן.',
+    'postDischarge.item.secondVisit': 'תיאום ביקור מעקב שני (יום 21–30).',
+    'postDischarge.item.communityReengage': 'חזרה הדרגתית למוקדי תמיכה (קבוצה, מועדון).',
+    'postDischarge.item.sickLeave': 'הגשת אישורי מחלה למקום העבודה / לימודים.',
+    'postDischarge.item.insuranceClaim': 'פתיחת תיק בביטוח לאומי אם רלוונטי (טופס 7801).',
+    'postDischarge.item.returnPlan': 'תכנון חזרה הדרגתית לעבודה / לימודים עם הצוות המטפל.',
+    'postDischarge.item.threeMonthReview': 'תיאום ביקור סיכום ב־3 חודשים.',
+    'postDischarge.item.familyDebrief': 'שיחת משפחה: מה עבד, מה היינו עושים אחרת.',
+    'postDischarge.item.warningSignsUpdated': 'עדכון סימני האזהרה האישיים בתיק.',
+
+    // ── Safety / lethal means ──────────────────────────────────────────────
+    'safety.kicker': 'בטיחות בבית',
+    'safety.title': 'הגבלת גישה לאמצעים מסכנים',
+    'safety.intro':
+      'במצבי משבר, צמצום הגישה לאמצעים שעלולים לשמש לפגיעה עצמית הוא הצעד המוכח ביותר במניעת אובדנות. השיחה לא קלה — וזה בסדר. הדף הזה מסביר מה לעשות, ואיך לדבר על זה בלי להפיל את האמון.',
+    'safety.why.title': 'למה זה עובד',
+    'safety.why.body':
+      'מחקרים עקביים מראים שצמצום נגישות לאמצעים קטלניים מוריד תמותה — גם בלי טיפול נוסף. מצבי אובדנות לרוב חולפים תוך שעות; אם האמצעי לא בהישג יד באותו רגע, רוב האנשים שורדים.',
+    'safety.scriptLabel': 'מה אפשר לומר',
+    'safety.item.meds': 'תרופות',
+    'safety.item.medsBody':
+      'אחסנו את כל התרופות (כולל משככי כאבים, שינה, ואנטי־דיכאון) בארון נעול. רק מבוגר אחד מחזיק את המפתח. הוציאו תרופות ישנות / לא בשימוש מהבית.',
+    'safety.item.medsScript':
+      'אני שם את התרופות בארון נעול לחודש הקרוב — לא כי אני לא סומך/ת, אלא כי בזמן משבר זה כלל יסוד. אעזור לך לקחת אותן בכל בוקר.',
+    'safety.item.firearms': 'נשק חם',
+    'safety.item.firearmsBody':
+      'אם יש נשק בבית — הוציאו אותו לאחסון אצל קרוב/ה, שכן/ה אחראי/ת, או בתחנת המשטרה. בעלי רישיון יכולים לבקש "החזקה זמנית" אצל ספק רישיונות. אם הוצאה אינה אפשרית מיידית — נעלו במנעול שונה מהתחמושת.',
+    'safety.item.firearmsScript':
+      'הנשק שלך יישאר אצל [שם] לכמה שבועות. ברגע שתחזור/י לעצמך נחזיר אותו. אני רוצה שתישאר/י בטוח/ה.',
+    'safety.item.sharps': 'סכינים וחפצים חדים',
+    'safety.item.sharpsBody':
+      'במצב אובדנות חריף — הוציאו סכינים גדולים, סכיני גילוח, וחבלים ארוכים מתחום הגישה. לא חייבים לעשות "בית סטרילי" — רק להעביר את החפצים הספציפיים שצוינו על־ידי הצוות המטפל.',
+    'safety.item.car': 'רכב ומפתחות',
+    'safety.item.carBody':
+      'אם המתמודד/ת נוהג/ת בזמן אפיזודה לא יציבה — שמרו את המפתחות בארון נעול או החזיקו אותם איתכם. נסיעה מסוכנת היא טריגר לאירועים פיזיים.',
+    'safety.item.disposal': 'השלכת תרופות עודפות',
+    'safety.item.disposalBody':
+      'בתי המרקחת בקופות החולים מקבלים תרופות לא בשימוש להשמדה. אל תזרקו לזבל ביתי או לאסלה. הוצאת תרופות מיותרות מהבית מורידה סיכון במידה משמעותית.',
+    'safety.crisis.title': 'אם הסיכון נראה מיידי',
+    'safety.crisis.body':
+      'אם המתמודד/ת אמר/ה משהו על פגיעה עצמית, אובדנות, או אם מצאתם תיק עם תרופות / סכין מוסתרים — אל תחכו. חייגו 101.',
+    'safety.crisis.callMDA': 'חייגו 101 (מד״א)',
+    'safety.crisis.callEran': 'חייגו 1201 (ער״ן)',
+    'safety.crisis.openEmergency': 'פתח מצב חירום',
+    'safety.disclaimer':
+      'הדף הזה מבוסס על המלצות פתוחות בתחום מניעת אובדנות (Means Matter, משרד הבריאות). הוא אינו ייעוץ קליני. אם יש סיכון מיידי — חיוג 101 קודם לכל.',
+
+    // ── "Who is my person when well" ───────────────────────────────────────
+    'whenWell.kicker': 'מי זה המתמודד/ת כשהוא/היא בריא/ה',
+    'whenWell.heading': 'מי הוא/היא כשהוא/היא בריא/ה',
+    'whenWell.intro':
+      'מסמך קצר שעוזר לצוות במיון או לפסיכיאטר/ית חדש/ה לראות אדם, לא רק תיק. ממלאים פעם אחת, מדפיסים, נוטלים איתכם.',
+    'whenWell.loves.label': 'מה הוא/היא אוהב/ת',
+    'whenWell.loves.hint': 'מוזיקה, אוכל, אנשים, מקומות — דברים שמרגיעים ומחברים.',
+    'whenWell.loves.placeholder': 'לדוגמה: ארץ נהדרת, כלבים, פלאפל, סבתא',
+    'whenWell.calms.label': 'מה מרגיע',
+    'whenWell.calms.hint': 'דברים שעוזרים במצב מתח — מוזיקה, שתיקה, להחזיק יד.',
+    'whenWell.calms.placeholder': 'לדוגמה: לשמוע מוזיקה שקטה, לצאת לאוויר, חיבוק',
+    'whenWell.neverSay.label': 'מה לעולם לא להגיד',
+    'whenWell.neverSay.hint': 'משפטים או נושאים שמסלימים מצב — חשוב לצוות המיון לדעת.',
+    'whenWell.neverSay.placeholder': 'לדוגמה: "תירגע!", "אתה מגזים", להזכיר את האקס',
+
+    // ── Golden record: dates + refill section ──────────────────────────────
+    'gr.form.dates.kicker': 'תאריכים קליניים (אופציונלי)',
+    'gr.form.dischargeDate.label': 'תאריך שחרור אחרון',
+    'gr.form.dischargeDate.hint': 'משמש לתכנון מסלול 30 הימים שאחרי האשפוז.',
+    'gr.form.nextRefillDate.label': 'תאריך חידוש מרשם הבא',
+    'gr.form.nextRefillDate.hint': 'תזכורת תופיע בלוח הראשי 3 ימים לפני.',
+
+    // ── Share manager + share viewer ───────────────────────────────────────
+    'share.title': 'שיתוף עם צוות מטפל',
+    'share.kicker': 'קישור שיתוף זמני',
+    'share.intro':
+      'יצירת קישור לקריאה־בלבד של הרשומה הרפואית. שלחו אותו לפסיכיאטר/ית או הראו במיון. הקישור פג אוטומטית במועד שתבחרו, וניתן לבטל ידנית בכל עת.',
+    'share.ttlLabel': 'תוקף',
+    'share.ttl.24h': '24 שעות',
+    'share.ttl.7d': '7 ימים',
+    'share.ttl.30d': '30 ימים',
+    'share.createCta': 'צור קישור',
+    'share.copy': 'העתקה',
+    'share.copied': 'הועתק ✓',
+    'share.revoke': 'ביטול',
+    'share.expiresAt': 'פג ב־{{when}}',
+    'share.disclaimer':
+      'מי שיש לו את הקישור יכול לקרוא את הרשומה. שלחו רק לכתובות אמינות (פסיכיאטר/ית, חדר מיון) ובטלו את הקישור כשלא צריך יותר.',
+    'share.notConfigured': 'אי אפשר ליצור קישור — Supabase אינו מוגדר.',
+    'share.viewer.kicker': 'רשומה רפואית — לעיון',
+    'share.viewer.unnamed': 'מתמודד/ת',
+    'share.viewer.relationship': 'מטפל/ת ראשי/ת: {{rel}}',
+    'share.viewer.updated': 'עודכן: {{when}}',
+    'share.viewer.dischargeDate': 'תאריך שחרור אחרון',
+    'share.viewer.empty': '—',
+    'share.viewer.loading': 'טוען רשומה…',
+    'share.viewer.expiredTitle': 'הקישור אינו תקף',
+    'share.viewer.expiredBody':
+      'הקישור פג, בוטל, או אינו קיים. בקשו מהמשפחה ליצור קישור חדש.',
+    'share.viewer.errorTitle': 'שגיאה בטעינת הרשומה',
+    'share.viewer.notConfigured': 'השירות אינו מוגדר.',
+    'share.viewer.disclaimer':
+      'הרשומה מוצגת לעיון בלבד. אינה תחליף לתיק רפואי מלא ואינה מתועדכת בזמן אמת.',
+
     // ── Privacy ────────────────────────────────────────────────────────────
     'privacy.kicker': 'שקיפות ואמון',
     'privacy.title': 'פרטיות ואבטחת מידע',
@@ -540,6 +906,10 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'common.yes': 'Yes',
     'common.no': 'No',
     'common.previewMode': 'Preview',
+    'configBanner.kicker': 'App not configured',
+    'configBanner.title': 'Supabase configuration required',
+    'configBanner.body':
+      'To run Matzpen, set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY. The app will not render any data until these are provided, so demo records are never mistaken for real medical history.',
     'common.langName': 'עב',
     'common.skip': 'Skip',
     'common.next': 'Next',
@@ -561,6 +931,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       'The "Triage record" holds the medical information an ER team needs. "Rights & paperwork" tracks your progress with National Insurance and the rehab basket.',
 
     'emergency.shortcutsTitle': 'Know what you need? Skip ahead',
+    'emergency.safetyLink': 'Lethal-means restriction guide →',
     'emergency.shortcut.violence': 'Immediate danger or violence',
     'emergency.shortcut.violenceHint': 'Police — dial 100',
     'emergency.shortcut.suicide': 'Suicidality / danger to self',
@@ -584,6 +955,16 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.assistant': 'Matzpen AI',
     'nav.assistantShort': 'Assistant',
     'nav.assistantHelper': 'Live answers on bureaucracy & crisis',
+    'nav.tools': 'Tools',
+    'nav.toolsHelper': 'Legal, hospitals, case studies',
+    'nav.legal': 'Legal shield',
+    'nav.legalHelper': 'Guardianship, credit freeze, exit ban',
+    'nav.hospitalization': 'Hospitalization',
+    'nav.hospitalizationHelper': 'Hospitals, balancing homes, day care',
+    'nav.cases': 'Case studies',
+    'nav.casesHelper': 'How other families coped',
+    'nav.moreShort': 'More',
+    'nav.moreSheetTitle': 'More tools',
     'nav.signIn': 'Sign in',
     'nav.signOut': 'Sign out',
     'nav.privacy': 'Privacy',
@@ -611,6 +992,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'login.toSignUp': 'Register here',
     'login.toSignIn': 'Sign in',
     'login.unknownError': 'Unknown error',
+    'login.consentLabel':
+      'I understand that Matzpen is a self-help documentation tool for families and is not a substitute for medical care, diagnosis, or clinical judgement. Alerts are heuristics and have not been clinically validated. In an emergency I will call 101 (MDA), 100 (police), or 1201 (ERAN) first. I acknowledge that data I enter (including the medical record and AI assistant conversations) is processed by an AI provider (Google Gemini) to generate responses.',
+    'login.consentRequired': 'Please confirm the disclosure to continue.',
 
     'dashboard.greeting': 'Hello, {{name}}',
     'dashboard.defaultName': 'family member',
@@ -716,6 +1100,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       '{{days}} consecutive days of missed medication',
     'alert.reason.medsMissedLowSleep':
       'On days medication was missed, sleep dropped below {{hours}} hours — elevated risk',
+    'alert.howCalculated': 'How was this calculated?',
+    'alert.nonClinicalNote':
+      'This alert is a heuristic based on patterns commonly reported by families (sustained short sleep, accelerated activity, missed medication). It is not a clinical guideline, has not been validated, and does not account for your loved one\'s personal baseline (e.g. chronic insomnia). Treat it only as a reminder to check in and update the treating team — not as a diagnosis.',
 
     'emergency.kicker': 'Emergency',
     'emergency.title': 'Decision tree',
@@ -817,6 +1204,21 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.form.relationship.hint':
       'Who is this person to you? Helps the Compass and the AI assistant talk in the right context.',
     'gr.form.relationship.placeholder': 'e.g., my son, my sister, my partner, my mom',
+    'gr.form.region.label': 'Region of residence',
+    'gr.form.region.hint':
+      'Used only to route you to the closest psychiatric hospital and to alternative-care options in your area.',
+    'gr.form.region.placeholder': 'Select a region',
+    'gr.form.city.label': 'City / town',
+    'gr.form.city.hint': 'Exact city of residence — also appears on the triage record.',
+    'gr.form.city.placeholder': 'e.g. Ramat Gan, Be\'er Sheva',
+    'region.north': 'Galilee & Golan',
+    'region.haifa': 'Haifa & Krayot',
+    'region.sharon': 'Sharon',
+    'region.center': 'Center',
+    'region.telaviv': 'Tel Aviv & surroundings',
+    'region.jerusalem': 'Jerusalem & surroundings',
+    'region.shfela': 'Shfela',
+    'region.south': 'South & Negev',
     'gr.form.diagnosis.label': 'Primary diagnosis',
     'gr.form.diagnosis.hint': 'e.g. Bipolar 1 Disorder.',
     'gr.form.comorbidities.label': 'Comorbidities',
@@ -1034,6 +1436,322 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'bur.planning.lawyer.label': 'Legal contact for emergencies',
     'bur.planning.lawyer.hint':
       'An attorney familiar with the Treatment of Mental Patients Law (5751-1991).',
+
+    'legal.kicker': 'Legal & financial shield',
+    'legal.title': 'Legal protection in a crisis',
+    'legal.intro':
+      "When a crisis escalates, urgent legal action may be needed to prevent irreversible harm — temporary guardianship, blocking credit, or an exit ban. Here you can prepare court filings and find a specialized attorney. This is not legal advice.",
+    'legal.disclaimer':
+      'These templates are an aid, not a substitute for legal counsel. Every filing should be reviewed by an attorney specializing in mental-health law and adapted to your local court rules. File only after counsel has approved the wording.',
+
+    'legal.actions.title': 'Available actions',
+    'legal.actions.cta': 'Fill in',
+
+    'legal.template.guardianship_property.kicker': 'Guardianship',
+    'legal.template.guardianship.summary':
+      'Urgent application to appoint a temporary property guardian when the respondent cannot manage their financial affairs and their actions are causing ongoing harm.',
+    'legal.template.block_finance.kicker': 'Credit freeze',
+    'legal.template.blockFinance.summary':
+      'Interim order to bank & credit providers limiting withdrawals and freezing credit lines until stabilization.',
+    'legal.template.exit_ban.kicker': 'Exit ban',
+    'legal.template.exitBan.summary':
+      'Application to bar exit from the country when there is real concern the respondent intends to leave while unstable.',
+
+    'legal.form.kicker': 'Prepare an urgent application',
+    'legal.form.preview': 'Show print preview',
+    'legal.form.patientSection': 'Respondent details',
+    'legal.form.patientName': 'Full name',
+    'legal.form.patientId': 'National ID',
+    'legal.form.patientAddress': 'Address',
+    'legal.form.applicantSection': 'Applicant details',
+    'legal.form.applicantName': 'Full name',
+    'legal.form.applicantId': 'National ID',
+    'legal.form.applicantRelation': 'Relation to respondent',
+    'legal.form.applicantRelationPlaceholder': 'e.g. mother, brother, spouse',
+    'legal.form.applicantPhone': 'Mobile phone',
+    'legal.form.applicantAddress': 'Address',
+    'legal.form.incidentSection': 'Incident',
+    'legal.form.incidentDate': 'Incident / onset date',
+    'legal.form.incidentSummary': 'Brief factual summary',
+    'legal.form.incidentSummaryHint':
+      'What happened, since when, who was present. Facts, not feelings — the court reads facts.',
+    'legal.form.riskDescription': 'Specific present risk',
+    'legal.form.riskDescriptionHint':
+      'What ongoing harm has occurred or is expected without urgent intervention (financial, physical, departure).',
+    'legal.form.evidence': 'Evidence to be submitted',
+    'legal.form.evidenceHint':
+      'List of attached documents (medical summaries, bank statements, communications).',
+    'legal.form.requestedRelief': 'Requested relief (optional — leave blank for default text)',
+    'legal.form.requestedReliefHint':
+      'You can tailor the interim orders to your specific circumstances.',
+
+    'legal.printable.print': 'Print / Save as PDF',
+    'legal.printable.dateLabel': 'Date',
+    'legal.printable.signatureLabel': 'Respectfully,',
+    'legal.printable.idLabel': 'ID',
+    'legal.printable.signatureLine': 'Signature: ____________________',
+    'legal.printable.disclaimer':
+      'This document is a draft prepared by the applicant via Matzpen. It is not legal advice. Have it reviewed by an attorney before filing.',
+
+    'legal.lawyers.title': 'Mental-health attorneys',
+    'legal.lawyers.filters': 'Filter',
+    'legal.lawyers.region': 'Region',
+    'legal.lawyers.allRegions': 'All regions',
+    'legal.lawyers.specialty': 'Specialty',
+    'legal.lawyers.allSpecialties': 'All specialties',
+    'legal.lawyers.proBonoOnly': 'Pro bono only',
+    'legal.lawyers.proBonoTag': 'Pro bono',
+    'legal.lawyers.feeUnit': 'initial consultation',
+    'legal.lawyers.website': 'Website',
+    'legal.lawyers.empty': 'No matches for these filters. Try broadening.',
+    'legal.lawyers.disclaimer':
+      'Listed for reference only. Matzpen has no affiliation with these attorneys and this is not a recommendation. Confirm fees and standing with the firm before retaining.',
+    'legal.lawyers.specialty.guardianship': 'Guardianship',
+    'legal.lawyers.specialty.involuntary': 'Involuntary commitment & boards',
+    'legal.lawyers.specialty.criminal_mental_health': 'Criminal mental-health',
+    'legal.lawyers.specialty.national_insurance': 'National Insurance',
+    'legal.lawyers.specialty.rehab_basket': 'Rehab basket',
+    'legal.lawyers.specialty.financial_protection': 'Financial protection',
+
+    'hosp.kicker': 'Hospitalization & alternatives',
+    'hosp.title': 'Where to turn right now',
+    'hosp.intro':
+      'When you decide hospitalization or intensive intervention is needed, time and distance matter. This page shows psychiatric hospitals nearest to your region, plus alternative-care options and day-hospitals.',
+    'hosp.disclaimer':
+      'Phone numbers are public information and may change. Verify on the hospital website before calling in a crisis. In a life-threatening emergency, 101 (MDA) or 100 (police) is always preferable to driving yourself.',
+    'hosp.regionPicker': 'Region',
+    'hosp.regionHint': "We didn't find a saved region in the medical record.",
+    'hosp.regionHintCta': 'Add a region to the record',
+    'hosp.clearRegion': 'Clear',
+    'hosp.tab.hospitals': 'Psychiatric hospitals',
+    'hosp.tab.alternative': 'Alternative care & day hospitals',
+    'hosp.nearbyHeading': 'In your area',
+    'hosp.otherHeading': 'Other regions',
+    'hosp.allHeading': 'All psychiatric hospitals',
+    'hosp.callSwitchboard': 'Switchboard',
+    'hosp.callER': 'ER',
+    'hosp.openWaze': 'Open in Waze',
+    'hosp.openMaps': 'Open in Google Maps',
+    'hosp.website': 'Hospital website',
+    'hosp.tag.psychER': '24/7 psychiatric ER',
+    'hosp.tag.noPsychER': 'No psych ER — admission by coordination',
+    'hosp.tag.minors': 'Accepts minors',
+    'hosp.tag.commitment': 'Authorized for civil commitment',
+    'hosp.altFilter.all': 'All',
+    'hosp.altFilter.balancing': 'Balancing homes',
+    'hosp.altFilter.day': 'Day hospitals',
+    'hosp.altEmpty': 'No alternative care matches this filter.',
+    'hosp.altAI.title': 'Ask the assistant',
+    'hosp.altAI.body':
+      'The assistant can help check availability, HMO fit, and admission criteria before you call.',
+    'hosp.altAI.cta': 'Find balancing homes that fit',
+    'hosp.altAIPromptRegion':
+      'I am looking for a balancing home or psychiatric day hospital in the {{region}} area that fits our HMO. Which options are currently available and who should I call first?',
+    'hosp.altAIPromptGeneric':
+      'I am looking for a balancing home or psychiatric day hospital that fits our HMO. Which options are currently available and who should I call first?',
+
+    'altCare.kind.balancing_home': 'Balancing home',
+    'altCare.kind.day_hospital': 'Day hospital',
+    'altCare.capacity': 'Up to {{n}} spots',
+    'altCare.dailyCost': 'Approx. daily cost',
+    'altCare.notAccepted': 'Not a fit for:',
+    'altCare.funding.kupat_holim': 'Covered by HMO',
+    'altCare.funding.rehab_basket': 'Via rehab basket',
+    'altCare.funding.private': 'Private',
+    'altCare.funding.subsidized': 'Subsidized / sliding',
+
+    'cases.kicker': 'Case studies',
+    'cases.title': 'How other families coped',
+    'cases.intro':
+      "Anonymized scenarios other families lived through — what worked, what they'd do differently. Treat these as orientation, not a treatment plan. Every case is unique.",
+    'cases.disclaimer':
+      'These stories are educational composites based on caregiver reports and open literature. They are not a substitute for psychiatric or legal counsel, and what worked for one family may not work for another.',
+    'cases.filters': 'Filters',
+    'cases.diagnosis': 'Diagnosis',
+    'cases.age': 'Age',
+    'cases.trigger': 'Trigger',
+    'cases.allDiagnoses': 'All diagnoses',
+    'cases.allAges': 'All ages',
+    'cases.allTriggers': 'All triggers',
+    'cases.count': '{{n}} matching cases',
+    'cases.empty': 'No cases match. Try broadening filters.',
+    'cases.clearFilters': 'Clear filters',
+    'cases.situation': 'Situation',
+    'cases.action': 'Action taken',
+    'cases.takeaway': 'Key takeaway',
+    'cases.durationLabel': 'Treatment duration',
+    'cases.diagnosis.bipolar_mania': 'Mania (Bipolar 1)',
+    'cases.diagnosis.bipolar_depression': 'Bipolar depression',
+    'cases.diagnosis.psychotic_break': 'Psychotic break',
+    'cases.diagnosis.postpartum_psychosis': 'Postpartum psychosis',
+    'cases.diagnosis.major_depression': 'Major depression',
+    'cases.diagnosis.suicidality_crisis': 'Suicidality crisis',
+    'cases.diagnosis.eating_disorder': 'Eating disorder',
+    'cases.age.adolescent': 'Adolescent (13–17)',
+    'cases.age.young_adult': 'Young adult (18–29)',
+    'cases.age.adult': 'Adult (30–55)',
+    'cases.age.older_adult': 'Older adult (55+)',
+    'cases.trigger.med_noncompliance': 'Medication non-compliance',
+    'cases.trigger.sleep_disruption': 'Sleep disruption',
+    'cases.trigger.substance_use': 'Substance use',
+    'cases.trigger.major_life_event': 'Major life event',
+    'cases.trigger.postpartum': 'Postpartum',
+    'cases.trigger.unknown': 'Unknown',
+
+    'trend.kicker': 'Last two weeks',
+    'trend.title': 'Sleep, mood, meds · {{days}} days',
+    'trend.empty': "Not enough daily logs to draw a trend yet. Log for a few days and the chart will appear here.",
+    'trend.legend.sleep': 'Sleep',
+    'trend.legend.missed': 'Missed meds',
+    'trend.today': 'Today',
+
+    'refill.kicker': 'Refill reminder',
+    'refill.overdue':
+      'Refill date was {{date}} ({{n}} days ago). Sudden discontinuation is a known relapse trigger — call the pharmacist or psychiatrist now.',
+    'refill.dueToday': 'Refill is due today ({{date}}).',
+    'refill.upcoming': 'Refill is due on {{date}} (in {{n}} days).',
+    'refill.updateCta': 'Update date',
+
+    'postDischarge.kicker': 'First 30 days',
+    'postDischarge.title': 'Post-discharge timeline',
+    'postDischarge.intro':
+      'The first month after admission carries the highest re-admit risk. The checklist is organized by phase — check off what is already done.',
+    'postDischarge.bannerBody': 'Day {{day}} after discharge — check the tasks for this phase.',
+    'postDischarge.bannerCta': 'Open timeline',
+    'postDischarge.dischargeOn': 'Discharge date: {{date}}',
+    'postDischarge.dayLabel': 'Day {{day}}',
+    'postDischarge.progress': '{{done}} of {{total}} done',
+    'postDischarge.currentPhase': 'Current phase',
+    'postDischarge.pastPhase': 'Complete',
+    'postDischarge.disclaimer':
+      'This checklist does not replace your discharge instructions. Follow the treating team. It is a memory aid for what to ask and when to schedule.',
+    'postDischarge.noDate.title': 'No discharge date saved',
+    'postDischarge.noDate.body':
+      'Add the discharge date to the medical record to get a timeline anchored to the days since.',
+    'postDischarge.noDate.cta': 'Update medical record',
+    'postDischarge.phase.day0.title': 'Day 0–2',
+    'postDischarge.phase.day0.intent': 'A safe arrival home',
+    'postDischarge.phase.day3.title': 'Day 3–6',
+    'postDischarge.phase.day3.intent': 'Building routine',
+    'postDischarge.phase.day7.title': 'Day 7–13',
+    'postDischarge.phase.day7.intent': 'First outpatient visit',
+    'postDischarge.phase.day14.title': 'Day 14–20',
+    'postDischarge.phase.day14.intent': 'Refills and second visit',
+    'postDischarge.phase.day21.title': 'Day 21–29',
+    'postDischarge.phase.day21.intent': 'Gradual return to function',
+    'postDischarge.phase.day30.title': 'Day 30+',
+    'postDischarge.phase.day30.intent': 'Wrap-up and next plan',
+    'postDischarge.item.dischargeSummary': 'Collect discharge summary (printed + digital).',
+    'postDischarge.item.meds7day': 'Verify 7-day medication supply at home.',
+    'postDischarge.item.bookNextAppt': 'Book first follow-up (community psychiatrist) within 7 days.',
+    'postDischarge.item.homeSafety': 'Walk through the home — remove dangerous items.',
+    'postDischarge.item.homeSafetyHint':
+      'Meds locked, firearm out of the home, alcohol limited.',
+    'postDischarge.item.followUpConfirmed': 'Confirm the psychiatrist appointment by phone.',
+    'postDischarge.item.familyRoutine':
+      'Assign family roles (who drives to the appointment, who handles meds).',
+    'postDischarge.item.sleepLogged': 'Daily log in Matzpen for 3 consecutive days.',
+    'postDischarge.item.firstOutpatient': 'First outpatient visit happened.',
+    'postDischarge.item.escalationScript': "If the visit didn't happen — run the escalation script.",
+    'postDischarge.item.escalationScriptHint':
+      'Call the district psychiatrist. Say: "discharged on X, no follow-up booked." They will help arrange an urgent slot.',
+    'postDischarge.item.sideEffects': 'Log side effects from any new medication.',
+    'postDischarge.item.refillScheduled': "Next refill date set and updated in Matzpen.",
+    'postDischarge.item.secondVisit': 'Book second follow-up (day 21–30).',
+    'postDischarge.item.communityReengage': 'Gradual return to support groups / clubs.',
+    'postDischarge.item.sickLeave': 'Submit sick-leave paperwork to employer / school.',
+    'postDischarge.item.insuranceClaim':
+      'Open a National Insurance file if relevant (form 7801).',
+    'postDischarge.item.returnPlan': 'Plan a gradual return to work / studies with the treating team.',
+    'postDischarge.item.threeMonthReview': 'Book a 3-month review.',
+    'postDischarge.item.familyDebrief': 'Family debrief: what worked, what we would do differently.',
+    'postDischarge.item.warningSignsUpdated': 'Update personal warning signs in the record.',
+
+    'safety.kicker': 'Home safety',
+    'safety.title': 'Restricting access to lethal means',
+    'safety.intro':
+      'In crisis, reducing access to items that could be used for self-harm is the single most-proven suicide-prevention action. The conversation is hard — and that is OK. This page covers what to do and how to talk about it without losing trust.',
+    'safety.why.title': 'Why this works',
+    'safety.why.body':
+      'Consistent research shows that reducing access to lethal means lowers mortality — even without additional treatment. Suicidal moments usually pass within hours; if the means are not at hand at that moment, most people survive.',
+    'safety.scriptLabel': 'What you can say',
+    'safety.item.meds': 'Medications',
+    'safety.item.medsBody':
+      'Store all medication (including pain-killers, sleep aids, antidepressants) in a locked cabinet. Only one adult holds the key. Take old / unused meds out of the home.',
+    'safety.item.medsScript':
+      "I'm putting the meds in a locked cabinet for the next month — not because I don't trust you, but because in a crisis this is basic. I will help you take them every morning.",
+    'safety.item.firearms': 'Firearms',
+    'safety.item.firearmsBody':
+      'If there is a firearm in the home — store it with a relative, a responsible neighbor, or at the police station. License holders can request temporary storage with their licensing provider. If immediate removal is not possible — lock with a different lock from the ammunition.',
+    'safety.item.firearmsScript':
+      "Your firearm will stay with [name] for a few weeks. As soon as you are back to yourself we will bring it back. I want you to be safe.",
+    'safety.item.sharps': 'Knives and sharp objects',
+    'safety.item.sharpsBody':
+      'During acute suicidality — remove large knives, razor blades, and long cords from immediate reach. You do not need a "sterile home" — just move the specific items the treating team flagged.',
+    'safety.item.car': 'Car and keys',
+    'safety.item.carBody':
+      'If your loved one drives during an unstable episode — keep keys in a locked drawer or on you. Unsafe driving is a real-world trigger.',
+    'safety.item.disposal': 'Disposing of leftover medication',
+    'safety.item.disposalBody':
+      'Pharmacies at the HMOs accept unused medication for safe disposal. Do not throw in household trash or down the toilet. Removing surplus meds materially lowers risk.',
+    'safety.crisis.title': 'If risk appears immediate',
+    'safety.crisis.body':
+      "If your loved one mentioned self-harm or suicide, or you found hidden meds or a knife — don't wait. Call 101.",
+    'safety.crisis.callMDA': 'Call 101 (MDA)',
+    'safety.crisis.callEran': 'Call 1201 (ERAN)',
+    'safety.crisis.openEmergency': 'Open emergency',
+    'safety.disclaimer':
+      'This page is based on open suicide-prevention guidance (Means Matter, Israeli Ministry of Health). Not clinical advice. If risk is immediate — calling 101 comes first.',
+
+    'whenWell.kicker': "When they're well — who is my person",
+    'whenWell.heading': "Who they are when they're well",
+    'whenWell.intro':
+      'A short document so the ER team or a new psychiatrist sees a person, not just a chart. Fill in once, print, take with you.',
+    'whenWell.loves.label': 'What they love',
+    'whenWell.loves.hint': 'Music, food, people, places — anything that calms or connects.',
+    'whenWell.loves.placeholder': 'e.g. dogs, falafel, my grandmother, jazz',
+    'whenWell.calms.label': 'What helps calm them',
+    'whenWell.calms.hint': 'Things that help in tense moments — music, silence, holding a hand.',
+    'whenWell.calms.placeholder': 'e.g. quiet music, going outside, a hug',
+    'whenWell.neverSay.label': "What NEVER to say",
+    'whenWell.neverSay.hint': 'Phrases or topics that escalate — important for ER staff.',
+    'whenWell.neverSay.placeholder': 'e.g. "calm down!", "you\'re exaggerating", mention the ex',
+
+    'gr.form.dates.kicker': 'Clinical dates (optional)',
+    'gr.form.dischargeDate.label': 'Last discharge date',
+    'gr.form.dischargeDate.hint': 'Anchors the post-discharge 30-day timeline.',
+    'gr.form.nextRefillDate.label': 'Next refill date',
+    'gr.form.nextRefillDate.hint': 'A reminder appears on the dashboard 3 days before.',
+
+    'share.title': 'Share with the treating team',
+    'share.kicker': 'Temporary share link',
+    'share.intro':
+      'Create a read-only link to the medical record. Send it to a psychiatrist or show in the ER. The link expires automatically at the time you choose and can be revoked manually any time.',
+    'share.ttlLabel': 'Valid for',
+    'share.ttl.24h': '24 hours',
+    'share.ttl.7d': '7 days',
+    'share.ttl.30d': '30 days',
+    'share.createCta': 'Create link',
+    'share.copy': 'Copy',
+    'share.copied': 'Copied ✓',
+    'share.revoke': 'Revoke',
+    'share.expiresAt': 'Expires {{when}}',
+    'share.disclaimer':
+      'Anyone with the link can read the record. Send only to trusted addresses (psychiatrist, ER) and revoke when no longer needed.',
+    'share.notConfigured': "Can't create a link — Supabase isn't configured.",
+    'share.viewer.kicker': 'Medical record — view',
+    'share.viewer.unnamed': 'Patient',
+    'share.viewer.relationship': 'Primary caregiver: {{rel}}',
+    'share.viewer.updated': 'Updated: {{when}}',
+    'share.viewer.dischargeDate': 'Last discharge date',
+    'share.viewer.empty': '—',
+    'share.viewer.loading': 'Loading record…',
+    'share.viewer.expiredTitle': 'Link no longer valid',
+    'share.viewer.expiredBody': 'The link has expired, been revoked, or never existed. Ask the family for a new one.',
+    'share.viewer.errorTitle': 'Failed to load record',
+    'share.viewer.notConfigured': 'The service is not configured.',
+    'share.viewer.disclaimer':
+      'This record is for reference only. Not a substitute for a full medical record and not updated in real time.',
 
     'privacy.kicker': 'Transparency & trust',
     'privacy.title': 'Privacy & data security',

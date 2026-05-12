@@ -6,15 +6,23 @@ import { AlertBanner } from '@/components/AlertBanner';
 import { DailyLogForm } from '@/components/DailyLogForm';
 import { WeeklySummary } from '@/components/WeeklySummary';
 import { OnboardingOverlay } from '@/components/OnboardingOverlay';
+import { RefillBanner } from '@/components/RefillBanner';
+import { TrendChart } from '@/components/TrendChart';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { usePatientId } from '@/lib/usePatientId';
-import { MOCK_PATIENT_ID, MOCK_PATIENT_NAME } from '@/lib/constants';
+import {
+  MOCK_PATIENT_ID,
+  MOCK_PATIENT_NAME,
+  PREVIEW_MODE_ENABLED,
+} from '@/lib/constants';
 import { getGoldenRecord, getRecentLogs } from '@/services/supabaseService';
-import type { DailyLog } from '@/lib/types';
+import type { DailyLog, GoldenRecord } from '@/lib/types';
 
-// Mock recent logs used when Supabase isn't configured so the AlertBanner
-// has something realistic to render in the live preview.
+// Demo logs are only ever shown when the operator explicitly opts into
+// preview mode via NEXT_PUBLIC_ENABLE_PREVIEW_MODE=true. Without that flag
+// the AuthGate now blocks the unconfigured app entirely, so these values
+// can't leak into a real caregiver's view.
 const MOCK_LOGS: DailyLog[] = [
   {
     patientId: MOCK_PATIENT_ID,
@@ -49,11 +57,12 @@ export default function DashboardPage() {
   const { user, configured } = useAuth();
   const { t } = useT();
   const patientId = usePatientId();
-  const [logs, setLogs] = useState<DailyLog[]>(MOCK_LOGS);
+  const [logs, setLogs] = useState<DailyLog[]>(PREVIEW_MODE_ENABLED ? MOCK_LOGS : []);
   const [logsLoading, setLogsLoading] = useState<boolean>(configured);
   // Patient name from the Golden Record. `undefined` while loading, empty
   // string when the caregiver hasn't filled it in yet, real name otherwise.
   const [patientName, setPatientName] = useState<string | undefined>(undefined);
+  const [record, setRecord] = useState<GoldenRecord | null>(null);
 
   const displayName =
     (user?.user_metadata?.full_name as string | undefined) ??
@@ -62,8 +71,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!configured) {
-      // Preview mode: show the placeholder name so the dashboard isn't blank.
-      setPatientName(MOCK_PATIENT_NAME);
+      // Preview mode (explicitly opted in) shows the placeholder name so the
+      // dashboard isn't blank for marketing screenshots. Otherwise leave the
+      // name unset — but AuthGate won't render us at all in that case.
+      setPatientName(PREVIEW_MODE_ENABLED ? MOCK_PATIENT_NAME : '');
       return;
     }
     let cancelled = false;
@@ -71,12 +82,13 @@ export default function DashboardPage() {
     (async () => {
       try {
         const [fetched, golden] = await Promise.all([
-          getRecentLogs(patientId, 7),
+          getRecentLogs(patientId, 30),
           getGoldenRecord(patientId).catch(() => null),
         ]);
         if (!cancelled) {
           if (fetched.length > 0) setLogs(fetched);
           setPatientName(golden?.patientName?.trim() || '');
+          setRecord(golden ?? null);
         }
       } catch {
         if (!cancelled) setPatientName('');
@@ -112,6 +124,10 @@ export default function DashboardPage() {
 
       {showSetupBanner && <SetupBanner />}
 
+      <RefillBanner nextRefillDate={record?.nextRefillDate} />
+
+      <PostDischargeBanner dischargeDate={record?.dischargeDate} />
+
       {logsLoading ? (
         <div className="mz-card p-5 md:p-6 animate-pulse">
           <div className="h-4 w-1/3 bg-sand-100 rounded mb-3" />
@@ -123,10 +139,14 @@ export default function DashboardPage() {
 
       {!logsLoading && <WeeklySummary logs={logs} />}
 
+      {!logsLoading && <TrendChart logs={logs} days={14} />}
+
       <div className="mz-card p-5 md:p-8">
         <DailyLogForm
           recentLogs={logs}
-          onSubmitted={(log) => setLogs((prev) => [{ ...log }, ...prev].slice(0, 7))}
+          onSubmitted={(log) =>
+            setLogs((prev) => [{ ...log }, ...prev].slice(0, 30))
+          }
         />
       </div>
 
@@ -161,5 +181,37 @@ function SetupBanner() {
         {t('dashboard.setup.cta')}
       </Link>
     </div>
+  );
+}
+
+// Surfaces the post-discharge timeline only during the 30-day window after
+// the most recent discharge. The first month is when re-admit risk is
+// highest — this nudges the family into the structured follow-up checklist.
+function PostDischargeBanner({ dischargeDate }: { dischargeDate: string | undefined }) {
+  const { t } = useT();
+  if (!dischargeDate) return null;
+  const d = new Date(`${dischargeDate}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return null;
+  const dayOffset = Math.floor(
+    (Date.now() - d.getTime()) / (24 * 60 * 60 * 1000),
+  );
+  if (dayOffset < 0 || dayOffset > 30) return null;
+  return (
+    <aside className="rounded-2xl bg-sage-bg/70 text-sage border border-sage/20 px-4 py-3 flex items-start justify-between gap-3 flex-wrap">
+      <div className="min-w-0">
+        <div className="text-xs font-bold uppercase tracking-wide opacity-80">
+          {t('postDischarge.kicker')}
+        </div>
+        <p className="text-sm text-ink-soft mt-1 leading-relaxed">
+          {t('postDischarge.bannerBody', { day: dayOffset })}
+        </p>
+      </div>
+      <Link
+        href="/post-discharge"
+        className="text-xs font-semibold underline whitespace-nowrap"
+      >
+        {t('postDischarge.bannerCta')}
+      </Link>
+    </aside>
   );
 }
