@@ -15,7 +15,17 @@ export interface DailyLog {
   impulsivityEvent: boolean;
   medicationTaken?: MedicationTaken;
   notes?: string;
+  // Ids of personal warning signs the caregiver checked today (from
+  // GoldenRecord.warningSigns). Empty/undefined means none were marked.
+  warningSignsHit?: string[];
   createdAt: number;
+}
+
+// A single family-defined warning sign — short phrase, stable id so the
+// daily-log multi-select can reference it without spelling out the text.
+export interface WarningSign {
+  id: string;
+  label: string;
 }
 
 export interface Patient {
@@ -63,6 +73,57 @@ export interface BureaucracyChecklist {
   updatedBy?: string;
 }
 
+// War-room / envelope-membership types.
+
+export interface EnvelopeMember {
+  patientId: string;
+  caregiverId: string;
+  role: string;
+  displayName?: string;
+  joinedAt: number;
+}
+
+export interface EnvelopeInvite {
+  token: string;
+  patientId: string;
+  inviterCaregiverId: string;
+  expiresAt: number;
+  redeemedBy: string | null;
+  redeemedAt: number | null;
+  createdAt: number;
+}
+
+export interface Shift {
+  id: string;
+  patientId: string;
+  caregiverId: string;
+  startAt: number;
+  endAt: number;
+  note?: string;
+  createdAt: number;
+}
+
+export interface SharedTask {
+  id: string;
+  patientId: string;
+  title: string;
+  done: boolean;
+  doneByCaregiver?: string;
+  doneAt?: number;
+  createdByCaregiver: string;
+  createdAt: number;
+}
+
+export interface BackupRequest {
+  id: string;
+  patientId: string;
+  requesterCaregiverId: string;
+  message?: string;
+  createdAt: number;
+  resolvedAt?: number;
+  resolvedByCaregiver?: string;
+}
+
 export interface GoldenRecord {
   id?: string;
   patientId: string;
@@ -93,5 +154,9 @@ export interface GoldenRecord {
   whenWellLoves?: string;
   whenWellCalms?: string;
   whenWellNeverSay?: string;
+  // 3-7 short phrases the family identifies as personal prodrome signs.
+  // When set, the alert algorithm checks recent logs against this list
+  // before falling back to the generic sleep/activity thresholds.
+  warningSigns?: WarningSign[];
   updatedAt: number;
 }

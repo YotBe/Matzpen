@@ -1,8 +1,10 @@
 // Mock directory of mental-health-specialized attorneys.
 //
-// These entries are illustrative only — populate from a vetted partner list
-// before launch. Costs are typical ranges in ILS for an initial paid
-// consultation as of writing; the actual fee is negotiated per case.
+// EVERY entry here has `isSample: true`. The UI surfaces this on each
+// card AND with a page-level banner so a caregiver never mistakes a
+// placeholder phone number (e.g. 03-0000000) for a real lawyer they can
+// call in a crisis. Before populating real attorneys, remove the
+// isSample flag entry by entry and the per-card badge disappears.
 export interface Lawyer {
   id: string;
   name: string;
@@ -15,6 +17,9 @@ export interface Lawyer {
   proBono?: boolean;
   languages: string[];
   notes?: string;
+  // True for placeholder rows that should NOT be called. UI hides phone
+  // CTAs and shows a "sample data" badge instead.
+  isSample?: boolean;
 }
 
 export type LawyerSpecialty =
@@ -36,6 +41,7 @@ export const LAWYERS: Lawyer[] = [
     consultationFeeIls: [600, 900],
     languages: ['he', 'en'],
     notes: 'מתמחה במינוי אפוטרופוס זמני לרכוש ובקשות חסימה בנקאית דחופות.',
+    isSample: true,
   },
   {
     id: 'mock-2',
@@ -46,6 +52,7 @@ export const LAWYERS: Lawyer[] = [
     consultationFeeIls: [500, 800],
     languages: ['he'],
     notes: 'ייצוג בוועדה פסיכיאטרית, התנגדויות לאשפוז כפוי, ערעורים במחוזי.',
+    isSample: true,
   },
   {
     id: 'mock-3',
@@ -56,6 +63,7 @@ export const LAWYERS: Lawyer[] = [
     proBono: true,
     languages: ['he', 'ru'],
     notes: 'סיוע ללא תשלום לזכאים בקצבת נכות נפשית וועדות סל שיקום.',
+    isSample: true,
   },
   {
     id: 'mock-4',
@@ -65,6 +73,7 @@ export const LAWYERS: Lawyer[] = [
     phone: '04-0000000',
     consultationFeeIls: [700, 1000],
     languages: ['he', 'ar'],
+    isSample: true,
   },
   {
     id: 'mock-5',
@@ -75,5 +84,11 @@ export const LAWYERS: Lawyer[] = [
     consultationFeeIls: [550, 850],
     languages: ['he', 'ru'],
     notes: 'התמחות בעיכוב יציאה מהארץ ועיקול חשבונות בנק במצבי משבר.',
+    isSample: true,
   },
 ];
+
+// Convenience flag for the UI: if any entry is a sample, show the
+// page-level warning banner.
+export const HAS_SAMPLE_LAWYERS = LAWYERS.some((l) => l.isSample);
+

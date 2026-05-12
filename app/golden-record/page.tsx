@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { GoldenRecordDisplay } from '@/components/GoldenRecordDisplay';
 import { GoldenRecordForm } from '@/components/GoldenRecordForm';
@@ -11,6 +13,7 @@ import {
   getGoldenRecord,
   saveGoldenRecord,
 } from '@/services/supabaseService';
+import { track } from '@/lib/analytics';
 import type { GoldenRecord } from '@/lib/types';
 
 type Mode = 'edit' | 'view';
@@ -18,10 +21,12 @@ type Mode = 'edit' | 'view';
 export default function GoldenRecordPage() {
   const { configured } = useAuth();
   const { t } = useT();
+  const router = useRouter();
   const patientId = usePatientId();
   const [record, setRecord] = useState<GoldenRecord | null>(null);
   const [mode, setMode] = useState<Mode>('edit');
   const [loading, setLoading] = useState(true);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,20 +48,39 @@ export default function GoldenRecordPage() {
 
   const handleSave = useCallback(
     async (data: Omit<GoldenRecord, 'id' | 'patientId' | 'updatedAt'>) => {
+      setSaveError(null);
       const next: GoldenRecord = {
         ...data,
         patientId,
         updatedAt: Date.now(),
       };
-      if (configured) {
-        await saveGoldenRecord(patientId, data);
+      try {
+        if (configured) {
+          await saveGoldenRecord(patientId, data);
+        }
+      } catch (err) {
+        // Surface the failure to the user — previously it was swallowed by
+        // the form's try/finally and the page silently switched modes,
+        // making the dashboard setup banner reappear with no explanation.
+        const message =
+          err instanceof Error ? err.message : t('gr.form.saveError');
+        setSaveError(message);
+        throw err;
       }
       setRecord(next);
-      // After a successful save, drop the user into view mode so they can
-      // immediately read or print the freshly saved record.
+      track('golden_record_saved', {
+        has_name: Boolean(data.patientName),
+        has_region: Boolean(data.region),
+        meds_count: data.medications.length,
+      });
+      // Invalidate the App Router cache so the dashboard re-fetches the
+      // golden record when the user navigates back. Belt-and-suspenders;
+      // the unmount/remount should already re-run the effect, but this
+      // kills the stale-cache class of bug.
+      router.refresh();
       setMode('view');
     },
-    [configured, patientId],
+    [configured, patientId, router, t],
   );
 
   if (loading) {
@@ -84,7 +108,11 @@ export default function GoldenRecordPage() {
 
       {mode === 'edit' ? (
         <div className="mz-card p-5 md:p-8">
-          <GoldenRecordForm initial={record} onSave={handleSave} />
+          <GoldenRecordForm
+            initial={record}
+            onSave={handleSave}
+            errorMessage={saveError}
+          />
         </div>
       ) : hasSavedRecord && record ? (
         <GoldenRecordDisplay
@@ -112,6 +140,18 @@ export default function GoldenRecordPage() {
         <section className="mz-no-print">
           <h2 className="text-lg font-bold mb-3">{t('share.title')}</h2>
           <ShareManager patientId={patientId} configured={configured} />
+        </section>
+      )}
+
+      {mode === 'view' && configured && (
+        <section className="mz-no-print rounded-2xl bg-sand-50/60 border border-sand-100 p-4 md:p-5">
+          <h2 className="font-bold">{t('gr.vaultLink.title')}</h2>
+          <p className="text-sm text-ink-soft mt-2 leading-relaxed">
+            {t('gr.vaultLink.body')}
+          </p>
+          <Link href="/vault" className="mz-btn mz-btn-ghost mt-3 h-10 px-4 text-sm">
+            {t('gr.vaultLink.cta')}
+          </Link>
         </section>
       )}
     </div>

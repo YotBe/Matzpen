@@ -1,10 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { supabase } from '@/lib/supabaseClient';
+import { track } from '@/lib/analytics';
 
 interface Props {
   /** Render in a fixed-height container (for the floating widget) vs flowing full-page. */
@@ -56,18 +58,21 @@ export function AIAssistant({ variant = 'page', initialPrompt }: Props) {
     const text = input.trim();
     if (!text || isStreaming) return;
     sendMessage({ text });
+    track('assistant_message_sent', { source: 'free_text', length: text.length });
     setInput('');
   }
 
   function sendStarter(text: string) {
     if (isStreaming) return;
     sendMessage({ text });
+    track('assistant_message_sent', { source: 'starter', length: text.length });
   }
 
   const starters = [
     t('assistant.starter.involuntary'),
     t('assistant.starter.bituachLeumi'),
     t('assistant.starter.refusesMeds'),
+    t('assistant.starter.playbook'),
   ];
 
   const containerClass =
@@ -158,9 +163,17 @@ export function AIAssistant({ variant = 'page', initialPrompt }: Props) {
           </button>
         </form>
 
-        <p className="text-[10px] text-ink-mute leading-snug px-1">
-          {t('assistant.disclaimer')}
-        </p>
+        <div className="flex items-center justify-between gap-2 px-1">
+          <p className="text-[10px] text-ink-mute leading-snug flex-1 min-w-0">
+            {t('assistant.disclaimer')}
+          </p>
+          <Link
+            href="/playbook"
+            className="text-[10px] font-semibold text-clay underline whitespace-nowrap shrink-0"
+          >
+            {t('assistant.playbookLink')}
+          </Link>
+        </div>
       </div>
     </div>
   );

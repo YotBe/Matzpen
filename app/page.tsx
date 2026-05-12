@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AlertBanner } from '@/components/AlertBanner';
+import { BurnoutBanner } from '@/components/BurnoutBanner';
+import { CaregiverPulsePrompt } from '@/components/CaregiverPulsePrompt';
 import { DailyLogForm } from '@/components/DailyLogForm';
 import { WeeklySummary } from '@/components/WeeklySummary';
 import { OnboardingOverlay } from '@/components/OnboardingOverlay';
@@ -17,6 +19,7 @@ import {
   PREVIEW_MODE_ENABLED,
 } from '@/lib/constants';
 import { getGoldenRecord, getRecentLogs } from '@/services/supabaseService';
+import { computeAlertLevel } from '@/utils/alertAlgorithm';
 import type { DailyLog, GoldenRecord } from '@/lib/types';
 
 // Demo logs are only ever shown when the operator explicitly opts into
@@ -124,9 +127,23 @@ export default function DashboardPage() {
 
       {showSetupBanner && <SetupBanner />}
 
+      {configured && user && (
+        <CaregiverPulsePrompt
+          patientId={patientId}
+          caregiverId={user.id}
+          configured={configured}
+        />
+      )}
+
+      {configured && (
+        <BurnoutBanner patientId={patientId} configured={configured} />
+      )}
+
       <RefillBanner nextRefillDate={record?.nextRefillDate} />
 
       <PostDischargeBanner dischargeDate={record?.dischargeDate} />
+
+      <LockdownBanner logs={logs} />
 
       {logsLoading ? (
         <div className="mz-card p-5 md:p-6 animate-pulse">
@@ -144,6 +161,7 @@ export default function DashboardPage() {
       <div className="mz-card p-5 md:p-8">
         <DailyLogForm
           recentLogs={logs}
+          warningSigns={record?.warningSigns}
           onSubmitted={(log) =>
             setLogs((prev) => [{ ...log }, ...prev].slice(0, 30))
           }
@@ -181,6 +199,40 @@ function SetupBanner() {
         {t('dashboard.setup.cta')}
       </Link>
     </div>
+  );
+}
+
+// Surfaces the lockdown protocol when the alert algorithm escalates to
+// yellow or red. Non-blocking — caregivers can dismiss the banner without
+// opening the page, but the link sits right above the alert details so
+// they see it immediately.
+function LockdownBanner({ logs }: { logs: DailyLog[] }) {
+  const { t } = useT();
+  const level = useMemo(() => computeAlertLevel(logs).level, [logs]);
+  if (level === 'STABLE') return null;
+  return (
+    <aside
+      className={`rounded-2xl px-4 py-3 flex items-start justify-between gap-3 flex-wrap border ${
+        level === 'RED_ALERT'
+          ? 'bg-crimson-bg text-crimson-deep border-crimson/30'
+          : 'bg-amber_-bg text-amber_-ink border-amber_/30'
+      }`}
+    >
+      <div className="min-w-0">
+        <div className="text-xs font-bold uppercase tracking-wide opacity-80">
+          {t('lockdown.banner.kicker')}
+        </div>
+        <p className="text-sm mt-1 leading-relaxed font-semibold">
+          {t('lockdown.banner.body')}
+        </p>
+      </div>
+      <Link
+        href="/lockdown"
+        className="text-xs font-bold underline whitespace-nowrap"
+      >
+        {t('lockdown.banner.cta')} →
+      </Link>
+    </aside>
   );
 }
 

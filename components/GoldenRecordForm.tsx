@@ -5,16 +5,20 @@ import { useDropzone, type FileRejection } from 'react-dropzone';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { supabase } from '@/lib/supabaseClient';
 import { REGIONS, type Region } from '@/lib/regions';
-import type { GoldenRecord } from '@/lib/types';
+import type { GoldenRecord, WarningSign } from '@/lib/types';
 
 interface Props {
   initial?: GoldenRecord | null;
   onSave: (data: Omit<GoldenRecord, 'id' | 'patientId' | 'updatedAt'>) => Promise<void> | void;
+  // Error message from the parent's save handler. Rendered above the
+  // submit button so users see what went wrong instead of having the
+  // failure swallowed.
+  errorMessage?: string | null;
 }
 
 type ExtractStatus = 'idle' | 'uploading' | 'done' | 'error';
 
-export function GoldenRecordForm({ initial, onSave }: Props) {
+export function GoldenRecordForm({ initial, onSave, errorMessage }: Props) {
   const { t } = useT();
   const [patientName, setPatientName] = useState(initial?.patientName ?? '');
   const [relationship, setRelationship] = useState(initial?.relationship ?? '');
@@ -35,6 +39,9 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
   const [whenWellLoves, setWhenWellLoves] = useState(initial?.whenWellLoves ?? '');
   const [whenWellCalms, setWhenWellCalms] = useState(initial?.whenWellCalms ?? '');
   const [whenWellNeverSay, setWhenWellNeverSay] = useState(initial?.whenWellNeverSay ?? '');
+  const [warningSigns, setWarningSigns] = useState<WarningSign[]>(
+    initial?.warningSigns ?? [],
+  );
   const [busy, setBusy] = useState(false);
 
   const handleExtracted = useCallback(
@@ -71,7 +78,12 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
         whenWellLoves: whenWellLoves.trim() || undefined,
         whenWellCalms: whenWellCalms.trim() || undefined,
         whenWellNeverSay: whenWellNeverSay.trim() || undefined,
+        warningSigns: warningSigns.length > 0 ? warningSigns : undefined,
       });
+    } catch {
+      // Parent (handleSave) already exposes the error via errorMessage
+      // prop and re-throws. We catch here so the rejected promise isn't
+      // unhandled and the button correctly leaves the busy state.
     } finally {
       setBusy(false);
     }
@@ -260,6 +272,17 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
           />
         </Field>
       </div>
+
+      <WarningSignsEditor value={warningSigns} onChange={setWarningSigns} />
+
+      {errorMessage && (
+        <p
+          role="alert"
+          className="text-sm text-crimson-deep bg-crimson-bg rounded-xl px-3 py-2"
+        >
+          {errorMessage}
+        </p>
+      )}
 
       <button type="submit" disabled={busy} className="mz-btn mz-btn-clay w-full">
         {busy ? t('common.saving') : t('gr.form.submit')}
@@ -472,5 +495,85 @@ function Field({
       {hint && <div className="text-xs text-ink-mute mt-0.5">{hint}</div>}
       <div className="mt-2">{children}</div>
     </label>
+  );
+}
+
+// Editor for personalized warning signs. Stable id per row so the daily
+// log can reference it; user-editable label. 3-7 entries recommended.
+function WarningSignsEditor({
+  value,
+  onChange,
+}: {
+  value: WarningSign[];
+  onChange: (next: WarningSign[]) => void;
+}) {
+  const { t } = useT();
+
+  function update(idx: number, label: string) {
+    onChange(value.map((s, i) => (i === idx ? { ...s, label } : s)));
+  }
+  function add() {
+    if (value.length >= 7) return;
+    const id =
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : `ws-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    onChange([...value, { id, label: '' }]);
+  }
+  function remove(idx: number) {
+    onChange(value.filter((_, i) => i !== idx));
+  }
+
+  return (
+    <div className="rounded-card border border-sand-100 bg-sand-50/40 p-4 md:p-5 space-y-3">
+      <div>
+        <div className="text-[11px] font-bold uppercase tracking-widest text-ink-mute">
+          {t('warningSigns.kicker')}
+        </div>
+        <p className="text-xs text-ink-mute mt-1 leading-relaxed">
+          {t('warningSigns.intro')}
+        </p>
+      </div>
+
+      {value.length === 0 ? (
+        <p className="text-sm text-ink-mute">{t('warningSigns.empty')}</p>
+      ) : (
+        <ul className="space-y-2">
+          {value.map((sign, idx) => (
+            <li key={sign.id} className="flex items-center gap-2">
+              <input
+                type="text"
+                value={sign.label}
+                onChange={(e) => update(idx, e.target.value)}
+                placeholder={t('warningSigns.placeholder')}
+                className="mz-input flex-1"
+                maxLength={80}
+              />
+              <button
+                type="button"
+                onClick={() => remove(idx)}
+                className="text-xs text-ink-mute underline hover:text-crimson-deep px-2"
+                aria-label={t('warningSigns.remove')}
+              >
+                {t('warningSigns.remove')}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <button
+        type="button"
+        onClick={add}
+        disabled={value.length >= 7}
+        className="mz-btn mz-btn-ghost h-9 px-3 text-sm"
+      >
+        + {t('warningSigns.add')}
+      </button>
+
+      {value.length >= 7 && (
+        <p className="text-xs text-ink-mute">{t('warningSigns.maxHint')}</p>
+      )}
+    </div>
   );
 }

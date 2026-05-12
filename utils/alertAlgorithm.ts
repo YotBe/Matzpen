@@ -14,6 +14,11 @@ import type { AlertReason, AlertResult, DailyLog } from '@/lib/types';
 // rationale recorded here. They are also surfaced in the UI (see the
 // "How is this calculated?" panel in AlertBanner) so caregivers can judge
 // the alert against their patient's normal baseline.
+//
+// PERSONALIZED warning signs (golden_records.warning_signs) take precedence:
+// if the family identified specific prodrome phrases and those have been
+// checked on 2+ consecutive days, we escalate before the generic rules
+// fire. This is the fix for atypical presentations.
 export const ALERT_THRESHOLDS = {
   sleepHours: 4.5,
   sleepHoursWithMissedMeds: 4,
@@ -21,6 +26,8 @@ export const ALERT_THRESHOLDS = {
   yellowDaysForRed: 5,
   consecutiveImpulsivityDaysForRed: 2,
   consecutiveMissedMedDaysForYellow: 2,
+  personalSignDaysForYellow: 2,
+  personalSignDaysForRed: 4,
 } as const;
 
 const SLEEP_THRESHOLD = ALERT_THRESHOLDS.sleepHours;
@@ -71,7 +78,30 @@ export function computeAlertLevel(logs: DailyLog[]): AlertResult {
     (l) => l.medicationTaken === 'no' || l.medicationTaken === 'refused',
   );
 
+  // Personalized warning signs come first. A streak of days where ANY
+  // family-defined sign was checked is more credible than generic
+  // thresholds, and lets us escalate even when sleep/activity look fine.
+  const personalStreak = consecutiveFromNewest(
+    sorted,
+    (l) => (l.warningSignsHit?.length ?? 0) > 0,
+  );
+
   let level: AlertResult['level'] = 'STABLE';
+
+  if (personalStreak >= ALERT_THRESHOLDS.personalSignDaysForYellow) {
+    level = escalate(level, 'YELLOW_ALERT');
+    reasons.push({
+      key: 'alert.reason.personalSigns',
+      vars: { days: personalStreak },
+    });
+  }
+  if (personalStreak >= ALERT_THRESHOLDS.personalSignDaysForRed) {
+    level = escalate(level, 'RED_ALERT');
+    reasons.push({
+      key: 'alert.reason.personalSignsRed',
+      vars: { days: personalStreak },
+    });
+  }
 
   if (yellowStreak >= 2) {
     level = escalate(level, 'YELLOW_ALERT');

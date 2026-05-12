@@ -71,6 +71,16 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.assistantHelper': 'מענה חי לשאלות בירוקרטיה ומשבר',
     'nav.tools': 'כלים',
     'nav.toolsHelper': 'משפט, אשפוז, מקרי בוחן',
+    'nav.warRoom': 'חדר מבצעים',
+    'nav.warRoomHelper': 'משמרות, משימות, חילוץ',
+    'nav.lockdown': 'נעילת סביבה',
+    'nav.lockdownHelper': 'צ׳קליסט פעולות חירום',
+    'nav.playbook': 'תסריטי הרגעה',
+    'nav.playbookHelper': 'מה לומר כשהמצב מתלהט',
+    'nav.vault': 'כספת מדיה',
+    'nav.vaultHelper': 'תיעוד התנהגות לרופאים',
+    'nav.selfCare': 'תמיכה למשפחה',
+    'nav.selfCareHelper': 'משאבי שחיקה ותמיכה',
     'nav.legal': 'מגן משפטי',
     'nav.legalHelper': 'אפוטרופסות, חסימת אשראי, עיכוב יציאה',
     'nav.hospitalization': 'חלופות ואשפוז',
@@ -349,6 +359,21 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.form.contacts.hint':
       'פסיכיאטר מטפל, מסגרת שיקומית, רופא משפחה — שם וטלפון.',
     'gr.form.submit': 'שמירת התיק',
+    'gr.form.saveError': 'השמירה נכשלה. אנא נסו שוב או רעננו את הדף.',
+    'warningSigns.kicker': 'סימני אזהרה אישיים',
+    'warningSigns.intro':
+      '3–7 משפטים קצרים שאתם מזהים כסימן ההידרדרות הספציפי של בן/בת המשפחה שלכם. לדוגמה: "מפסיק/ה לענות לטלפון", "מתחיל/ה לקנות באינטרנט בלילה", "מדבר/ת מהר על רעיונות חדשים". במצב חירום נשתמש בהם להתראה לפני האלגוריתם הכללי.',
+    'warningSigns.empty': 'עדיין לא הגדרתם סימני אזהרה אישיים.',
+    'warningSigns.placeholder': 'למשל: מפסיק/ה לישון בלילה',
+    'warningSigns.add': 'הוסיפו סימן',
+    'warningSigns.remove': 'הסר',
+    'warningSigns.maxHint': 'הגענו למקסימום — 7 סימנים. שווה למקד.',
+    'dailyLog.warningSignsKicker': 'סימני האזהרה שלכם',
+    'dailyLog.warningSignsHint': 'סמנו אילו מהסימנים זוהו היום. ריבוי ימי סימון יעלה את רמת ההתראה.',
+    'alert.reason.personalSigns':
+      '{{days}} ימים רצופים שבהם סומנו סימני אזהרה אישיים שהגדרתם',
+    'alert.reason.personalSignsRed':
+      '{{days}} ימים של סימני אזהרה אישיים — מצב מצריך התערבות',
 
     // AI extraction dropzone (Golden Record)
     'gr.extract.title': 'העלה סיכום אשפוז או ביקור רופא (PDF/תמונה) למילוי אוטומטי של התיק',
@@ -618,6 +643,10 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'legal.lawyers.empty': 'אין תוצאות לסינון. נסו להרחיב את החיפוש.',
     'legal.lawyers.disclaimer':
       'המידע מובא לעזרה בלבד. אין למצפן זיקה לעורכי/ות הדין ברשימה ואין כאן המלצה אישית. ודאו תעריפים וסמכות במשרד הרלוונטי לפני התקשרות.',
+    'legal.lawyers.sampleBadge': 'נתוני דוגמה',
+    'legal.lawyers.sampleBannerKicker': 'אזהרה: רשימה זו אינה אמיתית',
+    'legal.lawyers.sampleBannerBody':
+      'הערכים בלוח עורכי הדין הם נתוני דמו בלבד. מספרי הטלפון אינם פעילים. אל תחייגו אליהם במצב חירום. רשימה עם עורכי דין אמיתיים תתווסף בהמשך — בינתיים פנו דרך לשכת עורכי הדין, אנוש, או עוצמה.',
     'legal.lawyers.specialty.guardianship': 'אפוטרופסות',
     'legal.lawyers.specialty.involuntary': 'אשפוז כפוי וועדות פסיכיאטריות',
     'legal.lawyers.specialty.criminal_mental_health': 'פלילי בריאות הנפש',
@@ -655,6 +684,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'hosp.tag.noPsychER': 'אין מיון פסיכיאטרי — קבלה בתיאום',
     'hosp.tag.minors': 'מקבל נוער',
     'hosp.tag.commitment': 'מוסמך לאשפוז כפוי',
+    'hosp.tag.unverified': 'לא אומת',
+    'hosp.unverifiedNotice':
+      'הפרטים לא אומתו מול אתר בית החולים לאחרונה. ודאו את מספר הטלפון לפני התקשרות במצב חירום — מספרים עשויים להתעדכן.',
 
     'hosp.altFilter.all': 'הכל',
     'hosp.altFilter.balancing': 'בתים מאזנים',
@@ -878,6 +910,309 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'share.viewer.disclaimer':
       'הרשומה מוצגת לעיון בלבד. אינה תחליף לתיק רפואי מלא ואינה מתועדכת בזמן אמת.',
 
+    // ── War Room ───────────────────────────────────────────────────────────
+    'warRoom.kicker': 'חדר מבצעים',
+    'warRoom.title': 'ניהול משבר משותף',
+    'warRoom.intro':
+      'מקום אחד שבו כל המעטפת רואה את אותו דבר: מי במשמרת, מה צריך לעשות, ומי זקוק לחילוץ עכשיו. עדכונים מסונכרנים בזמן אמת.',
+    'warRoom.disclaimer':
+      'חדר המבצעים נועד לתיאום משפחתי, לא להחלפת הצוות הרפואי. במצב חירום מיידי חיוג 100/101 קודם לכל.',
+    'warRoom.notConfigured': 'חדר המבצעים זמין רק לאחר חיבור ל־Supabase.',
+    'warRoom.tab.shifts': 'משמרות',
+    'warRoom.tab.tasks': 'משימות',
+    'warRoom.tab.envelope': 'המעטפת',
+
+    'warRoom.shifts.heading': 'לוח משמרות השגחה',
+    'warRoom.shifts.startAt': 'תחילת המשמרת',
+    'warRoom.shifts.endAt': 'סוף המשמרת',
+    'warRoom.shifts.note': 'הערה למשמרת (אופציונלי)',
+    'warRoom.shifts.notePlaceholder': 'למשל: לוקח לטיפול בשעה 17:00',
+    'warRoom.shifts.signUp': 'הרשמה למשמרת',
+    'warRoom.shifts.empty': 'אף משמרת לא נרשמה עדיין. מי לוקח את הראשונה?',
+    'warRoom.shifts.activeNow': 'במשמרת כעת',
+    'warRoom.shifts.unnamedMember': 'בן משפחה',
+    'warRoom.shifts.errorBadDate': 'תאריך לא תקין.',
+    'warRoom.shifts.errorEndBeforeStart': 'סוף המשמרת חייב להיות אחרי תחילתה.',
+
+    'warRoom.tasks.heading': 'משימות המעטפת',
+    'warRoom.tasks.placeholder': 'משימה חדשה (למשל: לקנות תרופות)',
+    'warRoom.tasks.add': 'הוסף',
+    'warRoom.tasks.empty': 'אין משימות פתוחות. הוסיפו את הראשונה.',
+    'warRoom.tasks.completed': 'משימות שהושלמו ({{n}})',
+    'warRoom.tasks.doneBy': 'הושלם · {{name}} · {{when}}',
+    'warRoom.tasks.createdBy': 'נוסף · {{name}}',
+    'warRoom.tasks.remove': 'הסר',
+
+    'warRoom.backup.heading': 'בקשת חילוץ',
+    'warRoom.backup.sosCta': '⚡ צריך/ה חילוץ — קרא/י לעזרה',
+    'warRoom.backup.activeBanner': 'בקשת חילוץ פעילה',
+    'warRoom.backup.requestedBy': '{{name}} מבקש/ת חילוץ',
+    'warRoom.backup.yoursWaiting': 'הבקשה שלך פעילה — בני המשפחה רואים אותה',
+    'warRoom.backup.confirmIntro':
+      'הבקשה תופיע מיד אצל כל מי שמחובר עכשיו לחדר המבצעים. השתמשו רק כשבאמת צריך — שמירת אמינות הסימן חשובה.',
+    'warRoom.backup.messageLabel': 'הודעה (אופציונלי)',
+    'warRoom.backup.messagePlaceholder': 'למשל: צריך מישהו בבית עוד שעה',
+    'warRoom.backup.send': 'שלח/י בקשה',
+    'warRoom.backup.resolve': 'טופל',
+    'warRoom.backup.disclaimer':
+      'הבקשה גלויה רק לבני המעטפת. היא לא מתחלפת לשירות חירום — להוזעה דחופה חייגו 101/100.',
+    'push.sos.title': '⚡ בקשת חילוץ במצפן',
+    'push.sos.fallbackBody': 'בני משפחה זקוקים לעזרה כרגע. פתח את חדר המבצעים.',
+    'push.optIn.body':
+      'הפעלת התראות דחיפה תאפשר לכם לקבל סימן גם כשהאפליקציה סגורה. מומלץ למי שאחראי/ת על המעטפת.',
+    'push.optIn.cta': 'הפעלת התראות',
+    'push.optIn.denied':
+      'התראות חסומות לדפדפן הזה. כדי להפעיל — עברו להגדרות האתר ואפשרו "Notifications".',
+
+    'warRoom.envelope.heading': 'המעטפת — מי איתי',
+    'warRoom.envelope.intro':
+      'הוסיפו בני משפחה וחברים לחדר המבצעים. רק חברי המעטפת רואים את המשמרות, המשימות ובקשות החילוץ. בני המעטפת לא רואים את הדיווחים היומיים הפרטיים שלכם.',
+    'warRoom.envelope.inviteCta': 'יצירת קישור הזמנה',
+    'warRoom.envelope.ownerTag': 'בעלים',
+    'warRoom.envelope.disclaimer':
+      'מי שיש לו את הקישור יכול להצטרף לחדר המבצעים. שלחו רק לאנשים שאתם סומכים עליהם, ובטלו קישורים שלא נוצלו.',
+
+    'warRoom.envelope.join.title': 'הצטרפות למעטפת',
+    'warRoom.envelope.join.needsLogin':
+      'כדי להצטרף יש להתחבר או להירשם. אחרי ההתחברות תוחזרו לכאן אוטומטית.',
+    'warRoom.envelope.join.redeeming': 'מצטרפים לחדר המבצעים…',
+    'warRoom.envelope.join.ok': 'הצטרפתם בהצלחה ✓',
+    'warRoom.envelope.join.redirecting': 'מעבירים אתכם לחדר המבצעים…',
+    'warRoom.envelope.join.errorTitle': 'הקישור אינו תקף',
+    'warRoom.envelope.join.notConfigured': 'השירות אינו מוגדר.',
+    'warRoom.envelope.join.backHome': 'חזרה לבית',
+
+    // ── Lockdown protocol ─────────────────────────────────────────────────
+    'lockdown.kicker': 'פרוטוקול חירום',
+    'lockdown.title': 'נעילת הסביבה',
+    'lockdown.intro':
+      'כשמדדי האזהרה עולים — צמצום גישה לכלים שעלולים להזיק הוא הצעד היחיד שבני המשפחה יכולים לעשות מיד. סמנו כל פריט שהושלם — כל בני המעטפת רואים את ההתקדמות בזמן אמת.',
+    'lockdown.disclaimer':
+      'הצ׳קליסט הוא עזר משפחתי, לא תחליף לטיפול. גם אם הכל סומן — אם הסכנה מיידית, חיוג 101/100 קודם.',
+    'lockdown.progress': '{{done}} מתוך {{total}} הושלמו',
+    'lockdown.resetCta': 'איפוס',
+    'lockdown.resetConfirm': 'לאפס את כל הצ׳קליסט?',
+    'lockdown.doneBy': 'בוצע · {{name}} · {{when}}',
+    'lockdown.category.access': 'גישה למפתחות וכלי רכב',
+    'lockdown.category.finance': 'אשראי, מזומן ופיננסים',
+    'lockdown.category.travel': 'דרכון ויציאה מהארץ',
+    'lockdown.category.substances': 'אלכוהול ותרופות',
+    'lockdown.item.carKeys': 'הסתרת מפתחות הרכב',
+    'lockdown.item.carKeysHint': 'כולל פתח רזרבי בגלאי / בכיס מעיל / אצל שכן.',
+    'lockdown.item.spareKeys': 'הסתרת מפתחות חליפיים נוספים',
+    'lockdown.item.homeKeys': 'מפתחות הבית — לוודא שאי אפשר לצאת ולחזור באמצע הלילה ללא ידיעה',
+    'lockdown.item.creditCards': 'איסוף כרטיסי אשראי',
+    'lockdown.item.creditCardsHint':
+      'כולל כרטיסים נוספים מצורפים. שקלו להקפיא דרך אפליקציית הבנק לפני שמסתירים.',
+    'lockdown.item.idCard': 'הסתרת תעודת זהות',
+    'lockdown.item.checkbook': 'הסתרת פנקס צ׳קים',
+    'lockdown.item.bankApps': 'הסרה זמנית של אפליקציות בנק מהטלפון',
+    'lockdown.item.bankAppsHint':
+      'במיוחד אפליקציות שמאפשרות העברה מהירה (ביט, פייבוקס) או פתיחת מסגרת אשראי.',
+    'lockdown.item.passport': 'הסתרת דרכון',
+    'lockdown.item.driverLicense': 'הסתרת רישיון נהיגה',
+    'lockdown.item.alcohol': 'הוצאת אלכוהול מהבית',
+    'lockdown.item.oldMeds': 'הוצאת תרופות ישנות / לא בשימוש',
+    'lockdown.item.oldMedsHint':
+      'בית המרקחת בקופת החולים מקבל תרופות עודפות להשמדה. השאירו רק את הטיפול הנוכחי, בארון נעול.',
+    'lockdown.banner.kicker': 'מדדי אזהרה עלו',
+    'lockdown.banner.body':
+      'הופעלה התראה. הפעלת פרוטוקול נעילת הסביבה מקצרת את חלון הסיכון.',
+    'lockdown.banner.cta': 'פתח פרוטוקול נעילה',
+    'lockdown.followUp.title': 'הצעדים הבאים',
+    'lockdown.followUp.body':
+      'אחרי שהסביבה נעולה — הצעדים המשלימים: בקשות משפטיות דחופות, תיאום משמרות, ובדיקת בטיחות נוספת.',
+    'lockdown.followUp.legalCta': 'מגן משפטי',
+    'lockdown.followUp.warRoomCta': 'חדר מבצעים',
+    'lockdown.followUp.safetyCta': 'מדריך בטיחות',
+
+    // ── De-escalation playbook (LEAP) ─────────────────────────────────────
+    'playbook.kicker': 'תסריטי הרגעה',
+    'playbook.title': 'איך מדברים כשהמצב מתלהט',
+    'playbook.intro':
+      'תסריטי תקשורת מבוססי שיטת LEAP. המטרה: לתקף את הרגש מבלי להסכים עם הדלוזיה. משפט מאמת ("אתה נשמע מבוהל") נותן חיבור; הסכמה עם תוכן הדלוזיה ("כן, השכנים באמת מצותתים") מבססת אותה.',
+    'playbook.disclaimer':
+      'התסריטים הם נקודות פתיחה ולא נוסחה. כל מצב ייחודי — קראו את בן המשפחה שלכם והתאימו. אין כאן ייעוץ קליני.',
+    'playbook.leap.title': 'שיטת LEAP — בקצרה',
+    'playbook.leap.body':
+      'L — הקשבה אקטיבית, ללא ויכוח על העובדות.\nE — אמפתיה — תקפו את הרגש.\nA — הסכמה על מטרות משותפות (לישון, להרגיש בטוח), לא על האבחנה.\nP — שותפות — בנו משימה משותפת קטנה.',
+    'playbook.allScenarios': 'כל התסריטים',
+    'playbook.signsLabel': 'סימני זיהוי',
+    'playbook.doLabel': 'מה לעשות',
+    'playbook.dontLabel': 'מה לא לעשות',
+    'playbook.scriptLabel': 'נוסח לפתיחה',
+    'playbook.scriptAltLabel': 'נוסח חלופי',
+    'playbook.askAssistant.title': 'לא מצאתם תרחיש שמתאים?',
+    'playbook.askAssistant.body':
+      'העוזר יכול לעזור לכם לחבר תסריט מותאם למצב שאתם בו עכשיו.',
+    'playbook.askAssistant.cta': 'שאל את העוזר',
+    'playbook.askAssistant.prompt':
+      'אני מתמודד/ת עכשיו עם מצב מורכב מול בן/בת המשפחה. תוכל/י לעזור לי לבחור נוסח לפי שיטת LEAP?',
+
+    'playbook.paranoid.title': 'דלוזיות פרנואידיות',
+    'playbook.paranoid.signs':
+      'תחושה שעוקבים, מאמין/ה ששמים לו דברים באוכל, חוסר אמון פתאומי בקרובים, סגירת חלונות וזכוכיות.',
+    'playbook.paranoid.do':
+      'תקפו את הרגש ("נשמע ממש מפחיד"), שמרו על מרחק פיזי שלא מאיים, דברו בקול נמוך ואיטי, הציעו לעשות משהו פיזי קטן יחד (כוס מים).',
+    'playbook.paranoid.dont':
+      'אל תתווכחו על העובדות. אל תצחקו. אל תאמרו "תירגע" או "אין על מה לחשוש". אל תיגעו פתאום מאחור.',
+    'playbook.paranoid.script':
+      'אני שומע/ת אותך. אני לא חייב/ת לדעת מי בדיוק עוקב — מה שחשוב לי זה שאתה מרגיש מאוים. אני כאן. אפשר לשבת ביחד דקה?',
+    'playbook.paranoid.scriptAlt':
+      'אני מבין/ה למה אתה לא רוצה לאכול את זה עכשיו. אין בעיה. אולי משהו אחר מהבית, שהכנתי לפניך?',
+
+    'playbook.grandiosity.title': 'גרנדיוזיות',
+    'playbook.grandiosity.signs':
+      'תכניות עסקיות גדולות, רכישות יקרות, תחושת שליחות, ביטחון יוצא דופן, דיבור מהיר, חוסר שינה מבלי שזה מפריע.',
+    'playbook.grandiosity.do':
+      'הביעו עניין בלי לאשר את הסיפור. מקדו את השיחה בצעד אחד קטן ("בוא נדבר על מה שאתה רוצה לעשות מחר"). הסיטו לעיסוק שמרגיע (טבע, מוזיקה).',
+    'playbook.grandiosity.dont':
+      'אל תתעמתו עם הרעיון הגדול. אל תאמרו "אתה לא חושב נכון". אל תנסו לחתום הסכמים פיננסיים בזמן הזה.',
+    'playbook.grandiosity.script':
+      'אני שומע/ת רעיון גדול וזה מרגיש לך אמיתי מאוד. בוא נעשה אחד קטן ביחד היום — לישון לפחות 5-6 שעות, ומחר נחזור לדבר על השאר.',
+    'playbook.grandiosity.scriptAlt':
+      'הרעיון מעניין. כדי לעשות אותו טוב כדאי לבדוק עם [שם אדם אמין] לפני שמשקיעים. אפשר לדחות בשבועיים?',
+
+    'playbook.agitation.title': 'אגיטציה ועצבנות',
+    'playbook.agitation.signs':
+      'הליכה הלוך ושוב, צעקות, הקפצה של דלתות, התקפי זעם פתאומיים, חוסר יכולת לשבת.',
+    'playbook.agitation.do':
+      'הוציאו ילדים ובעלי חיים מהחדר. עמדו זוויתית (לא מולו), עם דלת מוצא פנויה. דברו לאט. הציעו אפשרויות פשוטות ("רוצה מים, או צאת לאוויר?"). תנו זמן.',
+    'playbook.agitation.dont':
+      'אל תרימו את הקול. אל תחסמו את היציאה. אל תיגעו בכוח. אל תיתנו אולטימטומים ("או שאתה רגוע, או…").',
+    'playbook.agitation.script':
+      'אני רואה שיש בך עומס גדול עכשיו. אני לא הולך/ת לדבר על שום דבר חשוב כרגע. אני רק כאן. אם תרצה — אצא לדקה ואחזור אחר כך.',
+
+    'playbook.refusalMeds.title': 'סירוב לתרופות',
+    'playbook.refusalMeds.signs':
+      'התווכחות על המינון, "אני לא צריך/ה את זה יותר", הסתרת כדורים, האשמת הרופא, חוסר אמון בטיפול.',
+    'playbook.refusalMeds.do':
+      'הקשיבו ראשית. שאלו מה התופעה שמפריעה ("אילו תופעות אתה מרגיש?"). הציעו לדבר על זה עם הרופא ביחד. הזכירו מטרה משותפת, לא אבחנה.',
+    'playbook.refusalMeds.dont':
+      'אל תאמרו "אתה חייב". אל תחביאו תרופה באוכל ללא ידיעתו (פוגע באמון לתמיד). אל תחזרו על "אתה חולה ואתה צריך".',
+    'playbook.refusalMeds.script':
+      'אני שומע/ת שהתרופה הזאת עושה לך משהו לא נעים. ספר/י לי מה בדיוק. אני יכול/ה לתאם פגישה עם הרופא, ולשבת איתך — שתגיד/י לו בעצמך.',
+    'playbook.refusalMeds.scriptAlt':
+      'אני מבין/ה את ההחלטה לעצור. בקשה אחת — לפני שמפסיקים לגמרי, בוא נדבר עם הרופא ביחד. שלא יקרה משהו שלא ראינו.',
+
+    'playbook.suicidal.title': 'מחשבות אובדניות',
+    'playbook.suicidal.signs':
+      'דיבור על "להיעלם", פרידה מאנשים, חלוקת חפצים, חיפוש שיטות, "לכולם יהיה יותר טוב בלעדיי", שינוי פתאומי לרוגע אחרי תקופת מצוקה.',
+    'playbook.suicidal.do':
+      'שאלו ישירות ("האם אתה חושב לפגוע בעצמך?"). הקשיבו בלי לתקן. הוציאו אמצעים קטלניים מהבית (תרופות, נשק, ראו /safety). אל תשאירו לבד. הזעיקו 101.',
+    'playbook.suicidal.dont':
+      'אל תאמרו "אל תהיה דרמטי". אל תבטיחו "אני לא אספר לאף אחד" — אם המצב מסכן חיים, חייבים להזעיק. אל תשאירו את האדם לבד.',
+    'playbook.suicidal.script':
+      'אני שומע/ת אותך. אני לא הולך/ת ללכת לשום מקום. נספר את זה לרופא ביחד. אני איתך.',
+
+    'playbook.withdrawal.title': 'התכנסות ודיכאון עמוק',
+    'playbook.withdrawal.signs':
+      'לא קם/ה מהמיטה, מסרב/ת לאכול, מפסיק/ה לענות לטלפון, היגיינה ירדה, "אין לי כוח", השתקה.',
+    'playbook.withdrawal.do':
+      'דבר/י באמירות קצרות, חיוביות, לא דורשות. הציעו פעולה זעירה ("בוא נצא דקה לחלון"). הביאו אוכל ושתייה לחדר. נגעו רק אם זה מתקבל.',
+    'playbook.withdrawal.dont':
+      'אל תאמרו "תקום, אין סיבה לעצב". אל תכריחו לדבר. אל תפעילו מוזיקה רעשנית או "תפנקו את עצמך".',
+    'playbook.withdrawal.script':
+      'אני יודע/ת שזה רגע נורא קשה. אני לא מצפה ממך לכלום. אני כאן, מביא/ה לך כוס מים, ואני נשאר/ת ליד עד שתרצה/י משהו.',
+
+    // ── Caregiver pulse + burnout ─────────────────────────────────────────
+    'pulse.kicker': 'איך אתם?',
+    'pulse.title': 'בדיקה קצרה — לכם, לא לאדם שאתם מלווים',
+    'pulse.intro':
+      'דקה אחת ביום. עוזר לכם לזכור שאתם גם בני אדם, ומאפשר לשאר בני המעטפת לראות אם מישהו שוחק.',
+    'pulse.notNow': 'לא עכשיו',
+    'pulse.sleepLabel': 'כמה שעות ישנתם בלילה האחרון?',
+    'pulse.moodLabel': 'איך אתם מרגישים?',
+    'pulse.mood.1': 'מותש/ת',
+    'pulse.mood.2': 'קשה',
+    'pulse.mood.3': 'באמצע',
+    'pulse.mood.4': 'בסדר',
+    'pulse.mood.5': 'טוב',
+    'pulse.noteLabel': 'מה הכי כבד עכשיו? (אופציונלי)',
+    'pulse.notePlaceholder': 'כל דבר שעוזר לכם לבטא',
+    'pulse.save': 'שמירה',
+    'pulse.savedKicker': 'נשמר',
+    'pulse.savedBody': 'תודה שדאגתם גם לעצמכם.',
+
+    'burnout.kicker': 'שימו לב למעטפת',
+    'burnout.noSleep':
+      '{{name}} דיווח/ה היום על שינה אפסית. שווה לבדוק איך הוא/היא ולהציע חילוץ.',
+    'burnout.solo48h':
+      '{{name}} מנהל/ת לבד את הזירה כבר 48 שעות. הזמן הכי טוב לקפוץ פנימה הוא עכשיו.',
+    'burnout.selfCareCta': 'משאבי תמיכה',
+    'burnout.dismiss': 'התעלם',
+
+    'selfCare.kicker': 'מעטפת בריאה',
+    'selfCare.title': 'תמיכה למשפחה המלווה',
+    'selfCare.intro':
+      'משפחה ששוחקת לא יכולה לעזור לאף אחד. כאן רשימת משאבים בישראל לליווי שלכם — לא של המתמודד/ת, אלא שלכם.',
+    'selfCare.why.title': 'למה זה חיוני',
+    'selfCare.why.body':
+      'מחקרים מראים שמשפחות מלוות מתמודדים פסיכיאטריים נמצאות בסיכון גבוה לדיכאון, חרדה ושחיקה. תמיכה למלווים היא חלק מהטיפול בחולה — לא תוספת.',
+    'selfCare.callCta': 'חיוג {{number}}',
+    'selfCare.openCta': 'פתח אתר',
+    'selfCare.disclaimer':
+      'המידע נכון למיטב ידיעתנו. ודאו פרטים באתרי הארגונים — הם משתנים מעת לעת.',
+    'selfCare.enosh.title': 'אנוש — קבוצות תמיכה למשפחות',
+    'selfCare.enosh.body':
+      'הארגון הישראלי לבריאות הנפש מפעיל קבוצות תמיכה אזוריות למשפחות. ייעוץ ראשוני ללא תשלום.',
+    'selfCare.ozma.title': 'עוצמה — פורום בני משפחה',
+    'selfCare.ozma.body':
+      'עוצמה הוא ארגון של בני משפחה למתמודדי נפש. מציע ליווי, קבוצות תמיכה והדרכה זוגית.',
+    'selfCare.eran.title': 'ער"ן — עזרה ראשונה נפשית',
+    'selfCare.eran.body':
+      'מענה אנונימי 24/7. אפשר להתקשר גם בשבילכם — לא רק בשם המתמודד.',
+    'selfCare.yad_sarah.title': 'יד שרה — סיוע ביתי',
+    'selfCare.yad_sarah.body':
+      'השאלת ציוד רפואי, סיוע בבית, ותחבורה מותאמת — פוחת את העומס היומיומי.',
+    'selfCare.kupa_therapy.title': 'טיפול פסיכולוגי לעצמכם דרך קופת חולים',
+    'selfCare.kupa_therapy.body':
+      'גם אתם זכאים לטיפול במסגרת ההסכמים. פנו לרופא המשפחה ובקשו הפניה לפסיכולוג/ית — לא של המתמודד, שלכם.',
+    'selfCare.support_group.title': 'קבוצת תמיכה מקוונת',
+    'selfCare.support_group.body':
+      'אם יציאה לפיזית לקבוצה לא אפשרית — חפשו "קבוצת תמיכה למשפחות מתמודדי נפש" בפייסבוק או דרך אנוש/עוצמה.',
+    'selfCare.shareLoad.title': 'חלקו את העומס',
+    'selfCare.shareLoad.body':
+      'אם בני המעטפת לא מצטרפים — הזמינו אותם לחדר המבצעים. שיתוף משמרות ומשימות מוריד את העומס מהאיש האחד שמוביל.',
+    'selfCare.shareLoad.cta': 'פתח חדר מבצעים',
+
+    // ── Visual vault ──────────────────────────────────────────────────────
+    'vault.kicker': 'כספת מאובטחת',
+    'vault.title': 'תיעוד התנהגות לרופאים',
+    'vault.intro':
+      'רישומי וידאו / שמע / תמונות שמתעדים את ההתנהגות החריגה. שימושי לפסיכיאטר המחוזי, חדר מיון ופסיכיאטר/ית מטפל/ת — לרוב במהלך משבר לא רואים את הדפוס, ובלי הוכחה ההחלטה מתקבלת על סמך עדות בלבד.',
+    'vault.disclaimer':
+      'הקבצים גלויים רק לבני המעטפת. אין להציג את הקבצים בפומבי או לשתף אותם בקבוצות. השימוש אמור להיות מול אנשי מקצוע בלבד.',
+    'vault.encryptionNote':
+      'הקבצים מוצפנים ברמת השרת (Supabase Storage), והגישה דרך לינקים זמניים בלבד. אין כאן הצפנה צד-לקוח אמיתית — מי שיש לו גישה לחשבון בני המעטפת יכול לראות את הקבצים. ודאו שכל אחד שמורשה הוא באמת בני המעטפת.',
+    'vault.recorder.title': 'הקלטה מהטלפון',
+    'vault.recorder.audio': 'שמע',
+    'vault.recorder.video': 'וידאו',
+    'vault.recorder.start': '● התחל הקלטה',
+    'vault.recorder.stop': '■ סיים והעלה',
+    'vault.recorder.maxLabel': '(מקסימום 5 דקות)',
+    'vault.recorder.hint':
+      'אישור גישה למיקרופון / מצלמה נדרש בפעם הראשונה. ההקלטה לא נשמרת עד שמאשרים בשלב הבא.',
+    'vault.upload.title': 'או העלאה מהגלריה',
+    'vault.upload.body': 'בחרו וידאו, שמע או תמונה קיימים מהטלפון או המחשב. מקסימום 50MB.',
+    'vault.upload.pick': 'בחירת קובץ',
+    'vault.pending.title': 'מוכן להעלאה',
+    'vault.pending.newRecording': 'הקלטה חדשה',
+    'vault.pending.captionLabel': 'תיאור קצר (מומלץ — עוזר לרופא לזהות מהר)',
+    'vault.pending.captionPlaceholder': 'למשל: אופוריה ודיבור מהיר, יום שלישי בערב',
+    'vault.pending.save': 'שמירה בכספת',
+    'vault.items.heading': 'הקבצים בכספת',
+    'vault.items.empty': 'הכספת ריקה. הקליטו או העלו את הראייה הראשונה.',
+    'vault.deleteConfirm': 'למחוק את הקובץ? הפעולה אינה הפיכה.',
+
+    'gr.vaultLink.title': 'תיעוד התנהגות לרופא',
+    'gr.vaultLink.body':
+      'אפשר להוסיף סרטונים קצרים או הקלטות שמע של ההתנהגות החריגה — לטובת מיון או ביקור פסיכיאטר.',
+    'gr.vaultLink.cta': 'פתח כספת',
+
+    'assistant.starter.playbook': 'איך אני מדבר/ת איתו/ה כשמתלהט?',
+    'assistant.playbookLink': 'פתח תסריטי הרגעה →',
+
     // ── Privacy ────────────────────────────────────────────────────────────
     'privacy.kicker': 'שקיפות ואמון',
     'privacy.title': 'פרטיות ואבטחת מידע',
@@ -957,6 +1292,16 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.assistantHelper': 'Live answers on bureaucracy & crisis',
     'nav.tools': 'Tools',
     'nav.toolsHelper': 'Legal, hospitals, case studies',
+    'nav.warRoom': 'War room',
+    'nav.warRoomHelper': 'Shifts, tasks, backup',
+    'nav.lockdown': 'Lockdown',
+    'nav.lockdownHelper': 'Emergency-action checklist',
+    'nav.playbook': 'Playbook',
+    'nav.playbookHelper': 'What to say when things heat up',
+    'nav.vault': 'Vault',
+    'nav.vaultHelper': 'Behavioral evidence for clinicians',
+    'nav.selfCare': 'Self-care',
+    'nav.selfCareHelper': 'Burnout & family resources',
     'nav.legal': 'Legal shield',
     'nav.legalHelper': 'Guardianship, credit freeze, exit ban',
     'nav.hospitalization': 'Hospitalization',
@@ -1236,6 +1581,21 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.form.contacts.hint':
       'Treating psychiatrist, rehab framework, family physician — name and phone.',
     'gr.form.submit': 'Save record',
+    'gr.form.saveError': 'Save failed. Please try again or refresh the page.',
+    'warningSigns.kicker': 'Personal warning signs',
+    'warningSigns.intro':
+      '3–7 short phrases you recognize as your person\'s specific prodrome. e.g. "stops answering the phone," "starts online shopping at night," "talks fast about new ideas." When marked, we use these for alerts before the generic algorithm fires.',
+    'warningSigns.empty': "You haven't set personal warning signs yet.",
+    'warningSigns.placeholder': 'e.g. stops sleeping at night',
+    'warningSigns.add': 'Add sign',
+    'warningSigns.remove': 'Remove',
+    'warningSigns.maxHint': "You've reached the maximum — 7 signs. Worth focusing.",
+    'dailyLog.warningSignsKicker': 'Your warning signs',
+    'dailyLog.warningSignsHint': "Mark which signs appeared today. Several days in a row raises the alert level.",
+    'alert.reason.personalSigns':
+      '{{days}} consecutive days with personal warning signs marked',
+    'alert.reason.personalSignsRed':
+      '{{days}} days of personal warning signs — likely needs intervention',
 
     'gr.extract.title':
       'Upload a hospital summary or doctor’s letter (PDF/image) to auto-fill the record',
@@ -1506,6 +1866,10 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'legal.lawyers.empty': 'No matches for these filters. Try broadening.',
     'legal.lawyers.disclaimer':
       'Listed for reference only. Matzpen has no affiliation with these attorneys and this is not a recommendation. Confirm fees and standing with the firm before retaining.',
+    'legal.lawyers.sampleBadge': 'sample data',
+    'legal.lawyers.sampleBannerKicker': 'Warning: this list is not real',
+    'legal.lawyers.sampleBannerBody':
+      'The entries in the lawyer directory are placeholder data only. The phone numbers are inactive. Do not dial them in a crisis. A real list will be added in the future — for now reach out via the Israel Bar Association, ENOSH, or OZMA.',
     'legal.lawyers.specialty.guardianship': 'Guardianship',
     'legal.lawyers.specialty.involuntary': 'Involuntary commitment & boards',
     'legal.lawyers.specialty.criminal_mental_health': 'Criminal mental-health',
@@ -1537,6 +1901,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'hosp.tag.noPsychER': 'No psych ER — admission by coordination',
     'hosp.tag.minors': 'Accepts minors',
     'hosp.tag.commitment': 'Authorized for civil commitment',
+    'hosp.tag.unverified': 'Unverified',
+    'hosp.unverifiedNotice':
+      "Details have not been verified against the hospital's official site recently. Confirm the phone number before calling in a crisis — numbers change.",
     'hosp.altFilter.all': 'All',
     'hosp.altFilter.balancing': 'Balancing homes',
     'hosp.altFilter.day': 'Day hospitals',
@@ -1752,6 +2119,304 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'share.viewer.notConfigured': 'The service is not configured.',
     'share.viewer.disclaimer':
       'This record is for reference only. Not a substitute for a full medical record and not updated in real time.',
+
+    'warRoom.kicker': 'War room',
+    'warRoom.title': 'Coordinated crisis management',
+    'warRoom.intro':
+      "One place where the whole envelope sees the same thing: who's on shift, what needs doing, and who needs backup right now. Updates sync in real time.",
+    'warRoom.disclaimer':
+      'The war room is for family coordination, not a substitute for the treating team. In immediate danger call 100/101 first.',
+    'warRoom.notConfigured': 'The war room is available only after connecting to Supabase.',
+    'warRoom.tab.shifts': 'Shifts',
+    'warRoom.tab.tasks': 'Tasks',
+    'warRoom.tab.envelope': 'Envelope',
+
+    'warRoom.shifts.heading': 'Observation shift board',
+    'warRoom.shifts.startAt': 'Shift starts',
+    'warRoom.shifts.endAt': 'Shift ends',
+    'warRoom.shifts.note': 'Shift note (optional)',
+    'warRoom.shifts.notePlaceholder': 'e.g. driving to therapy at 17:00',
+    'warRoom.shifts.signUp': 'Sign up for shift',
+    'warRoom.shifts.empty': 'No shifts yet. Who takes the first one?',
+    'warRoom.shifts.activeNow': 'On shift now',
+    'warRoom.shifts.unnamedMember': 'Family member',
+    'warRoom.shifts.errorBadDate': 'Invalid date.',
+    'warRoom.shifts.errorEndBeforeStart': 'End must be after start.',
+
+    'warRoom.tasks.heading': 'Envelope task list',
+    'warRoom.tasks.placeholder': 'New task (e.g. pick up medication)',
+    'warRoom.tasks.add': 'Add',
+    'warRoom.tasks.empty': 'No open tasks. Add the first one.',
+    'warRoom.tasks.completed': 'Completed tasks ({{n}})',
+    'warRoom.tasks.doneBy': 'Done · {{name}} · {{when}}',
+    'warRoom.tasks.createdBy': 'Added · {{name}}',
+    'warRoom.tasks.remove': 'Remove',
+
+    'warRoom.backup.heading': 'Backup request',
+    'warRoom.backup.sosCta': '⚡ I need backup — call for help',
+    'warRoom.backup.activeBanner': 'Active backup request',
+    'warRoom.backup.requestedBy': '{{name}} is asking for backup',
+    'warRoom.backup.yoursWaiting': 'Your request is active — the family can see it',
+    'warRoom.backup.confirmIntro':
+      'The request will appear immediately for everyone currently connected to the war room. Use only when truly needed — keep the signal trustworthy.',
+    'warRoom.backup.messageLabel': 'Message (optional)',
+    'warRoom.backup.messagePlaceholder': 'e.g. need someone here in an hour',
+    'warRoom.backup.send': 'Send request',
+    'warRoom.backup.resolve': 'Resolved',
+    'warRoom.backup.disclaimer':
+      'Visible only to envelope members. Not a substitute for emergency services — for immediate danger call 101/100.',
+    'push.sos.title': '⚡ Matzpen backup request',
+    'push.sos.fallbackBody': 'Family member needs help now. Open the war room.',
+    'push.optIn.body':
+      'Enable push so you receive alerts even when the app is closed. Recommended for envelope owners.',
+    'push.optIn.cta': 'Enable notifications',
+    'push.optIn.denied':
+      'Notifications are blocked for this browser. Open site settings and allow "Notifications" to enable.',
+
+    'warRoom.envelope.heading': 'The envelope — who is with me',
+    'warRoom.envelope.intro':
+      'Add family and friends to the war room. Only envelope members can see shifts, tasks, and backup requests. They do NOT see your private daily log entries.',
+    'warRoom.envelope.inviteCta': 'Create invite link',
+    'warRoom.envelope.ownerTag': 'owner',
+    'warRoom.envelope.disclaimer':
+      'Anyone with the link can join the war room. Share only with people you trust, and revoke unused links.',
+
+    'warRoom.envelope.join.title': 'Join the envelope',
+    'warRoom.envelope.join.needsLogin':
+      "Sign in or create an account to join. You'll be redirected back here automatically.",
+    'warRoom.envelope.join.redeeming': 'Joining the war room…',
+    'warRoom.envelope.join.ok': 'Joined successfully ✓',
+    'warRoom.envelope.join.redirecting': 'Taking you to the war room…',
+    'warRoom.envelope.join.errorTitle': 'This invite is no longer valid',
+    'warRoom.envelope.join.notConfigured': 'The service is not configured.',
+    'warRoom.envelope.join.backHome': 'Back home',
+
+    'lockdown.kicker': 'Emergency protocol',
+    'lockdown.title': 'Environment lockdown',
+    'lockdown.intro':
+      "When warning metrics climb, reducing access to high-risk items is the single thing the family can do right now. Check off each completed item — every envelope member sees the progress in real time.",
+    'lockdown.disclaimer':
+      "This is a family-coordination checklist, not a substitute for treatment. Even if everything is checked, when immediate danger appears, call 101/100 first.",
+    'lockdown.progress': '{{done}} of {{total}} done',
+    'lockdown.resetCta': 'Reset',
+    'lockdown.resetConfirm': 'Reset the whole checklist?',
+    'lockdown.doneBy': 'Done · {{name}} · {{when}}',
+    'lockdown.category.access': 'Keys & vehicle access',
+    'lockdown.category.finance': 'Credit, cash, finance',
+    'lockdown.category.travel': 'Passport & departure',
+    'lockdown.category.substances': 'Alcohol & medication',
+    'lockdown.item.carKeys': 'Hide the car keys',
+    'lockdown.item.carKeysHint': 'Include any spare in a magnetic case, coat pocket, or with a neighbor.',
+    'lockdown.item.spareKeys': 'Hide all spare keys',
+    'lockdown.item.homeKeys': 'House keys — make sure no one can slip out at night unnoticed',
+    'lockdown.item.creditCards': 'Collect credit cards',
+    'lockdown.item.creditCardsHint':
+      "Include any additional cards. Consider freezing through the bank app before hiding.",
+    'lockdown.item.idCard': 'Hide the national ID card',
+    'lockdown.item.checkbook': 'Hide the checkbook',
+    'lockdown.item.bankApps': 'Temporarily remove banking apps from the phone',
+    'lockdown.item.bankAppsHint':
+      'Especially apps that allow instant transfers (Bit, PayBox) or opening new credit lines.',
+    'lockdown.item.passport': 'Hide the passport',
+    'lockdown.item.driverLicense': 'Hide the driver license',
+    'lockdown.item.alcohol': 'Remove alcohol from the home',
+    'lockdown.item.oldMeds': 'Remove old / unused medication',
+    'lockdown.item.oldMedsHint':
+      'Pharmacies at the HMOs accept surplus meds for disposal. Keep only current treatment, locked.',
+    'lockdown.banner.kicker': 'Warning metrics rising',
+    'lockdown.banner.body':
+      'An alert is active. Running the environment lockdown shortens the risk window.',
+    'lockdown.banner.cta': 'Open lockdown protocol',
+    'lockdown.followUp.title': 'Next steps',
+    'lockdown.followUp.body':
+      'Once the environment is locked, the complementary steps: urgent legal filings, shift coordination, and a safety review.',
+    'lockdown.followUp.legalCta': 'Legal shield',
+    'lockdown.followUp.warRoomCta': 'War room',
+    'lockdown.followUp.safetyCta': 'Safety guide',
+
+    'playbook.kicker': 'De-escalation playbook',
+    'playbook.title': 'What to say when things heat up',
+    'playbook.intro':
+      "Communication scripts based on LEAP. The principle: validate the feeling without agreeing with the delusion. \"You sound terrified\" connects; \"yes, the neighbors really are listening\" confirms the delusion.",
+    'playbook.disclaimer':
+      "Scripts are starting points, not formulas. Read your person and adapt. Not clinical advice.",
+    'playbook.leap.title': 'LEAP — in brief',
+    'playbook.leap.body':
+      'L — Listen actively, no argument over facts.\nE — Empathize — validate the feeling.\nA — Agree on shared goals (sleep, feel safe), not on the diagnosis.\nP — Partner — build a small shared step.',
+    'playbook.allScenarios': 'All scenarios',
+    'playbook.signsLabel': 'Signs to recognize',
+    'playbook.doLabel': 'Do',
+    'playbook.dontLabel': "Don't",
+    'playbook.scriptLabel': 'Opening script',
+    'playbook.scriptAltLabel': 'Alternative wording',
+    'playbook.askAssistant.title': "Didn't find a matching scenario?",
+    'playbook.askAssistant.body':
+      'The assistant can help compose a tailored script for your specific situation right now.',
+    'playbook.askAssistant.cta': 'Ask the assistant',
+    'playbook.askAssistant.prompt':
+      'I am dealing with a complex situation with my family member right now. Could you help me choose wording using the LEAP method?',
+
+    'playbook.paranoid.title': 'Paranoid delusions',
+    'playbook.paranoid.signs':
+      "A feeling of being followed, belief that things are added to food, sudden distrust of relatives, closing windows and curtains.",
+    'playbook.paranoid.do':
+      "Validate the feeling (\"that sounds really frightening\"), keep a non-threatening physical distance, speak quietly and slowly, offer a small shared physical action (glass of water).",
+    'playbook.paranoid.dont':
+      "Don't argue facts. Don't laugh. Don't say \"calm down\" or \"there's nothing to worry about.\" Don't touch suddenly from behind.",
+    'playbook.paranoid.script':
+      "I hear you. I don't need to know exactly who's following — what matters to me is that you feel threatened. I'm here. Can we sit together for a minute?",
+    'playbook.paranoid.scriptAlt':
+      "I understand why you don't want to eat this now. That's fine. Maybe something else I prepared in front of you?",
+
+    'playbook.grandiosity.title': 'Grandiosity',
+    'playbook.grandiosity.signs':
+      "Big business plans, expensive purchases, sense of mission, unusual confidence, fast speech, no sleep but no distress about it.",
+    'playbook.grandiosity.do':
+      "Show interest without confirming the story. Focus on one small step (\"let's talk about what you want to do tomorrow\"). Redirect to a calming activity (nature, music).",
+    'playbook.grandiosity.dont':
+      "Don't confront the big idea. Don't say \"you're not thinking clearly.\" Don't try to sign financial agreements right now.",
+    'playbook.grandiosity.script':
+      "I hear a big idea and it feels very real to you. Let's do one small thing together today — get at least 5-6 hours of sleep, and tomorrow we'll come back to the rest.",
+    'playbook.grandiosity.scriptAlt':
+      "Interesting idea. To do it well, it's worth checking with [trusted person] before investing. Can we wait two weeks?",
+
+    'playbook.agitation.title': 'Agitation',
+    'playbook.agitation.signs':
+      "Pacing, yelling, slamming doors, sudden anger, inability to sit still.",
+    'playbook.agitation.do':
+      "Move kids and pets out of the room. Stand at an angle (not in front), with a free exit. Speak slowly. Offer simple options (\"water or a step outside?\"). Allow time.",
+    'playbook.agitation.dont':
+      "Don't raise your voice. Don't block the exit. Don't touch forcefully. Don't issue ultimatums (\"calm down or else…\").",
+    'playbook.agitation.script':
+      "I see there's a lot of pressure on you right now. I'm not going to talk about anything important. I'm just here. If you'd like, I'll step out for a minute and come back.",
+
+    'playbook.refusalMeds.title': 'Refusing medication',
+    'playbook.refusalMeds.signs':
+      "Arguing about dosage, \"I don't need this anymore,\" hiding pills, blaming the doctor, mistrust of treatment.",
+    'playbook.refusalMeds.do':
+      "Listen first. Ask what's bothering them about it (\"which side effect are you feeling?\"). Offer to discuss with the doctor together. Mention a shared goal, not the diagnosis.",
+    'playbook.refusalMeds.dont':
+      "Don't say \"you must.\" Don't hide pills in food without their knowledge (kills trust permanently). Don't repeat \"you're sick and you need it.\"",
+    'playbook.refusalMeds.script':
+      "I hear that this medication is doing something unpleasant. Tell me exactly. I can schedule a meeting with the doctor and sit with you — and you can tell them yourself.",
+    'playbook.refusalMeds.scriptAlt':
+      "I understand the decision to stop. One ask — before stopping entirely, let's talk to the doctor together. So we don't miss something.",
+
+    'playbook.suicidal.title': 'Suicidal thoughts',
+    'playbook.suicidal.signs':
+      "Talk of 'disappearing,' farewells, giving away belongings, searching methods, \"everyone would be better off without me,\" sudden calm after a period of distress.",
+    'playbook.suicidal.do':
+      "Ask directly (\"are you thinking of hurting yourself?\"). Listen without correcting. Remove lethal means from the home (meds, firearms, see /safety). Don't leave alone. Call 101.",
+    'playbook.suicidal.dont':
+      "Don't say \"don't be dramatic.\" Don't promise \"I won't tell anyone\" — if life is at risk, you must call. Don't leave the person alone.",
+    'playbook.suicidal.script':
+      "I hear you. I'm not going anywhere. We'll tell the doctor together. I'm with you.",
+
+    'playbook.withdrawal.title': 'Withdrawal & deep depression',
+    'playbook.withdrawal.signs':
+      "Not getting out of bed, refusing food, stopping responding to phone, hygiene drop, \"I have no energy,\" silence.",
+    'playbook.withdrawal.do':
+      "Speak in short, positive, non-demanding sentences. Offer a tiny action (\"let's step to the window for a minute\"). Bring food and drink to the room. Touch only if welcomed.",
+    'playbook.withdrawal.dont':
+      "Don't say \"get up, there's no reason to be sad.\" Don't force conversation. Don't blast music or do \"treat yourself!\"",
+    'playbook.withdrawal.script':
+      "I know this is a terribly hard moment. I'm not expecting anything from you. I'm here, I'm bringing you water, and I'll stay nearby until you want something.",
+
+    'pulse.kicker': 'How are YOU?',
+    'pulse.title': 'A quick check — for you, not the person you care for',
+    'pulse.intro':
+      "One minute a day. Helps you remember you're a person too, and lets the rest of the envelope see if someone is burning out.",
+    'pulse.notNow': 'Not now',
+    'pulse.sleepLabel': 'How many hours did you sleep last night?',
+    'pulse.moodLabel': 'How are you feeling?',
+    'pulse.mood.1': 'Exhausted',
+    'pulse.mood.2': 'Hard',
+    'pulse.mood.3': 'Middle',
+    'pulse.mood.4': 'OK',
+    'pulse.mood.5': 'Good',
+    'pulse.noteLabel': "What's heaviest right now? (optional)",
+    'pulse.notePlaceholder': 'Anything that helps you put it in words',
+    'pulse.save': 'Save',
+    'pulse.savedKicker': 'Saved',
+    'pulse.savedBody': 'Thank you for taking care of yourself too.',
+
+    'burnout.kicker': 'Watch the envelope',
+    'burnout.noSleep':
+      '{{name}} reported zero hours of sleep today. Worth checking on them and offering relief.',
+    'burnout.solo48h':
+      "{{name}} has been managing alone for 48 hours. The best time to jump in is now.",
+    'burnout.selfCareCta': 'Support resources',
+    'burnout.dismiss': 'Dismiss',
+
+    'selfCare.kicker': 'A healthy envelope',
+    'selfCare.title': 'Support for the caring family',
+    'selfCare.intro':
+      "A burned-out family can't help anyone. Here is a list of resources in Israel — for YOUR support, not the patient's.",
+    'selfCare.why.title': 'Why this is essential',
+    'selfCare.why.body':
+      "Research shows that families caring for people with serious mental illness are at high risk for depression, anxiety, and burnout. Support for caregivers is part of the treatment — not an extra.",
+    'selfCare.callCta': 'Call {{number}}',
+    'selfCare.openCta': 'Open website',
+    'selfCare.disclaimer':
+      'Information is accurate to the best of our knowledge. Verify details on the organizations\' sites — they change.',
+    'selfCare.enosh.title': 'ENOSH — family support groups',
+    'selfCare.enosh.body':
+      'The Israeli Mental Health Association runs regional family support groups. Free initial consultation.',
+    'selfCare.ozma.title': 'OZMA — family-member forum',
+    'selfCare.ozma.body':
+      'OZMA is an organization of family members of mental-health patients. Provides counseling, support groups, and couples guidance.',
+    'selfCare.eran.title': 'ERAN — emotional first aid',
+    'selfCare.eran.body':
+      "Anonymous 24/7 line. You can call for yourself — not just on behalf of your loved one.",
+    'selfCare.yad_sarah.title': 'Yad Sarah — home assistance',
+    'selfCare.yad_sarah.body':
+      'Loans of medical equipment, in-home help, accessible transport — reduces daily load.',
+    'selfCare.kupa_therapy.title': 'Psychological treatment for YOU via your HMO',
+    'selfCare.kupa_therapy.body':
+      'You are also entitled to treatment. Go to your GP and ask for a referral to a psychologist — for you, not the patient.',
+    'selfCare.support_group.title': 'Online support group',
+    'selfCare.support_group.body':
+      'If you can\'t make it to an in-person group — search "family support mental health" on Facebook or via ENOSH/OZMA.',
+    'selfCare.shareLoad.title': 'Share the load',
+    'selfCare.shareLoad.body':
+      "If envelope members aren't pitching in — invite them to the war room. Sharing shifts and tasks lifts the burden off the one person leading.",
+    'selfCare.shareLoad.cta': 'Open war room',
+
+    'vault.kicker': 'Secure vault',
+    'vault.title': 'Behavioral evidence for clinicians',
+    'vault.intro':
+      "Video / audio / image records of unusual behavior. Useful for the district psychiatrist, ER, and treating psychiatrist — during a crisis the pattern isn't visible in clinic, and without evidence the decision is made on hearsay.",
+    'vault.disclaimer':
+      'Files are visible only to envelope members. Do not display publicly or share in chat groups. Intended for professionals only.',
+    'vault.encryptionNote':
+      'Files are encrypted at the server level (Supabase Storage), and access is via temporary signed links. There is no real client-side encryption — anyone with access to an envelope account can view the files. Make sure everyone you invite is truly in the envelope.',
+    'vault.recorder.title': 'Record on your phone',
+    'vault.recorder.audio': 'Audio',
+    'vault.recorder.video': 'Video',
+    'vault.recorder.start': '● Start recording',
+    'vault.recorder.stop': '■ Stop & upload',
+    'vault.recorder.maxLabel': '(max 5 minutes)',
+    'vault.recorder.hint':
+      "Microphone / camera permission required on first use. The recording isn't saved until you confirm at the next step.",
+    'vault.upload.title': 'Or upload from gallery',
+    'vault.upload.body': 'Pick an existing video, audio, or image from your phone or computer. Max 50MB.',
+    'vault.upload.pick': 'Pick file',
+    'vault.pending.title': 'Ready to upload',
+    'vault.pending.newRecording': 'New recording',
+    'vault.pending.captionLabel': 'Short caption (recommended — helps the clinician identify it fast)',
+    'vault.pending.captionPlaceholder': 'e.g. euphoria and rapid speech, Tuesday evening',
+    'vault.pending.save': 'Save to vault',
+    'vault.items.heading': 'Files in the vault',
+    'vault.items.empty': 'Vault is empty. Record or upload the first piece of evidence.',
+    'vault.deleteConfirm': 'Delete this file? This cannot be undone.',
+
+    'gr.vaultLink.title': 'Behavioral evidence for a clinician',
+    'gr.vaultLink.body':
+      'Add short videos or audio recordings of unusual behavior — useful for ER triage or a psychiatrist visit.',
+    'gr.vaultLink.cta': 'Open vault',
+
+    'assistant.starter.playbook': 'How do I talk to them when it heats up?',
+    'assistant.playbookLink': 'Open de-escalation playbook →',
 
     'privacy.kicker': 'Transparency & trust',
     'privacy.title': 'Privacy & data security',

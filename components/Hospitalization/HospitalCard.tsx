@@ -3,12 +3,14 @@
 import { useT } from '@/lib/i18n/LocaleProvider';
 import {
   googleMapsLink,
+  isHospitalStale,
   wazeLink,
   type PsychHospital,
 } from '@/lib/hospitalization/hospitals';
 
 export function HospitalCard({ h }: { h: PsychHospital }) {
   const { t } = useT();
+  const stale = isHospitalStale(h);
   return (
     <article className="mz-card p-4 md:p-5">
       <div className="flex items-start justify-between gap-3 flex-wrap">
@@ -19,6 +21,11 @@ export function HospitalCard({ h }: { h: PsychHospital }) {
           </div>
         </div>
         <div className="flex flex-wrap gap-1.5">
+          {stale && (
+            <span className="mz-pill bg-amber_/30 text-amber_-ink text-[10px]">
+              {t('hosp.tag.unverified')}
+            </span>
+          )}
           {h.hasPsychER ? (
             <span className="mz-pill bg-sage/15 text-sage">{t('hosp.tag.psychER')}</span>
           ) : (
@@ -34,6 +41,12 @@ export function HospitalCard({ h }: { h: PsychHospital }) {
           )}
         </div>
       </div>
+
+      {stale && (
+        <p className="text-xs text-amber_-ink bg-amber_-bg/60 border border-amber_/40 rounded-xl px-3 py-2 mt-2 leading-relaxed">
+          {t('hosp.unverifiedNotice')}
+        </p>
+      )}
 
       {h.notes && (
         <p className="text-sm text-ink-soft mt-3 leading-relaxed">{h.notes}</p>

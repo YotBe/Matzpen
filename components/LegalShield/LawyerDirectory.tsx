@@ -2,7 +2,12 @@
 
 import { useMemo, useState } from 'react';
 import { useT } from '@/lib/i18n/LocaleProvider';
-import { LAWYERS, type Lawyer, type LawyerSpecialty } from '@/lib/legalShield/lawyers';
+import {
+  HAS_SAMPLE_LAWYERS,
+  LAWYERS,
+  type Lawyer,
+  type LawyerSpecialty,
+} from '@/lib/legalShield/lawyers';
 import { REGIONS, type Region } from '@/lib/regions';
 
 const SPECIALTIES: LawyerSpecialty[] = [
@@ -33,6 +38,17 @@ export function LawyerDirectory({ defaultRegion }: { defaultRegion?: string }) {
 
   return (
     <div className="space-y-5">
+      {HAS_SAMPLE_LAWYERS && (
+        <div className="rounded-2xl bg-amber_-bg text-amber_-ink border border-amber_/40 px-4 py-3">
+          <div className="text-xs font-bold uppercase tracking-wide opacity-80">
+            {t('legal.lawyers.sampleBannerKicker')}
+          </div>
+          <p className="text-sm mt-1 leading-relaxed">
+            {t('legal.lawyers.sampleBannerBody')}
+          </p>
+        </div>
+      )}
+
       <div className="rounded-card border border-sand-100 bg-sand-50/40 p-4 md:p-5">
         <div className="text-[11px] font-bold uppercase tracking-widest text-ink-mute mb-3">
           {t('legal.lawyers.filters')}
@@ -86,10 +102,22 @@ export function LawyerDirectory({ defaultRegion }: { defaultRegion?: string }) {
       ) : (
         <ul className="space-y-3">
           {filtered.map((l) => (
-            <li key={l.id} className="mz-card p-4 md:p-5">
+            <li
+              key={l.id}
+              className={`mz-card p-4 md:p-5 ${
+                l.isSample ? 'border-2 border-dashed border-amber_/40 bg-amber_-bg/20' : ''
+              }`}
+            >
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div className="min-w-0">
-                  <h3 className="text-lg font-extrabold">{l.name}</h3>
+                  <h3 className="text-lg font-extrabold flex items-center gap-2 flex-wrap">
+                    {l.name}
+                    {l.isSample && (
+                      <span className="mz-pill bg-amber_/30 text-amber_-ink text-[10px]">
+                        {t('legal.lawyers.sampleBadge')}
+                      </span>
+                    )}
+                  </h3>
                   <div className="text-xs text-ink-mute mt-0.5">
                     {t(`region.${l.region}`)} · {l.languages.map((lng) => lng.toUpperCase()).join(' / ')}
                   </div>
@@ -121,28 +149,38 @@ export function LawyerDirectory({ defaultRegion }: { defaultRegion?: string }) {
                 <p className="text-sm text-ink-soft mt-3 leading-relaxed">{l.notes}</p>
               )}
 
-              <div className="mt-3 flex flex-wrap gap-2 text-sm">
-                {l.phone && (
-                  <a href={`tel:${l.phone}`} className="mz-btn mz-btn-ghost h-9 px-3 text-sm">
-                    {l.phone}
-                  </a>
-                )}
-                {l.email && (
-                  <a href={`mailto:${l.email}`} className="mz-btn mz-btn-ghost h-9 px-3 text-sm">
-                    {l.email}
-                  </a>
-                )}
-                {l.website && (
-                  <a
-                    href={l.website}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="mz-btn mz-btn-ghost h-9 px-3 text-sm"
-                  >
-                    {t('legal.lawyers.website')}
-                  </a>
-                )}
-              </div>
+              {l.isSample ? (
+                // Sample rows render contact info as plain text — no tel: /
+                // mailto: links — so a caregiver can't accidentally call a
+                // placeholder number during a crisis.
+                <div className="mt-3 text-xs text-ink-mute font-mono leading-relaxed" dir="ltr">
+                  {l.phone && <div>{l.phone}</div>}
+                  {l.email && <div>{l.email}</div>}
+                </div>
+              ) : (
+                <div className="mt-3 flex flex-wrap gap-2 text-sm">
+                  {l.phone && (
+                    <a href={`tel:${l.phone}`} className="mz-btn mz-btn-ghost h-9 px-3 text-sm">
+                      {l.phone}
+                    </a>
+                  )}
+                  {l.email && (
+                    <a href={`mailto:${l.email}`} className="mz-btn mz-btn-ghost h-9 px-3 text-sm">
+                      {l.email}
+                    </a>
+                  )}
+                  {l.website && (
+                    <a
+                      href={l.website}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="mz-btn mz-btn-ghost h-9 px-3 text-sm"
+                    >
+                      {t('legal.lawyers.website')}
+                    </a>
+                  )}
+                </div>
+              )}
             </li>
           ))}
         </ul>
