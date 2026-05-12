@@ -359,6 +359,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.form.contacts.hint':
       'פסיכיאטר מטפל, מסגרת שיקומית, רופא משפחה — שם וטלפון.',
     'gr.form.submit': 'שמירת התיק',
+    'gr.form.saveError': 'השמירה נכשלה. אנא נסו שוב או רעננו את הדף.',
 
     // AI extraction dropzone (Golden Record)
     'gr.extract.title': 'העלה סיכום אשפוז או ביקור רופא (PDF/תמונה) למילוי אוטומטי של התיק',
@@ -1552,6 +1553,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'gr.form.contacts.hint':
       'Treating psychiatrist, rehab framework, family physician — name and phone.',
     'gr.form.submit': 'Save record',
+    'gr.form.saveError': 'Save failed. Please try again or refresh the page.',
 
     'gr.extract.title':
       'Upload a hospital summary or doctor’s letter (PDF/image) to auto-fill the record',

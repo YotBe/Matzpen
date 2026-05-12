@@ -10,11 +10,15 @@ import type { GoldenRecord } from '@/lib/types';
 interface Props {
   initial?: GoldenRecord | null;
   onSave: (data: Omit<GoldenRecord, 'id' | 'patientId' | 'updatedAt'>) => Promise<void> | void;
+  // Error message from the parent's save handler. Rendered above the
+  // submit button so users see what went wrong instead of having the
+  // failure swallowed.
+  errorMessage?: string | null;
 }
 
 type ExtractStatus = 'idle' | 'uploading' | 'done' | 'error';
 
-export function GoldenRecordForm({ initial, onSave }: Props) {
+export function GoldenRecordForm({ initial, onSave, errorMessage }: Props) {
   const { t } = useT();
   const [patientName, setPatientName] = useState(initial?.patientName ?? '');
   const [relationship, setRelationship] = useState(initial?.relationship ?? '');
@@ -72,6 +76,10 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
         whenWellCalms: whenWellCalms.trim() || undefined,
         whenWellNeverSay: whenWellNeverSay.trim() || undefined,
       });
+    } catch {
+      // Parent (handleSave) already exposes the error via errorMessage
+      // prop and re-throws. We catch here so the rejected promise isn't
+      // unhandled and the button correctly leaves the busy state.
     } finally {
       setBusy(false);
     }
@@ -260,6 +268,15 @@ export function GoldenRecordForm({ initial, onSave }: Props) {
           />
         </Field>
       </div>
+
+      {errorMessage && (
+        <p
+          role="alert"
+          className="text-sm text-crimson-deep bg-crimson-bg rounded-xl px-3 py-2"
+        >
+          {errorMessage}
+        </p>
+      )}
 
       <button type="submit" disabled={busy} className="mz-btn mz-btn-clay w-full">
         {busy ? t('common.saving') : t('gr.form.submit')}

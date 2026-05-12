@@ -99,9 +99,18 @@ export async function saveGoldenRecord(
   data: Omit<GoldenRecord, 'id' | 'patientId' | 'updatedAt'>,
 ): Promise<void> {
   const db = requireClient();
+  // Explicitly carry caregiver_id in the upsert payload. Relying on the
+  // column DEFAULT (auth.uid()) works for fresh INSERTs, but on the
+  // ON-CONFLICT UPDATE branch the default does NOT re-apply — and any
+  // pre-RLS-migration row with caregiver_id = NULL would be rejected by
+  // the UPDATE USING policy (`auth.uid() = caregiver_id`). Setting it
+  // here repairs those legacy rows on the next save.
+  const { data: authData } = await db.auth.getUser();
+  const caregiverId = authData?.user?.id;
   const { error } = await db.from('golden_records').upsert(
     {
       patient_id: patientId,
+      ...(caregiverId ? { caregiver_id: caregiverId } : {}),
       patient_name: data.patientName?.trim() || null,
       relationship: data.relationship?.trim() || null,
       region: data.region?.trim() || null,

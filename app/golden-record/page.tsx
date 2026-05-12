@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { GoldenRecordDisplay } from '@/components/GoldenRecordDisplay';
 import { GoldenRecordForm } from '@/components/GoldenRecordForm';
@@ -19,10 +20,12 @@ type Mode = 'edit' | 'view';
 export default function GoldenRecordPage() {
   const { configured } = useAuth();
   const { t } = useT();
+  const router = useRouter();
   const patientId = usePatientId();
   const [record, setRecord] = useState<GoldenRecord | null>(null);
   const [mode, setMode] = useState<Mode>('edit');
   const [loading, setLoading] = useState(true);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,20 +47,34 @@ export default function GoldenRecordPage() {
 
   const handleSave = useCallback(
     async (data: Omit<GoldenRecord, 'id' | 'patientId' | 'updatedAt'>) => {
+      setSaveError(null);
       const next: GoldenRecord = {
         ...data,
         patientId,
         updatedAt: Date.now(),
       };
-      if (configured) {
-        await saveGoldenRecord(patientId, data);
+      try {
+        if (configured) {
+          await saveGoldenRecord(patientId, data);
+        }
+      } catch (err) {
+        // Surface the failure to the user — previously it was swallowed by
+        // the form's try/finally and the page silently switched modes,
+        // making the dashboard setup banner reappear with no explanation.
+        const message =
+          err instanceof Error ? err.message : t('gr.form.saveError');
+        setSaveError(message);
+        throw err;
       }
       setRecord(next);
-      // After a successful save, drop the user into view mode so they can
-      // immediately read or print the freshly saved record.
+      // Invalidate the App Router cache so the dashboard re-fetches the
+      // golden record when the user navigates back. Belt-and-suspenders;
+      // the unmount/remount should already re-run the effect, but this
+      // kills the stale-cache class of bug.
+      router.refresh();
       setMode('view');
     },
-    [configured, patientId],
+    [configured, patientId, router, t],
   );
 
   if (loading) {
@@ -85,7 +102,11 @@ export default function GoldenRecordPage() {
 
       {mode === 'edit' ? (
         <div className="mz-card p-5 md:p-8">
-          <GoldenRecordForm initial={record} onSave={handleSave} />
+          <GoldenRecordForm
+            initial={record}
+            onSave={handleSave}
+            errorMessage={saveError}
+          />
         </div>
       ) : hasSavedRecord && record ? (
         <GoldenRecordDisplay
