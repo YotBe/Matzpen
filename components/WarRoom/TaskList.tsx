@@ -9,6 +9,7 @@ import {
   listSharedTasks,
   setSharedTaskDone,
 } from '@/services/warRoomService';
+import { track } from '@/lib/analytics';
 import type { EnvelopeMember, SharedTask } from '@/lib/types';
 
 interface Props {
@@ -74,6 +75,7 @@ export function TaskList({ patientId, members }: Props) {
     setBusy(true);
     try {
       await createSharedTask(patientId, v);
+      track('shared_task_created');
       setTitle('');
     } catch {
       /* surfaced via realtime */
@@ -84,11 +86,13 @@ export function TaskList({ patientId, members }: Props) {
 
   async function toggle(task: SharedTask) {
     // Optimistic flip.
+    const next = !task.done;
     setTasks((prev) =>
-      prev.map((t) => (t.id === task.id ? { ...t, done: !t.done } : t)),
+      prev.map((t) => (t.id === task.id ? { ...t, done: next } : t)),
     );
     try {
-      await setSharedTaskDone(task.id, !task.done);
+      await setSharedTaskDone(task.id, next);
+      if (next) track('shared_task_completed');
     } catch {
       // Realtime refetch will restore truth.
     }

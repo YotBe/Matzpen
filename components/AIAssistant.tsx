@@ -6,6 +6,7 @@ import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { supabase } from '@/lib/supabaseClient';
+import { track } from '@/lib/analytics';
 
 interface Props {
   /** Render in a fixed-height container (for the floating widget) vs flowing full-page. */
@@ -57,12 +58,14 @@ export function AIAssistant({ variant = 'page', initialPrompt }: Props) {
     const text = input.trim();
     if (!text || isStreaming) return;
     sendMessage({ text });
+    track('assistant_message_sent', { source: 'free_text', length: text.length });
     setInput('');
   }
 
   function sendStarter(text: string) {
     if (isStreaming) return;
     sendMessage({ text });
+    track('assistant_message_sent', { source: 'starter', length: text.length });
   }
 
   const starters = [

@@ -17,6 +17,7 @@ import {
   setLockdownItemDone,
   type LockdownEntry,
 } from '@/services/lockdownService';
+import { track } from '@/lib/analytics';
 import { listEnvelopeMembers } from '@/services/warRoomService';
 import type { EnvelopeMember } from '@/lib/types';
 
@@ -97,6 +98,7 @@ export default function LockdownPage() {
     }));
     try {
       await setLockdownItemDone(patientId, itemKey, next);
+      track('lockdown_item_toggled', { item: itemKey, done: next });
     } catch {
       void refresh();
     }

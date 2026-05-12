@@ -13,6 +13,7 @@ import {
   getGoldenRecord,
   saveGoldenRecord,
 } from '@/services/supabaseService';
+import { track } from '@/lib/analytics';
 import type { GoldenRecord } from '@/lib/types';
 
 type Mode = 'edit' | 'view';
@@ -67,6 +68,11 @@ export default function GoldenRecordPage() {
         throw err;
       }
       setRecord(next);
+      track('golden_record_saved', {
+        has_name: Boolean(data.patientName),
+        has_region: Boolean(data.region),
+        meds_count: data.medications.length,
+      });
       // Invalidate the App Router cache so the dashboard re-fetches the
       // golden record when the user navigates back. Belt-and-suspenders;
       // the unmount/remount should already re-run the effect, but this

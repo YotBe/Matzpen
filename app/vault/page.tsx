@@ -12,6 +12,7 @@ import {
   uploadVaultFile,
   type VaultFile,
 } from '@/services/vaultService';
+import { track } from '@/lib/analytics';
 
 interface SignedItem {
   file: VaultFile;
@@ -78,6 +79,11 @@ export default function VaultPage() {
         caption: caption.trim() || undefined,
         durationSeconds: pendingBlob.duration,
         originalName: pendingBlob.name,
+      });
+      track('vault_file_uploaded', {
+        kind: pendingBlob.blob.type.split('/')[0] || 'unknown',
+        bytes: pendingBlob.blob.size,
+        duration_s: pendingBlob.duration ?? null,
       });
       setPendingBlob(null);
       setCaption('');

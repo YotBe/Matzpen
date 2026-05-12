@@ -15,7 +15,17 @@ export interface DailyLog {
   impulsivityEvent: boolean;
   medicationTaken?: MedicationTaken;
   notes?: string;
+  // Ids of personal warning signs the caregiver checked today (from
+  // GoldenRecord.warningSigns). Empty/undefined means none were marked.
+  warningSignsHit?: string[];
   createdAt: number;
+}
+
+// A single family-defined warning sign — short phrase, stable id so the
+// daily-log multi-select can reference it without spelling out the text.
+export interface WarningSign {
+  id: string;
+  label: string;
 }
 
 export interface Patient {
@@ -144,5 +154,9 @@ export interface GoldenRecord {
   whenWellLoves?: string;
   whenWellCalms?: string;
   whenWellNeverSay?: string;
+  // 3-7 short phrases the family identifies as personal prodrome signs.
+  // When set, the alert algorithm checks recent logs against this list
+  // before falling back to the generic sleep/activity thresholds.
+  warningSigns?: WarningSign[];
   updatedAt: number;
 }

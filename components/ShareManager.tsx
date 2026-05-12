@@ -8,6 +8,7 @@ import {
   revokeShareToken,
   type ShareToken,
 } from '@/services/supabaseService';
+import { track } from '@/lib/analytics';
 
 interface Props {
   patientId: string;
@@ -51,6 +52,7 @@ export function ShareManager({ patientId, configured }: Props) {
     setError(null);
     try {
       await createShareToken(patientId, ttlHours);
+      track('share_token_created', { ttl_hours: ttlHours });
       await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create share link');
@@ -64,6 +66,7 @@ export function ShareManager({ patientId, configured }: Props) {
     setError(null);
     try {
       await revokeShareToken(token);
+      track('share_token_revoked');
       await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to revoke link');

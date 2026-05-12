@@ -7,6 +7,7 @@ import {
   listEnvelopeInvites,
   revokeEnvelopeInvite,
 } from '@/services/warRoomService';
+import { track } from '@/lib/analytics';
 import type { EnvelopeInvite, EnvelopeMember } from '@/lib/types';
 
 interface Props {
@@ -47,6 +48,7 @@ export function EnvelopeInviteManager({ patientId, members, onMembersChange }: P
     setError(null);
     try {
       await createEnvelopeInvite(patientId, ttlHours);
+      track('envelope_invite_created', { ttl_hours: ttlHours });
       await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed');

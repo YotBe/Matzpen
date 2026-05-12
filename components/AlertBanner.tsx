@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { computeAlertLevel } from '@/utils/alertAlgorithm';
 import { AlertIcon, ChevronEnd, ShieldIcon } from '@/components/icons';
 import { useT } from '@/lib/i18n/LocaleProvider';
+import { track } from '@/lib/analytics';
 import type { DailyLog } from '@/lib/types';
 
 interface Props {
@@ -14,6 +15,11 @@ interface Props {
 export function AlertBanner({ logs }: Props) {
   const result = useMemo(() => computeAlertLevel(logs), [logs]);
   const { t } = useT();
+
+  useEffect(() => {
+    if (result.level === 'YELLOW_ALERT') track('alert_banner_yellow_shown');
+    else if (result.level === 'RED_ALERT') track('alert_banner_red_shown');
+  }, [result.level]);
 
   if (result.level === 'STABLE') {
     return (

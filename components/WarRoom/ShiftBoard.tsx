@@ -8,6 +8,7 @@ import {
   deleteShift,
   listShifts,
 } from '@/services/warRoomService';
+import { track } from '@/lib/analytics';
 import type { EnvelopeMember, Shift } from '@/lib/types';
 
 interface Props {
@@ -99,6 +100,9 @@ export function ShiftBoard({ patientId, currentUserId, members }: Props) {
     setBusy(true);
     try {
       await createShift(patientId, s, eDate, note.trim() || null);
+      track('shift_created', {
+        duration_minutes: Math.round((eDate.getTime() - s.getTime()) / 60000),
+      });
       setNote('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed');

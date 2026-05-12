@@ -6,11 +6,13 @@ import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { usePatientId } from '@/lib/usePatientId';
 import { computeAlertLevel } from '@/utils/alertAlgorithm';
+import { track } from '@/lib/analytics';
 import {
   type AffectiveState,
   type AlertLevel,
   type DailyLog,
   type MedicationTaken,
+  type WarningSign,
 } from '@/lib/types';
 import { CheckIcon } from '@/components/icons';
 
@@ -25,6 +27,10 @@ interface Props {
   onSubmitted?: (log: Omit<DailyLog, 'id'>) => void;
   // Recent logs used to compute the post-submit guidance level. Optional.
   recentLogs?: DailyLog[];
+  // Personalized warning signs from the golden record. When present, the
+  // form renders a quick multi-select; the chosen ids are saved on the
+  // daily log and used by the alert algorithm.
+  warningSigns?: WarningSign[];
 }
 
 function SectionCard({ kicker, children }: { kicker: string; children: ReactNode }) {
@@ -38,7 +44,7 @@ function SectionCard({ kicker, children }: { kicker: string; children: ReactNode
   );
 }
 
-export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
+export function DailyLogForm({ onSubmitted, recentLogs, warningSigns }: Props) {
   const { user, configured } = useAuth();
   const { t } = useT();
   const patientId = usePatientId();
@@ -48,6 +54,7 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
   const [impulsivityEvent, setImpulsivityEvent] = useState<boolean>(false);
   const [medicationTaken, setMedicationTaken] = useState<MedicationTaken>('yes');
   const [notes, setNotes] = useState<string>('');
+  const [warningSignsHit, setWarningSignsHit] = useState<string[]>([]);
   const [status, setStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
   const [error, setError] = useState<string | null>(null);
   const [submittedSnapshot, setSubmittedSnapshot] = useState<Omit<DailyLog, 'id'> | null>(null);
@@ -85,6 +92,7 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
       impulsivityEvent,
       medicationTaken,
       notes: notes.trim() || undefined,
+      warningSignsHit: warningSignsHit.length > 0 ? warningSignsHit : undefined,
       loggedBy: user?.id ?? 'mock-caregiver',
       loggedByName:
         (user?.user_metadata?.full_name as string | undefined) ??
@@ -98,6 +106,12 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
       } else {
         await new Promise((r) => setTimeout(r, 350));
       }
+      track('daily_log_submitted', {
+        sleep_hours: payload.sleepHours,
+        affective_state: payload.affectiveState,
+        impulsivity_event: payload.impulsivityEvent,
+        medication_taken: payload.medicationTaken ?? 'unknown',
+      });
       const snapshot: Omit<DailyLog, 'id'> = {
         ...payload,
         patientId,
@@ -392,6 +406,36 @@ export function DailyLogForm({ onSubmitted, recentLogs }: Props) {
           className="mz-input mt-3 resize-none"
         />
       </SectionCard>
+
+      {warningSigns && warningSigns.length > 0 && (
+        <SectionCard kicker={t('dailyLog.warningSignsKicker')}>
+          <p className="text-xs text-ink-mute mb-2 leading-relaxed">
+            {t('dailyLog.warningSignsHint')}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {warningSigns.map((sign) => {
+              const checked = warningSignsHit.includes(sign.id);
+              return (
+                <button
+                  key={sign.id}
+                  type="button"
+                  onClick={() =>
+                    setWarningSignsHit((prev) =>
+                      checked ? prev.filter((id) => id !== sign.id) : [...prev, sign.id],
+                    )
+                  }
+                  aria-pressed={checked}
+                  className={`mz-pill text-sm py-2 px-3 ${
+                    checked ? 'bg-amber_/30 text-amber_-ink ring-1 ring-amber_/60' : ''
+                  }`}
+                >
+                  {sign.label}
+                </button>
+              );
+            })}
+          </div>
+        </SectionCard>
+      )}
 
       {error && (
         <div className="text-sm text-crimson-deep bg-crimson-bg rounded-xl px-3 py-2">

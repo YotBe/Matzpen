@@ -161,6 +161,7 @@ export default function DashboardPage() {
       <div className="mz-card p-5 md:p-8">
         <DailyLogForm
           recentLogs={logs}
+          warningSigns={record?.warningSigns}
           onSubmitted={(log) =>
             setLogs((prev) => [{ ...log }, ...prev].slice(0, 30))
           }

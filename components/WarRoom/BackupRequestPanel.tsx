@@ -8,6 +8,7 @@ import {
   listOpenBackupRequests,
   resolveBackupRequest,
 } from '@/services/warRoomService';
+import { track } from '@/lib/analytics';
 import type { BackupRequest, EnvelopeMember } from '@/lib/types';
 
 interface Props {
@@ -71,6 +72,7 @@ export function BackupRequestPanel({ patientId, currentUserId, members }: Props)
     setError(null);
     try {
       await createBackupRequest(patientId, message.trim() || null);
+      track('backup_request_sent', { has_message: message.trim().length > 0 });
       setMessage('');
       setConfirming(false);
     } catch (err) {

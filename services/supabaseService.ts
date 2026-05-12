@@ -31,6 +31,10 @@ export async function addDailyLog(
     note: log.notes ?? null,
     logged_by: log.loggedBy,
     logged_by_name: log.loggedByName ?? null,
+    warning_signs_hit:
+      log.warningSignsHit && log.warningSignsHit.length > 0
+        ? log.warningSignsHit
+        : null,
   });
   if (error) throw error;
 }
@@ -57,6 +61,9 @@ export async function getRecentLogs(patientId: string, limit = 30): Promise<Dail
     impulsivityEvent: row.impulsivity_event,
     medicationTaken: (row.medication_taken ?? undefined) as MedicationTaken | undefined,
     notes: row.note ?? undefined,
+    warningSignsHit: Array.isArray(row.warning_signs_hit)
+      ? (row.warning_signs_hit as string[])
+      : undefined,
     createdAt: new Date(row.created_at).getTime(),
   }));
 }
@@ -126,6 +133,10 @@ export async function saveGoldenRecord(
       when_well_loves: data.whenWellLoves?.trim() || null,
       when_well_calms: data.whenWellCalms?.trim() || null,
       when_well_never_say: data.whenWellNeverSay?.trim() || null,
+      warning_signs:
+        data.warningSigns && data.warningSigns.length > 0
+          ? data.warningSigns
+          : null,
       updated_at: new Date().toISOString(),
     },
     { onConflict: 'patient_id' },
@@ -160,6 +171,9 @@ export async function getGoldenRecord(patientId: string): Promise<GoldenRecord |
     whenWellLoves: data.when_well_loves ?? undefined,
     whenWellCalms: data.when_well_calms ?? undefined,
     whenWellNeverSay: data.when_well_never_say ?? undefined,
+    warningSigns: Array.isArray(data.warning_signs)
+      ? (data.warning_signs as { id: string; label: string }[])
+      : undefined,
     updatedAt: new Date(data.updated_at).getTime(),
   };
 }

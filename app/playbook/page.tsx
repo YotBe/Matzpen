@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { PLAYBOOK, type Scenario } from '@/lib/playbook/scripts';
+import { track } from '@/lib/analytics';
 
 const SCENARIOS: Scenario[] = [
   'paranoid_delusions',
@@ -51,7 +52,10 @@ export default function PlaybookPage() {
           <button
             key={s}
             type="button"
-            onClick={() => setActive(s)}
+            onClick={() => {
+              setActive(s);
+              track('playbook_scenario_opened', { scenario: s });
+            }}
             className={`mz-pill ${
               active === s ? 'bg-clay/15 text-clay-deep ring-1 ring-clay/30' : ''
             }`}

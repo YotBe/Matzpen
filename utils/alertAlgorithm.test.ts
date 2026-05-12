@@ -109,4 +109,32 @@ describe('computeAlertLevel', () => {
     ]);
     assert.equal(r.level, 'STABLE', 'breaking the streak with a normal day must reset');
   });
+
+  it('escalates to YELLOW after 2 days of personalized warning signs', () => {
+    const r = computeAlertLevel([
+      log({ warningSignsHit: ['s1'] }),
+      log({ warningSignsHit: ['s2'] }),
+    ]);
+    assert.equal(r.level, 'YELLOW_ALERT');
+    assert.ok(r.reasons.some((x) => x.key === 'alert.reason.personalSigns'));
+  });
+
+  it('escalates personalized streak to RED after 4 days', () => {
+    const r = computeAlertLevel([
+      log({ warningSignsHit: ['s1'] }),
+      log({ warningSignsHit: ['s2'] }),
+      log({ warningSignsHit: ['s1'] }),
+      log({ warningSignsHit: ['s3'] }),
+    ]);
+    assert.equal(r.level, 'RED_ALERT');
+    assert.ok(r.reasons.some((x) => x.key === 'alert.reason.personalSignsRed'));
+  });
+
+  it('does not fire personalized escalation when warningSignsHit is empty', () => {
+    const r = computeAlertLevel([
+      log({ warningSignsHit: [] }),
+      log({ warningSignsHit: [] }),
+    ]);
+    assert.equal(r.level, 'STABLE');
+  });
 });

@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { redeemEnvelopeInvite } from '@/services/warRoomService';
+import { track } from '@/lib/analytics';
 
 type State =
   | { kind: 'loading' }
@@ -36,6 +37,7 @@ export default function EnvelopeJoinPage({ params }: { params: { token: string }
     setState({ kind: 'redeeming' });
     redeemEnvelopeInvite(params.token)
       .then(() => {
+        track('envelope_invite_redeemed');
         setState({ kind: 'ok' });
         setTimeout(() => router.replace('/war-room'), 1200);
       })

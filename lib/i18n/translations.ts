@@ -360,6 +360,20 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       'פסיכיאטר מטפל, מסגרת שיקומית, רופא משפחה — שם וטלפון.',
     'gr.form.submit': 'שמירת התיק',
     'gr.form.saveError': 'השמירה נכשלה. אנא נסו שוב או רעננו את הדף.',
+    'warningSigns.kicker': 'סימני אזהרה אישיים',
+    'warningSigns.intro':
+      '3–7 משפטים קצרים שאתם מזהים כסימן ההידרדרות הספציפי של בן/בת המשפחה שלכם. לדוגמה: "מפסיק/ה לענות לטלפון", "מתחיל/ה לקנות באינטרנט בלילה", "מדבר/ת מהר על רעיונות חדשים". במצב חירום נשתמש בהם להתראה לפני האלגוריתם הכללי.',
+    'warningSigns.empty': 'עדיין לא הגדרתם סימני אזהרה אישיים.',
+    'warningSigns.placeholder': 'למשל: מפסיק/ה לישון בלילה',
+    'warningSigns.add': 'הוסיפו סימן',
+    'warningSigns.remove': 'הסר',
+    'warningSigns.maxHint': 'הגענו למקסימום — 7 סימנים. שווה למקד.',
+    'dailyLog.warningSignsKicker': 'סימני האזהרה שלכם',
+    'dailyLog.warningSignsHint': 'סמנו אילו מהסימנים זוהו היום. ריבוי ימי סימון יעלה את רמת ההתראה.',
+    'alert.reason.personalSigns':
+      '{{days}} ימים רצופים שבהם סומנו סימני אזהרה אישיים שהגדרתם',
+    'alert.reason.personalSignsRed':
+      '{{days}} ימים של סימני אזהרה אישיים — מצב מצריך התערבות',
 
     // AI extraction dropzone (Golden Record)
     'gr.extract.title': 'העלה סיכום אשפוז או ביקור רופא (PDF/תמונה) למילוי אוטומטי של התיק',
@@ -1554,6 +1568,20 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
       'Treating psychiatrist, rehab framework, family physician — name and phone.',
     'gr.form.submit': 'Save record',
     'gr.form.saveError': 'Save failed. Please try again or refresh the page.',
+    'warningSigns.kicker': 'Personal warning signs',
+    'warningSigns.intro':
+      '3–7 short phrases you recognize as your person\'s specific prodrome. e.g. "stops answering the phone," "starts online shopping at night," "talks fast about new ideas." When marked, we use these for alerts before the generic algorithm fires.',
+    'warningSigns.empty': "You haven't set personal warning signs yet.",
+    'warningSigns.placeholder': 'e.g. stops sleeping at night',
+    'warningSigns.add': 'Add sign',
+    'warningSigns.remove': 'Remove',
+    'warningSigns.maxHint': "You've reached the maximum — 7 signs. Worth focusing.",
+    'dailyLog.warningSignsKicker': 'Your warning signs',
+    'dailyLog.warningSignsHint': "Mark which signs appeared today. Several days in a row raises the alert level.",
+    'alert.reason.personalSigns':
+      '{{days}} consecutive days with personal warning signs marked',
+    'alert.reason.personalSignsRed':
+      '{{days}} days of personal warning signs — likely needs intervention',
 
     'gr.extract.title':
       'Upload a hospital summary or doctor’s letter (PDF/image) to auto-fill the record',

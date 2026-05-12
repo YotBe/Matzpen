@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { getTodaysPulse, savePulse } from '@/services/pulseService';
+import { track } from '@/lib/analytics';
 
 interface Props {
   patientId: string;
@@ -48,7 +49,9 @@ export function CaregiverPulsePrompt({ patientId, caregiverId, configured }: Pro
     setError(null);
     try {
       const sleep = sleepHours.trim() === '' ? null : Number(sleepHours);
-      await savePulse(patientId, Number.isFinite(sleep) ? (sleep as number) : null, mood, note.trim() || null);
+      const sleepValue = Number.isFinite(sleep) ? (sleep as number) : null;
+      await savePulse(patientId, sleepValue, mood, note.trim() || null);
+      track('pulse_submitted', { sleep_hours: sleepValue, mood });
       setSavedJustNow(true);
       setTimeout(() => setOpen(false), 1500);
     } catch (err) {
