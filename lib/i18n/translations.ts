@@ -93,6 +93,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.signOut': 'יציאה',
     'nav.privacy': 'פרטיות',
     'nav.feedback': 'משוב',
+    'nav.terms': 'תנאי שימוש',
 
     // ── Auth gate / config banner ──────────────────────────────────────────
     'config.previewLocal':
@@ -121,6 +122,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'login.consentLabel':
       'אני מבין/ה ש"מצפן" הוא כלי תיעוד לעזרה עצמית למשפחות ואינו תחליף לטיפול רפואי, אבחון או החלטה קלינית. ההתראות הן היוריסטיקה שלא קיבלה אישור קליני. במצבי חירום פניתי קודם ל-101 (מד״א), 100 (משטרה) או 1201 (ער״ן). אני מאשר/ת שמידע שאזין (כולל תיק רפואי ושיחות עם העוזר החכם) יעובד גם אצל ספק הבינה המלאכותית (Google Gemini) לצורך מתן התשובה.',
     'login.consentRequired': 'אנא אשרו את ההצהרה כדי להמשיך.',
+    'login.consentTermsLink': '(תנאי שימוש מלאים)',
 
     // ── Dashboard ──────────────────────────────────────────────────────────
     'dashboard.greeting': 'שלום, {{name}}',
@@ -1214,6 +1216,40 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'assistant.playbookLink': 'פתח תסריטי הרגעה →',
 
     // ── Privacy ────────────────────────────────────────────────────────────
+    // ── Terms of Service ─────────────────────────────────────────────────
+    'terms.kicker': 'מסמך משפטי',
+    'terms.title': 'תנאי שימוש',
+    'terms.intro':
+      'מצפן הוא כלי תיעוד וקואורדינציה למשפחות המלוות מתמודדים פסיכיאטריים. הוא לא תחליף לטיפול רפואי, ייעוץ משפטי, או שירות חירום. הסעיפים הבאים מבהירים מה השירות עושה ומה לא.',
+    'terms.notMedical.title': 'לא תחליף לטיפול רפואי',
+    'terms.notMedical.body':
+      'מצפן אינו מאבחן, אינו רושם תרופות, ואינו מעניק חוות דעת קלינית. ההתראות שמופיעות באפליקציה הן היוריסטיקה שמבוססת על דיווחים יומיים — לא הנחיה רפואית. החלטות טיפוליות צריכות להתקבל עם הצוות המטפל בלבד.',
+    'terms.notLegal.title': 'לא תחליף לייעוץ משפטי',
+    'terms.notLegal.body':
+      'התבניות במגן המשפטי (אפוטרופסות, חסימת אשראי, עיכוב יציאה) הן טיוטות לעזרה. בקשות לבית משפט חייבות לעבור בדיקה של עו"ד מתאים לפני הגשה. רשימת עורכי הדין במצפן היא לעזרה בלבד; אין למצפן זיקה לעורכי הדין ברשימה.',
+    'terms.emergency.title': 'במצב חירום מיידי',
+    'terms.emergency.body':
+      'אם יש סכנת חיים מיידית — חיוג 101 (מד״א) או 100 (משטרה) קודם לכל. מצפן אינו מתחלף לשירות חירום ואינו מבטיח שמישהו יראה הודעה שתשלחו דרך האפליקציה בזמן אמת.',
+    'terms.ai.title': 'העוזר החכם',
+    'terms.ai.body':
+      'העוזר החכם משתמש במודל בינה מלאכותית חיצוני (Google Gemini). תשובותיו אינן תחליף לרופא, פסיכיאטר, או עו"ד. הוא עלול לטעות; ודאו פרטים קריטיים מול מקור רשמי.',
+    'terms.dataYouEnter.title': 'נתונים שאתם מזינים',
+    'terms.dataYouEnter.body':
+      'אתם בעלי המידע שאתם מזינים. מצפן שומר אותו ב-Supabase (אירופה / ארה"ב, תלוי בהגדרת הפרויקט) ומעבד שיחות עם העוזר ועם מחלץ המסמכים אצל Google. למידע מפורט ראו את עמוד הפרטיות. אתם יכולים למחוק את החשבון בכל עת.',
+    'terms.directories.title': 'מידע על עורכי דין ובתי חולים',
+    'terms.directories.body':
+      'הספריות (לוח עורכי דין, בתי חולים פסיכיאטריים, בתים מאזנים) מבוססות על מידע ציבורי. מספרי טלפון עשויים להשתנות ללא הודעה. ודאו את המספר באתר הרשמי לפני התקשרות במצב חירום.',
+    'terms.warranty.title': 'אחריות',
+    'terms.warranty.body':
+      'השירות ניתן "כפי שהוא" (AS IS), ללא אחריות מפורשת או משתמעת. השימוש על אחריותכם בלבד. במידה המותרת בחוק, מצפן והפועלים בו לא יישאו באחריות לנזק עקיף שנובע משימוש בשירות.',
+    'terms.changes.title': 'שינויים בתנאים',
+    'terms.changes.body':
+      'תנאי שימוש אלה עשויים להשתנות. במקרה של שינוי מהותי תוצג הודעה באפליקציה. המשך השימוש לאחר עדכון מהווה הסכמה לתנאים החדשים.',
+    'terms.contactTitle': 'יצירת קשר',
+    'terms.contactBody': 'לשאלות על תנאים אלה, פנו אלינו בדוא"ל.',
+    'terms.draftDisclaimer':
+      'טיוטת תנאים זו לא עברה ביקורת משפטית סופית. גרסה סופית תוחלף בה לאחר ייעוץ עם עו"ד.',
+
     'privacy.kicker': 'שקיפות ואמון',
     'privacy.title': 'פרטיות ואבטחת מידע',
     'privacy.intro':
@@ -1314,6 +1350,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'nav.signOut': 'Sign out',
     'nav.privacy': 'Privacy',
     'nav.feedback': 'Feedback',
+    'nav.terms': 'Terms',
 
     'config.previewLocal':
       'Preview mode: Supabase is not configured. See .env.local to enable auth and persistence.',
@@ -1340,6 +1377,7 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'login.consentLabel':
       'I understand that Matzpen is a self-help documentation tool for families and is not a substitute for medical care, diagnosis, or clinical judgement. Alerts are heuristics and have not been clinically validated. In an emergency I will call 101 (MDA), 100 (police), or 1201 (ERAN) first. I acknowledge that data I enter (including the medical record and AI assistant conversations) is processed by an AI provider (Google Gemini) to generate responses.',
     'login.consentRequired': 'Please confirm the disclosure to continue.',
+    'login.consentTermsLink': '(full terms of service)',
 
     'dashboard.greeting': 'Hello, {{name}}',
     'dashboard.defaultName': 'family member',
@@ -2417,6 +2455,39 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
 
     'assistant.starter.playbook': 'How do I talk to them when it heats up?',
     'assistant.playbookLink': 'Open de-escalation playbook →',
+
+    'terms.kicker': 'Legal',
+    'terms.title': 'Terms of Service',
+    'terms.intro':
+      "Matzpen is a documentation and coordination tool for families caring for people with serious mental illness. It is not a substitute for medical care, legal advice, or emergency services. The sections below clarify what the service does and doesn't do.",
+    'terms.notMedical.title': 'Not a substitute for medical care',
+    'terms.notMedical.body':
+      'Matzpen does not diagnose, prescribe, or provide clinical opinions. The alerts shown in the app are heuristics based on daily logs — not medical guidance. Treatment decisions should be made with the treating team only.',
+    'terms.notLegal.title': 'Not a substitute for legal counsel',
+    'terms.notLegal.body':
+      'The templates in the Legal Shield module (guardianship, credit freeze, exit ban) are drafts. Court filings must be reviewed by a qualified attorney before submission. The lawyer list in Matzpen is for reference only; Matzpen has no affiliation with the attorneys listed.',
+    'terms.emergency.title': 'In an immediate emergency',
+    'terms.emergency.body':
+      'If there is immediate danger to life, call 101 (MDA) or 100 (police) first. Matzpen is not a substitute for emergency services and does not guarantee that anyone will see a message sent through the app in real time.',
+    'terms.ai.title': 'The AI assistant',
+    'terms.ai.body':
+      'The AI assistant uses an external model (Google Gemini). Its responses are not a substitute for a doctor, psychiatrist, or attorney. It can make mistakes; verify critical details against an official source.',
+    'terms.dataYouEnter.title': 'Data you enter',
+    'terms.dataYouEnter.body':
+      'You own the data you enter. Matzpen stores it in Supabase (EU / US depending on project configuration) and forwards chat + document-extraction requests to Google. See the privacy page for details. You can delete your account at any time.',
+    'terms.directories.title': 'Lawyer and hospital directories',
+    'terms.directories.body':
+      'The directories (lawyer list, psychiatric hospitals, balancing homes) are based on public information. Phone numbers may change without notice. Confirm the number on the official site before calling in a crisis.',
+    'terms.warranty.title': 'Warranty',
+    'terms.warranty.body':
+      'The service is provided "AS IS" without warranty, express or implied. Use is at your own risk. To the extent permitted by law, Matzpen and its operators are not liable for indirect damages arising from use of the service.',
+    'terms.changes.title': 'Changes to these terms',
+    'terms.changes.body':
+      'These terms may change. Material changes will be announced in the app. Continued use after an update constitutes acceptance of the new terms.',
+    'terms.contactTitle': 'Contact',
+    'terms.contactBody': 'For questions about these terms, email us.',
+    'terms.draftDisclaimer':
+      'This is a draft. It has not had a final legal review. A reviewed version will replace it after consulting with an attorney.',
 
     'privacy.kicker': 'Transparency & trust',
     'privacy.title': 'Privacy & data security',

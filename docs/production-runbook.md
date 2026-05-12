@@ -159,6 +159,27 @@ failure is understood.
 4. Bug-report channel: a single `mailto:` link in the app footer (use
    `NEXT_PUBLIC_CONTACT_EMAIL`) + an emoji react in your Slack DM.
 
+## 6.5. Schedule token cleanup
+
+Migration `20260520_token_cleanup.sql` installs three SQL functions —
+`cleanup_expired_share_tokens()`, `cleanup_expired_envelope_invites()`,
+and `cleanup_expired_tokens()` (calls both). Wire them to run weekly via
+one of:
+
+- **Supabase scheduled edge function** — easiest. Create a tiny function
+  that runs `select public.cleanup_expired_tokens();` and schedule it
+  in the dashboard.
+- **pg_cron** — if you've enabled the extension:
+  ```sql
+  select cron.schedule(
+    'matzpen-cleanup-tokens',
+    '0 4 * * 0',
+    $$ select public.cleanup_expired_tokens(); $$
+  );
+  ```
+- **Manual** — run the SQL from the dashboard each week if you don't
+  want extra infra. Acceptable while the cohort is small.
+
 ## 7. Pre-launch checklist (don't skip)
 
 - [ ] `docs/legal-review.md` signed off — see `docs/legal-review-brief.md`.
