@@ -24,6 +24,21 @@ export interface PsychHospital {
   acceptsCivilCommitment: boolean;
   notes?: string;
   website?: string;
+  // ISO date when the phone numbers and admission criteria were last
+  // verified against the hospital's official website. Cards older than
+  // 6 months render a "verify before relying on" badge in the UI.
+  verifiedAt?: string;
+}
+
+// Entries are considered stale this many days after `verifiedAt`. Beyond
+// the cutoff the UI surfaces a per-card warning.
+export const HOSPITAL_VERIFICATION_TTL_DAYS = 180;
+
+export function isHospitalStale(h: PsychHospital, now = Date.now()): boolean {
+  if (!h.verifiedAt) return true;
+  const ts = new Date(`${h.verifiedAt}T00:00:00`).getTime();
+  if (!Number.isFinite(ts)) return true;
+  return now - ts > HOSPITAL_VERIFICATION_TTL_DAYS * 24 * 60 * 60 * 1000;
 }
 
 export const PSYCH_HOSPITALS: PsychHospital[] = [

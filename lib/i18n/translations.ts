@@ -643,6 +643,10 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'legal.lawyers.empty': 'אין תוצאות לסינון. נסו להרחיב את החיפוש.',
     'legal.lawyers.disclaimer':
       'המידע מובא לעזרה בלבד. אין למצפן זיקה לעורכי/ות הדין ברשימה ואין כאן המלצה אישית. ודאו תעריפים וסמכות במשרד הרלוונטי לפני התקשרות.',
+    'legal.lawyers.sampleBadge': 'נתוני דוגמה',
+    'legal.lawyers.sampleBannerKicker': 'אזהרה: רשימה זו אינה אמיתית',
+    'legal.lawyers.sampleBannerBody':
+      'הערכים בלוח עורכי הדין הם נתוני דמו בלבד. מספרי הטלפון אינם פעילים. אל תחייגו אליהם במצב חירום. רשימה עם עורכי דין אמיתיים תתווסף בהמשך — בינתיים פנו דרך לשכת עורכי הדין, אנוש, או עוצמה.',
     'legal.lawyers.specialty.guardianship': 'אפוטרופסות',
     'legal.lawyers.specialty.involuntary': 'אשפוז כפוי וועדות פסיכיאטריות',
     'legal.lawyers.specialty.criminal_mental_health': 'פלילי בריאות הנפש',
@@ -680,6 +684,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'hosp.tag.noPsychER': 'אין מיון פסיכיאטרי — קבלה בתיאום',
     'hosp.tag.minors': 'מקבל נוער',
     'hosp.tag.commitment': 'מוסמך לאשפוז כפוי',
+    'hosp.tag.unverified': 'לא אומת',
+    'hosp.unverifiedNotice':
+      'הפרטים לא אומתו מול אתר בית החולים לאחרונה. ודאו את מספר הטלפון לפני התקשרות במצב חירום — מספרים עשויים להתעדכן.',
 
     'hosp.altFilter.all': 'הכל',
     'hosp.altFilter.balancing': 'בתים מאזנים',
@@ -1859,6 +1866,10 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'legal.lawyers.empty': 'No matches for these filters. Try broadening.',
     'legal.lawyers.disclaimer':
       'Listed for reference only. Matzpen has no affiliation with these attorneys and this is not a recommendation. Confirm fees and standing with the firm before retaining.',
+    'legal.lawyers.sampleBadge': 'sample data',
+    'legal.lawyers.sampleBannerKicker': 'Warning: this list is not real',
+    'legal.lawyers.sampleBannerBody':
+      'The entries in the lawyer directory are placeholder data only. The phone numbers are inactive. Do not dial them in a crisis. A real list will be added in the future — for now reach out via the Israel Bar Association, ENOSH, or OZMA.',
     'legal.lawyers.specialty.guardianship': 'Guardianship',
     'legal.lawyers.specialty.involuntary': 'Involuntary commitment & boards',
     'legal.lawyers.specialty.criminal_mental_health': 'Criminal mental-health',
@@ -1890,6 +1901,9 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'hosp.tag.noPsychER': 'No psych ER — admission by coordination',
     'hosp.tag.minors': 'Accepts minors',
     'hosp.tag.commitment': 'Authorized for civil commitment',
+    'hosp.tag.unverified': 'Unverified',
+    'hosp.unverifiedNotice':
+      "Details have not been verified against the hospital's official site recently. Confirm the phone number before calling in a crisis — numbers change.",
     'hosp.altFilter.all': 'All',
     'hosp.altFilter.balancing': 'Balancing homes',
     'hosp.altFilter.day': 'Day hospitals',
