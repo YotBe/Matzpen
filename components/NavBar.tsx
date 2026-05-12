@@ -25,9 +25,13 @@ export function NavBar() {
 
   const tools = [
     { href: '/war-room', label: t('nav.warRoom'), helper: t('nav.warRoomHelper') },
+    { href: '/lockdown', label: t('nav.lockdown'), helper: t('nav.lockdownHelper') },
+    { href: '/playbook', label: t('nav.playbook'), helper: t('nav.playbookHelper') },
+    { href: '/vault', label: t('nav.vault'), helper: t('nav.vaultHelper') },
     { href: '/legal-shield', label: t('nav.legal'), helper: t('nav.legalHelper') },
     { href: '/hospitalization', label: t('nav.hospitalization'), helper: t('nav.hospitalizationHelper') },
     { href: '/case-studies', label: t('nav.cases'), helper: t('nav.casesHelper') },
+    { href: '/self-care', label: t('nav.selfCare'), helper: t('nav.selfCareHelper') },
   ];
 
   const inTools = tools.some((tl) => pathname === tl.href || pathname.startsWith(tl.href));

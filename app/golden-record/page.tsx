@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { GoldenRecordDisplay } from '@/components/GoldenRecordDisplay';
 import { GoldenRecordForm } from '@/components/GoldenRecordForm';
@@ -112,6 +113,18 @@ export default function GoldenRecordPage() {
         <section className="mz-no-print">
           <h2 className="text-lg font-bold mb-3">{t('share.title')}</h2>
           <ShareManager patientId={patientId} configured={configured} />
+        </section>
+      )}
+
+      {mode === 'view' && configured && (
+        <section className="mz-no-print rounded-2xl bg-sand-50/60 border border-sand-100 p-4 md:p-5">
+          <h2 className="font-bold">{t('gr.vaultLink.title')}</h2>
+          <p className="text-sm text-ink-soft mt-2 leading-relaxed">
+            {t('gr.vaultLink.body')}
+          </p>
+          <Link href="/vault" className="mz-btn mz-btn-ghost mt-3 h-10 px-4 text-sm">
+            {t('gr.vaultLink.cta')}
+          </Link>
         </section>
       )}
     </div>

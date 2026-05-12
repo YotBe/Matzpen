@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
@@ -68,6 +69,7 @@ export function AIAssistant({ variant = 'page', initialPrompt }: Props) {
     t('assistant.starter.involuntary'),
     t('assistant.starter.bituachLeumi'),
     t('assistant.starter.refusesMeds'),
+    t('assistant.starter.playbook'),
   ];
 
   const containerClass =
@@ -158,9 +160,17 @@ export function AIAssistant({ variant = 'page', initialPrompt }: Props) {
           </button>
         </form>
 
-        <p className="text-[10px] text-ink-mute leading-snug px-1">
-          {t('assistant.disclaimer')}
-        </p>
+        <div className="flex items-center justify-between gap-2 px-1">
+          <p className="text-[10px] text-ink-mute leading-snug flex-1 min-w-0">
+            {t('assistant.disclaimer')}
+          </p>
+          <Link
+            href="/playbook"
+            className="text-[10px] font-semibold text-clay underline whitespace-nowrap shrink-0"
+          >
+            {t('assistant.playbookLink')}
+          </Link>
+        </div>
       </div>
     </div>
   );

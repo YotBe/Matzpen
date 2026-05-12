@@ -34,9 +34,13 @@ export function BottomNav() {
 
   const more: { href: string; label: string; Icon: IconCmp }[] = [
     { href: '/war-room', label: t('nav.warRoom'), Icon: ShieldIcon },
+    { href: '/lockdown', label: t('nav.lockdown'), Icon: AlertIcon },
+    { href: '/playbook', label: t('nav.playbook'), Icon: BookIcon },
+    { href: '/vault', label: t('nav.vault'), Icon: NoteIcon },
     { href: '/legal-shield', label: t('nav.legal'), Icon: GavelIcon },
     { href: '/hospitalization', label: t('nav.hospitalization'), Icon: HospitalIcon },
     { href: '/case-studies', label: t('nav.cases'), Icon: BookIcon },
+    { href: '/self-care', label: t('nav.selfCare'), Icon: SparklesIcon },
     { href: '/assistant', label: t('nav.assistant'), Icon: SparklesIcon },
   ];
 
