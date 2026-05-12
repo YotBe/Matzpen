@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -123,7 +124,16 @@ export default function LoginPage() {
                 className="mt-1 shrink-0"
                 aria-describedby="consent-detail"
               />
-              <span id="consent-detail">{t('login.consentLabel')}</span>
+              <span id="consent-detail">
+                {t('login.consentLabel')}{' '}
+                <Link
+                  href="/terms"
+                  target="_blank"
+                  className="underline text-clay font-semibold"
+                >
+                  {t('login.consentTermsLink')}
+                </Link>
+              </span>
             </label>
           )}
 

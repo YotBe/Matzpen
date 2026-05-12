@@ -16,6 +16,9 @@ export function Footer() {
           <Link href="/privacy" className="hover:text-ink">
             {t('nav.privacy')}
           </Link>
+          <Link href="/terms" className="hover:text-ink">
+            {t('nav.terms')}
+          </Link>
           <a
             href={`mailto:${CONTACT_EMAIL}?subject=Matzpen%20feedback`}
             className="hover:text-ink"
