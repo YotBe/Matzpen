@@ -180,6 +180,26 @@ one of:
 - **Manual** — run the SQL from the dashboard each week if you don't
   want extra infra. Acceptable while the cohort is small.
 
+## 6.6. Troubleshooting: Golden Record save errors
+
+If a user reports that the "who are you caring for" form fails to save,
+the error banner above the submit button now shows the actual Postgres
+message (after the fix in commit replacing `instanceof Error` with the
+`describeError` structural extractor). Map the banner text to the fix:
+
+| What the banner says | Root cause | Fix |
+|---|---|---|
+| `column "X" of relation "golden_records" does not exist` (e.g. X = `region`, `city`, `discharge_date`, `next_refill_date`, `when_well_loves`, `when_well_calms`, `when_well_never_say`, `warning_signs`, `caregiver_id`) | A migration from the 20260512 → 20260517 range has not been applied to this Supabase project. | Open the Supabase SQL editor and apply migrations from `supabase/migrations/` in chronological order from 20260511 onwards. The 9-line list is in **section 1** above. |
+| `new row violates row-level security policy "golden_records_*"` or `permission denied for table golden_records` | The RLS migration `20260512_rls_and_patient_ownership.sql` is applied but the legacy backfill is missing → an existing row has `caregiver_id = NULL` and the UPDATE policy rejects the upsert. | Run `20260516_golden_record_caregiver_backfill.sql` (idempotent — safe to re-run). If the user is a brand-new sign-up, this shouldn't trigger. |
+| `relation "public.golden_records" does not exist` | The base schema was never created on this Supabase project. | The schema is created implicitly by the migrations. Apply 20260511 first; the table is added by the initial migration the user ran when the project was provisioned. |
+| `JWT expired` / `Invalid JWT` | Stale auth session. | Have the user sign out and sign back in. |
+| Anything else | Unknown — capture the full error from the browser DevTools console (`[golden-record] save failed: …`) and check `code`, `details`, `hint`. | If it points to a specific table/column, the migration ordering is suspect. If it's a network error, check Vercel function logs. |
+
+**To diagnose without involving the user:** open the failing deployment
+in a browser with DevTools open, hit save, and copy the full
+`[golden-record] save failed:` line from the console. It includes
+`code`, `details`, and `hint` which the banner can't fit.
+
 ## 7. Pre-launch checklist (don't skip)
 
 - [ ] `docs/legal-review.md` signed off — see `docs/legal-review-brief.md`.
