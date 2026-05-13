@@ -59,12 +59,18 @@ export default function GoldenRecordPage() {
           await saveGoldenRecord(patientId, data);
         }
       } catch (err) {
-        // Surface the failure to the user — previously it was swallowed by
-        // the form's try/finally and the page silently switched modes,
-        // making the dashboard setup banner reappear with no explanation.
-        const message =
-          err instanceof Error ? err.message : t('gr.form.saveError');
+        // Surface the failure to the user. We deliberately do NOT use
+        // `err instanceof Error` — Supabase JS throws PostgrestError which
+        // formally extends Error, but the instanceof check can return
+        // false across Next.js client/server chunk boundaries. Structural
+        // extraction handles Error, PostgrestError, and plain { message }
+        // shapes uniformly.
+        const message = describeError(err, t('gr.form.saveError'));
         setSaveError(message);
+        // Full object to the console for debugging — Postgres errors carry
+        // code/hint/details that don't render in the UI but matter for
+        // operators applying migrations or fixing RLS.
+        console.error('[golden-record] save failed:', err);
         throw err;
       }
       setRecord(next);
@@ -201,4 +207,23 @@ function ModeToggle({
       </button>
     </div>
   );
+}
+
+// Structural error extractor. Pulls .message / .code / .hint off any
+// object-shaped value, so a PostgrestError (`{ message, code, details,
+// hint }`) renders as something like:
+//   `column "warning_signs" of relation "golden_records" does not exist (PGRST204)`
+// rather than a useless generic fallback. Returns `fallback` only when
+// the error has no extractable text at all.
+function describeError(err: unknown, fallback: string): string {
+  if (typeof err === 'string' && err) return err;
+  if (err && typeof err === 'object') {
+    const e = err as { message?: unknown; code?: unknown; hint?: unknown };
+    const parts: string[] = [];
+    if (typeof e.message === 'string' && e.message) parts.push(e.message);
+    if (typeof e.code === 'string' && e.code) parts.push(`(${e.code})`);
+    if (typeof e.hint === 'string' && e.hint) parts.push(`— ${e.hint}`);
+    if (parts.length > 0) return parts.join(' ');
+  }
+  return fallback;
 }
