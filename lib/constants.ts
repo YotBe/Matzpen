@@ -11,6 +11,12 @@ export const MOCK_PATIENT_NAME = 'דורון';
 export const PREVIEW_MODE_ENABLED =
   process.env.NEXT_PUBLIC_ENABLE_PREVIEW_MODE === 'true';
 
+// Feature flags for the investor demo. The lawyer directory ships with
+// sample data only — show it only when an operator has populated real
+// attorneys and explicitly enabled this. Defaults OFF.
+export const SHOW_LAWYER_DIRECTORY =
+  process.env.NEXT_PUBLIC_SHOW_LAWYER_DIRECTORY === 'true';
+
 // Contact email surfaced in the footer and the privacy page. Override via
 // NEXT_PUBLIC_CONTACT_EMAIL (build-time). Falls back to a clearly-placeholder
 // value so it's obvious to the operator that something needs configuring.

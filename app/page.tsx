@@ -8,59 +8,34 @@ import { CaregiverPulsePrompt } from '@/components/CaregiverPulsePrompt';
 import { DailyLogForm } from '@/components/DailyLogForm';
 import { WeeklySummary } from '@/components/WeeklySummary';
 import { OnboardingOverlay } from '@/components/OnboardingOverlay';
+import { MarketingLanding } from '@/components/MarketingLanding';
 import { RefillBanner } from '@/components/RefillBanner';
 import { TrendChart } from '@/components/TrendChart';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { usePatientId } from '@/lib/usePatientId';
-import {
-  MOCK_PATIENT_ID,
-  MOCK_PATIENT_NAME,
-  PREVIEW_MODE_ENABLED,
-} from '@/lib/constants';
+import { MOCK_PATIENT_NAME, PREVIEW_MODE_ENABLED } from '@/lib/constants';
+import { DEMO_LOGS } from '@/lib/demoSeed';
 import { getGoldenRecord, getRecentLogs } from '@/services/supabaseService';
 import { computeAlertLevel } from '@/utils/alertAlgorithm';
 import type { DailyLog, GoldenRecord } from '@/lib/types';
 
-// Demo logs are only ever shown when the operator explicitly opts into
-// preview mode via NEXT_PUBLIC_ENABLE_PREVIEW_MODE=true. Without that flag
-// the AuthGate now blocks the unconfigured app entirely, so these values
-// can't leak into a real caregiver's view.
-const MOCK_LOGS: DailyLog[] = [
-  {
-    patientId: MOCK_PATIENT_ID,
-    loggedBy: 'mock',
-    sleepHours: 4.0,
-    affectiveState: 'irritability',
-    psychomotorSpeed: 4,
-    impulsivityEvent: false,
-    createdAt: Date.now() - 1000 * 60 * 60 * 6,
-  },
-  {
-    patientId: MOCK_PATIENT_ID,
-    loggedBy: 'mock',
-    sleepHours: 4.5,
-    affectiveState: 'euphoria',
-    psychomotorSpeed: 4,
-    impulsivityEvent: true,
-    createdAt: Date.now() - 1000 * 60 * 60 * 30,
-  },
-  {
-    patientId: MOCK_PATIENT_ID,
-    loggedBy: 'mock',
-    sleepHours: 6,
-    affectiveState: 'euthymia',
-    psychomotorSpeed: 3,
-    impulsivityEvent: false,
-    createdAt: Date.now() - 1000 * 60 * 60 * 54,
-  },
-];
+export default function RootPage() {
+  const { user, loading, configured } = useAuth();
+  // Unauthenticated visitors (whether or not Supabase is configured) see
+  // the marketing landing. Authenticated callers fall through to the
+  // dashboard. Loading state shows a brief blank to avoid the landing
+  // flashing on signed-in tab refreshes.
+  if (loading) return null;
+  if (configured && !user) return <MarketingLanding />;
+  return <DashboardPage />;
+}
 
-export default function DashboardPage() {
+function DashboardPage() {
   const { user, configured } = useAuth();
   const { t } = useT();
   const patientId = usePatientId();
-  const [logs, setLogs] = useState<DailyLog[]>(PREVIEW_MODE_ENABLED ? MOCK_LOGS : []);
+  const [logs, setLogs] = useState<DailyLog[]>(PREVIEW_MODE_ENABLED ? DEMO_LOGS : []);
   const [logsLoading, setLogsLoading] = useState<boolean>(configured);
   // Patient name from the Golden Record. `undefined` while loading, empty
   // string when the caregiver hasn't filled it in yet, real name otherwise.

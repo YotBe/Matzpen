@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { usePatientId } from '@/lib/usePatientId';
+import { SHOW_LAWYER_DIRECTORY } from '@/lib/constants';
 import { getGoldenRecord } from '@/services/supabaseService';
 import { IncidentForm } from '@/components/LegalShield/IncidentForm';
 import { LawyerDirectory } from '@/components/LegalShield/LawyerDirectory';
@@ -157,10 +158,12 @@ export default function LegalShieldPage() {
         </ul>
       </section>
 
-      <section>
-        <h2 className="text-lg font-bold mb-3">{t('legal.lawyers.title')}</h2>
-        <LawyerDirectory defaultRegion={record?.region} />
-      </section>
+      {SHOW_LAWYER_DIRECTORY && (
+        <section>
+          <h2 className="text-lg font-bold mb-3">{t('legal.lawyers.title')}</h2>
+          <LawyerDirectory defaultRegion={record?.region} />
+        </section>
+      )}
 
       <aside className="rounded-2xl bg-amber_-bg text-amber_-ink p-4 text-sm leading-relaxed border border-amber_/30">
         {t('legal.disclaimer')}

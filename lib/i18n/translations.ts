@@ -18,6 +18,49 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'common.yes': 'כן',
     'common.no': 'לא',
     'common.previewMode': 'תצוגה',
+    // ── Marketing landing (public) ─────────────────────────────────────────
+    'landing.nav.signIn': 'התחברות',
+    'landing.hero.kicker': 'מצפן · מרכז ניהול משבר',
+    'landing.hero.title': 'כשבן משפחה נכנס למשבר נפשי — אתם לא לבד.',
+    'landing.hero.subtitle':
+      'אפליקציה אחת לבני המעטפת: מעקב יומי, חדר מבצעים משפחתי, פרוטוקול נעילת סביבה, תיק רפואי למיון, ועוזר AI דובר עברית — בנויה מהיסוד לרגעים הקשים.',
+    'landing.hero.familyCta': 'הצטרפו בני משפחה',
+    'landing.hero.partnerCta': 'עבור קופות חולים וארגונים',
+    'landing.hero.partnerSubject': 'בקשת מידע משותף — מצפן',
+    'landing.problem.kicker': 'הבעיה',
+    'landing.problem.title': 'משפחות מנהלות את המשבר לבד, בלי כלים',
+    'landing.problem.body':
+      'בישראל יש כ־400 אלף בני משפחה הפעילים כיום בליווי מתמודד פסיכיאטרי. כשהמשבר פורץ — אין כלי שמאחד את המעטפת, מתעד את ההידרדרות לרופא, ומוביל את המשפחה צעד-צעד במסלולים החוקיים, הרפואיים והלוגיסטיים.',
+    'landing.problem.bullet1':
+      'התיעוד מתפזר בין WhatsApp, פתקים, וזיכרון של אדם אחד — לרוב נשרף תוך שבועיים.',
+    'landing.problem.bullet2':
+      'בני המעטפת לא מתואמים. אחד-שניים נושאים את כל העומס; השאר לא יודעים מה לעשות.',
+    'landing.problem.bullet3':
+      'מסלולי החירום (אשפוז כפוי, אפוטרופסות, חסימת אשראי) הם תהליכים בירוקרטיים שאף אחד לא לימד את המשפחה איך לפעול בהם.',
+    'landing.product.kicker': 'המוצר',
+    'landing.product.title': 'מה אנחנו עושים',
+    'landing.product.f1.title': 'מעקב יומי שבונה תמונה',
+    'landing.product.f1.body':
+      'דקה ביום: שינה, מצב רגשי, פעילות, תרופות. סימני אזהרה אישיים שהמשפחה מגדירה. גרף שמראה לפסיכיאטר ב־10 שניות איפה אנחנו עומדים.',
+    'landing.product.f2.title': 'חדר מבצעים משפחתי',
+    'landing.product.f2.body':
+      'משמרות, משימות משותפות, ובקשת חילוץ דחופה — בזמן אמת. הזמינו אחים, הורים, חברים. כולם רואים את אותה תמונה.',
+    'landing.product.f3.title': 'פרוטוקול נעילה ותסריטי הרגעה',
+    'landing.product.f3.body':
+      'כשמדדי האזהרה עולים — צ׳קליסט להגבלת גישה (מפתחות, אשראי, דרכון), תסריטי תקשורת לפי שיטת LEAP, וניתוב לבית החולים הקרוב.',
+    'landing.partner.kicker': 'לקופות חולים, NGOs וצוותים קליניים',
+    'landing.partner.title': 'הורידו אשפוזים חוזרים, חזקו את בני המעטפת',
+    'landing.partner.body':
+      'מצפן זמין לשילוב בתוכניות שיקום קהילתי, כתוספת לטיפול אחרי אשפוז, ולפיילוטים עם קופות החולים. אנחנו מספקים נתוני שימוש מאוגדים (ללא PII) על מנת למדוד תוצאות.',
+    'landing.partner.cta': 'דברו איתנו',
+    'landing.finalCta.title': 'הזמן הטוב ביותר להירשם הוא לפני המשבר הבא.',
+    'landing.finalCta.body':
+      'התיק היומי, סימני האזהרה, ותיק המיון — הכי יעילים כשהם כבר ממולאים כשמתחילים להתבלבל.',
+    'landing.finalCta.cta': 'התחילו עכשיו — חינם',
+    'landing.finalCta.privacyNote': 'בכניסה תאשרו את',
+    'landing.finalCta.privacyLink': 'מדיניות הפרטיות',
+    'landing.finalCta.termsLink': 'תנאי השימוש',
+
     'configBanner.kicker': 'המערכת אינה מוגדרת',
     'configBanner.title': 'נדרשת הגדרת Supabase',
     'configBanner.body':
@@ -1277,6 +1320,48 @@ export const TRANSLATIONS: Record<Locale, Record<string, string>> = {
     'common.yes': 'Yes',
     'common.no': 'No',
     'common.previewMode': 'Preview',
+    'landing.nav.signIn': 'Sign in',
+    'landing.hero.kicker': 'Matzpen · crisis command center',
+    'landing.hero.title': "When a family member enters a mental-health crisis, you're not alone.",
+    'landing.hero.subtitle':
+      'One app for the family envelope: daily check-ins, a shared war room, an environment-lockdown protocol, an ER record, and a Hebrew-speaking AI assistant — built from the ground up for the hardest moments.',
+    'landing.hero.familyCta': 'For families',
+    'landing.hero.partnerCta': 'For HMOs and partners',
+    'landing.hero.partnerSubject': 'Partner inquiry — Matzpen',
+    'landing.problem.kicker': 'The problem',
+    'landing.problem.title': 'Families manage the crisis alone, without tools',
+    'landing.problem.body':
+      "There are roughly 400,000 active family caregivers in Israel supporting someone with a serious psychiatric condition. When a crisis hits, there is no tool that brings the envelope together, documents the trajectory for a clinician, and walks the family through the legal, medical, and logistical steps.",
+    'landing.problem.bullet1':
+      'Documentation is scattered across WhatsApp, sticky notes, and one person\'s memory — usually lost within two weeks.',
+    'landing.problem.bullet2':
+      "Family members aren't coordinated. One or two carry the entire load; the rest don't know what to do.",
+    'landing.problem.bullet3':
+      'Emergency paths (involuntary commitment, guardianship, blocking credit) are bureaucratic processes no one taught the family.',
+    'landing.product.kicker': 'The product',
+    'landing.product.title': 'What we do',
+    'landing.product.f1.title': 'A daily log that tells a story',
+    'landing.product.f1.body':
+      'One minute a day: sleep, mood, activity, medication. Personal warning signs the family defines. A chart any psychiatrist can read in 10 seconds.',
+    'landing.product.f2.title': 'A family war room',
+    'landing.product.f2.body':
+      'Shifts, shared tasks, and an urgent SOS — in real time. Invite siblings, parents, friends. Everyone sees the same picture.',
+    'landing.product.f3.title': 'Lockdown protocols and scripts',
+    'landing.product.f3.body':
+      'When the metrics climb — an access-restriction checklist (keys, credit, passport), LEAP-method de-escalation scripts, and routing to the nearest hospital.',
+    'landing.partner.kicker': 'For HMOs, NGOs, and clinical teams',
+    'landing.partner.title': 'Lower readmissions, strengthen the family',
+    'landing.partner.body':
+      "Matzpen integrates with community rehab programs, post-discharge follow-up, and HMO pilots. We provide aggregate (PII-free) usage data so you can measure outcomes.",
+    'landing.partner.cta': 'Talk to us',
+    'landing.finalCta.title': 'The best time to sign up is before the next crisis.',
+    'landing.finalCta.body':
+      'The daily log, warning signs, and ER record are most useful when they are already filled in when things start to spin.',
+    'landing.finalCta.cta': 'Start now — free',
+    'landing.finalCta.privacyNote': 'By signing up you accept our',
+    'landing.finalCta.privacyLink': 'privacy policy',
+    'landing.finalCta.termsLink': 'terms of service',
+
     'configBanner.kicker': 'App not configured',
     'configBanner.title': 'Supabase configuration required',
     'configBanner.body':

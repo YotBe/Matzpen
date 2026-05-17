@@ -6,7 +6,10 @@ import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { PREVIEW_MODE_ENABLED } from '@/lib/constants';
 
-const PUBLIC_PATHS = ['/login'];
+// `/` is public so unauthenticated visitors land on the marketing page
+// instead of getting force-redirected to /login. The page itself decides
+// what to render based on auth state (marketing vs dashboard).
+const PUBLIC_PATHS = ['/', '/login'];
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const { user, loading, configured } = useAuth();
