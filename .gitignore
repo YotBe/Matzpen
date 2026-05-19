@@ -12,3 +12,6 @@ dist
 .vite
 tsconfig.tsbuildinfo
 *.tsbuildinfo
+
+# Local Claude Code session cache (the .agents/ skill defs ARE tracked)
+.claude/

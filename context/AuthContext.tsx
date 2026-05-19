@@ -11,6 +11,7 @@ import {
 } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { supabase, supabaseConfigured } from '@/lib/supabaseClient';
+import { identifyCaregiver, initAnalytics, resetAnalytics } from '@/lib/analytics';
 
 interface AuthContextValue {
   user: User | null;
@@ -29,18 +30,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    initAnalytics();
+  }, []);
+
+  useEffect(() => {
     if (!supabaseConfigured || !supabase) {
       setLoading(false);
       return;
     }
 
     supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
+      const u = data.session?.user ?? null;
+      setUser(u);
+      if (u) identifyCaregiver(u.id);
       setLoading(false);
     });
 
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      const u = session?.user ?? null;
+      setUser(u);
+      if (event === 'SIGNED_OUT') {
+        resetAnalytics();
+      } else if (u) {
+        identifyCaregiver(u.id);
+      }
     });
 
     return () => listener.subscription.unsubscribe();

@@ -1,0 +1,286 @@
+'use client';
+
+import Link from 'next/link';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
+import { useT } from '@/lib/i18n/LocaleProvider';
+import { supabase } from '@/lib/supabaseClient';
+import { track } from '@/lib/analytics';
+
+interface Props {
+  /** Render in a fixed-height container (for the floating widget) vs flowing full-page. */
+  variant?: 'panel' | 'page';
+  /** Optional prefilled prompt that is auto-sent once on mount. */
+  initialPrompt?: string;
+  /** Patient context from Golden Record — shown as a banner above the chat. */
+  patientContext?: { name: string; diagnosis: string } | null;
+}
+
+export function AIAssistant({ variant = 'page', initialPrompt, patientContext }: Props) {
+  const { t } = useT();
+
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        headers: async (): Promise<Record<string, string>> => {
+          if (!supabase) return {};
+          const { data } = await supabase.auth.getSession();
+          const token = data.session?.access_token;
+          return token ? { 'x-supabase-token': token } : {};
+        },
+      }),
+    [],
+  );
+
+  const { messages, sendMessage, status, error, clearError } = useChat({ transport });
+  const [input, setInput] = useState('');
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const autosentRef = useRef(false);
+
+  const isStreaming = status === 'submitted' || status === 'streaming';
+  const hasMessages = messages.length > 0;
+
+  useEffect(() => {
+    if (autosentRef.current) return;
+    const text = initialPrompt?.trim();
+    if (!text) return;
+    autosentRef.current = true;
+    sendMessage({ text });
+  }, [initialPrompt, sendMessage]);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+  }, [messages, isStreaming]);
+
+  function submit(e: FormEvent) {
+    e.preventDefault();
+    const text = input.trim();
+    if (!text || isStreaming) return;
+    sendMessage({ text });
+    track('assistant_message_sent', { source: 'free_text', length: text.length });
+    setInput('');
+  }
+
+  function sendStarter(text: string) {
+    if (isStreaming) return;
+    sendMessage({ text });
+    track('assistant_message_sent', { source: 'starter', length: text.length });
+  }
+
+  const starters = [
+    'מה זכויותי לאחר אשפוז פסיכיאטרי?',
+    'איך מגישים בקשה לועדת אשפוז כפוי?',
+    'מה ההבדל בין סעיף 15 ל-17?',
+    'כיצד מתנהל טופס 17א?',
+    'איך מבקשים פטור ממס הכנסה?',
+    'מה עושים כשהמטופל מסרב לתרופות?',
+  ];
+
+  const containerClass =
+    variant === 'panel'
+      ? 'flex h-full flex-col'
+      : 'flex flex-col h-[calc(100dvh-10rem)] max-h-[760px]';
+
+  return (
+    <div className={containerClass} dir="rtl">
+      {patientContext && (
+        <div className="px-4 md:px-5 pt-3 pb-0">
+          <div className="flex items-center gap-2 bg-clay-bg border border-clay/20 rounded-xl px-4 py-2 text-sm">
+            <span className="font-semibold text-clay shrink-0">מדבר על:</span>
+            <span className="text-ink truncate">{patientContext.name}</span>
+            {patientContext.diagnosis && (
+              <>
+                <span className="text-ink-mute shrink-0">|</span>
+                <span className="text-ink-mute truncate">{patientContext.diagnosis}</span>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+      <div
+        ref={scrollerRef}
+        className="flex-1 overflow-y-auto px-4 md:px-5 py-5 space-y-4"
+      >
+        {!hasMessages && (
+          <WelcomeCard subtitle={t('assistant.welcomeSubtitle')} title={t('assistant.welcomeTitle')} />
+        )}
+
+        {messages.map((m) => (
+          <Bubble key={m.id} role={m.role}>
+            {renderParts(m.parts)}
+          </Bubble>
+        ))}
+
+        {isStreaming && messages[messages.length - 1]?.role === 'user' && (
+          <Bubble role="assistant">
+            <TypingDots />
+          </Bubble>
+        )}
+
+        {error && (
+          <div className="rounded-2xl bg-crimson/10 border border-crimson/20 text-crimson-deep text-sm px-4 py-3 leading-relaxed flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0 space-y-1">
+              <div>{t('assistant.error')}</div>
+              {error.message && (
+                <div className="text-[11px] opacity-80 break-words font-mono leading-snug">
+                  {error.message}
+                </div>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={clearError}
+              className="shrink-0 text-xs font-semibold underline hover:no-underline"
+            >
+              {t('assistant.errorRetry')}
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="border-t border-ink/5 bg-white px-4 md:px-5 pt-3 pb-3 space-y-2">
+        {!hasMessages && (
+          <div className="flex flex-wrap gap-2">
+            {starters.map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => sendStarter(s)}
+                className="text-xs md:text-sm rounded-full bg-sand-100 hover:bg-sand-50 text-ink-soft hover:text-ink px-3 py-1.5 transition-colors text-start leading-snug"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <form onSubmit={submit} className="flex items-end gap-2">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submit(e as unknown as FormEvent);
+              }
+            }}
+            placeholder={t('assistant.inputPlaceholder')}
+            rows={1}
+            className="mz-input resize-none min-h-[2.75rem] py-2.5"
+          />
+          <button
+            type="submit"
+            disabled={!input.trim() || isStreaming}
+            className="mz-btn mz-btn-clay h-11 px-4 shrink-0"
+            aria-label={t('assistant.send')}
+          >
+            <SendIcon />
+          </button>
+        </form>
+
+        <div className="bg-amber_-bg border border-amber_/30 rounded-xl px-4 py-3">
+          <p className="text-xs text-amber_-ink leading-snug font-medium">
+            ⚠️ מצפן AI אינו תחליף לייעוץ רפואי או משפטי. במצב חירום — חייגו{' '}
+            <strong>100</strong> (משטרה) או <strong>101</strong> (מד״א).
+          </p>
+          <div className="flex items-center gap-3 mt-1.5">
+            <span className="text-[10px] text-amber_-ink/70 flex-1">{t('assistant.disclaimer')}</span>
+            <Link
+              href="/playbook"
+              className="text-[10px] font-semibold text-clay underline whitespace-nowrap shrink-0"
+            >
+              {t('assistant.playbookLink')}
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function renderParts(parts: { type: string; text?: string }[]) {
+  return (
+    <>
+      {parts.map((p, i) =>
+        p.type === 'text' ? (
+          <span key={i} className="whitespace-pre-wrap break-words leading-relaxed">
+            {p.text}
+          </span>
+        ) : null,
+      )}
+    </>
+  );
+}
+
+function Bubble({
+  role,
+  children,
+}: {
+  role: 'user' | 'assistant' | 'system';
+  children: React.ReactNode;
+}) {
+  const isUser = role === 'user';
+  return (
+    <div className={`flex ${isUser ? 'justify-start' : 'justify-end'}`}>
+      <div
+        className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-[15px] leading-relaxed shadow-soft ${
+          isUser
+            ? 'bg-sand-100 text-ink rounded-bl-md'
+            : 'bg-white text-ink border border-sand-100 rounded-br-md'
+        }`}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function WelcomeCard({ title, subtitle }: { title: string; subtitle: string }) {
+  return (
+    <div className="rounded-card bg-white border border-sand-100 p-5 text-center shadow-soft">
+      <div className="mx-auto h-10 w-10 rounded-full bg-clay/10 text-clay flex items-center justify-center mb-3">
+        <SparkleIcon />
+      </div>
+      <h3 className="font-bold text-ink">{title}</h3>
+      <p className="text-sm text-ink-mute mt-1.5 leading-relaxed">{subtitle}</p>
+    </div>
+  );
+}
+
+function TypingDots() {
+  return (
+    <span className="inline-flex items-center gap-1 py-1" aria-label="loading">
+      <span className="h-1.5 w-1.5 rounded-full bg-ink-mute animate-bounce [animation-delay:-0.3s]" />
+      <span className="h-1.5 w-1.5 rounded-full bg-ink-mute animate-bounce [animation-delay:-0.15s]" />
+      <span className="h-1.5 w-1.5 rounded-full bg-ink-mute animate-bounce" />
+    </span>
+  );
+}
+
+function SendIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M21 12L4 4l3 8-3 8 17-8z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        fill="none"
+        transform="scale(-1,1) translate(-24,0)"
+      />
+    </svg>
+  );
+}
+
+function SparkleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M12 3l1.7 4.6L18.4 9.3 13.8 11l-1.8 4.7L10.3 11 5.6 9.3l4.7-1.7L12 3z" />
+      <path d="M19 14l.9 2.4L22 17l-2.1.9-.9 2.4-.9-2.4L16 17l2.1-.9.9-2.4z" />
+    </svg>
+  );
+}

@@ -1,11 +1,8 @@
 export type AffectiveState = 'depression' | 'euthymia' | 'euphoria' | 'irritability';
 
-export const AFFECTIVE_LABELS: Record<AffectiveState, string> = {
-  depression: 'דיכאון עמוק',
-  euthymia: 'יציב',
-  euphoria: 'אופוריה / היי',
-  irritability: 'עצבנות ורוגזנות',
-};
+// Adherence-to-medication answer from the daily log.
+// `unknown` is the default for legacy rows / unanswered submissions.
+export type MedicationTaken = 'yes' | 'no' | 'refused' | 'unknown';
 
 export interface DailyLog {
   id?: string;
@@ -16,8 +13,19 @@ export interface DailyLog {
   affectiveState: AffectiveState;
   psychomotorSpeed: number;
   impulsivityEvent: boolean;
+  medicationTaken?: MedicationTaken;
   notes?: string;
+  // Ids of personal warning signs the caregiver checked today (from
+  // GoldenRecord.warningSigns). Empty/undefined means none were marked.
+  warningSignsHit?: string[];
   createdAt: number;
+}
+
+// A single family-defined warning sign — short phrase, stable id so the
+// daily-log multi-select can reference it without spelling out the text.
+export interface WarningSign {
+  id: string;
+  label: string;
 }
 
 export interface Patient {
@@ -30,12 +38,30 @@ export interface Patient {
 
 export type AlertLevel = 'STABLE' | 'YELLOW_ALERT' | 'RED_ALERT';
 
-export interface AlertResult {
-  level: AlertLevel;
-  reasons: string[];
+export interface AlertReason {
+  key: string;
+  vars?: Record<string, string | number>;
 }
 
-export type BureaucracySection = 'national_insurance' | 'rehab_basket' | 'legal';
+export interface AlertResult {
+  level: AlertLevel;
+  reasons: AlertReason[];
+}
+
+// Section IDs are used as DB keys for `checklist_items.section`. The first three
+// are legacy (institution-grouped); the latter are situation-based.
+// `post_discharge_30day` reuses the checklist_items table for the new
+// post-discharge timeline page so we don't need a separate table.
+export type BureaucracySection =
+  | 'national_insurance'
+  | 'rehab_basket'
+  | 'legal'
+  | 'first_hospitalization'
+  | 'discharge_followup'
+  | 'deterioration'
+  | 'disability_claim'
+  | 'advance_planning'
+  | 'post_discharge_30day';
 
 export interface BureaucracyChecklist {
   id?: string;
@@ -47,14 +73,90 @@ export interface BureaucracyChecklist {
   updatedBy?: string;
 }
 
+// War-room / envelope-membership types.
+
+export interface EnvelopeMember {
+  patientId: string;
+  caregiverId: string;
+  role: string;
+  displayName?: string;
+  joinedAt: number;
+}
+
+export interface EnvelopeInvite {
+  token: string;
+  patientId: string;
+  inviterCaregiverId: string;
+  expiresAt: number;
+  redeemedBy: string | null;
+  redeemedAt: number | null;
+  createdAt: number;
+}
+
+export interface Shift {
+  id: string;
+  patientId: string;
+  caregiverId: string;
+  startAt: number;
+  endAt: number;
+  note?: string;
+  createdAt: number;
+}
+
+export interface SharedTask {
+  id: string;
+  patientId: string;
+  title: string;
+  done: boolean;
+  doneByCaregiver?: string;
+  doneAt?: number;
+  createdByCaregiver: string;
+  createdAt: number;
+}
+
+export interface BackupRequest {
+  id: string;
+  patientId: string;
+  requesterCaregiverId: string;
+  message?: string;
+  createdAt: number;
+  resolvedAt?: number;
+  resolvedByCaregiver?: string;
+}
+
 export interface GoldenRecord {
   id?: string;
   patientId: string;
+  // The person being cared for. Optional because legacy rows predate this
+  // field — the UI prompts the caregiver to fill it on first visit.
+  patientName?: string;
+  // Free-text relationship of the caregiver to the patient (e.g. "בני",
+  // "אחותי", "בן זוגי"). Helps personalize AI responses.
+  relationship?: string;
+  // Coarse region bucket (see lib/regions.ts) used by the hospitalization
+  // routing module. Free-text city is captured separately for human use.
+  region?: string;
+  city?: string;
   diagnosis: string;
   comorbidities: string;
   medications: string[];
   allergies: string;
   riskVectors: string;
   contacts: string;
+  // Most recent discharge date — anchors the post-discharge 30-day timeline.
+  // ISO date string (YYYY-MM-DD).
+  dischargeDate?: string;
+  // Next expected medication refill date. Anchors the refill SLA banner.
+  nextRefillDate?: string;
+  // "Who is my person when they're well" — three short free-text fields the
+  // caregiver fills in once. Surfaces alongside the golden record so ER
+  // staff see a person, not just a chart.
+  whenWellLoves?: string;
+  whenWellCalms?: string;
+  whenWellNeverSay?: string;
+  // 3-7 short phrases the family identifies as personal prodrome signs.
+  // When set, the alert algorithm checks recent logs against this list
+  // before falling back to the generic sleep/activity thresholds.
+  warningSigns?: WarningSign[];
   updatedAt: number;
 }
