@@ -26,7 +26,7 @@ export function BottomNav() {
   const [moreOpen, setMoreOpen] = useState(false);
 
   const primary: { href: string; label: string; Icon: IconCmp }[] = [
-    { href: '/', label: t('nav.dailyShort'), Icon: HomeIcon },
+    { href: '/dashboard', label: t('nav.dailyShort'), Icon: HomeIcon },
     { href: '/emergency', label: t('nav.emergencyShort'), Icon: AlertIcon },
     { href: '/golden-record', label: t('nav.goldenRecordShort'), Icon: NoteIcon },
     { href: '/bureaucracy', label: t('nav.bureaucracyShort'), Icon: ScrollIcon },
@@ -42,6 +42,8 @@ export function BottomNav() {
     { href: '/case-studies', label: t('nav.cases'), Icon: BookIcon },
     { href: '/self-care', label: t('nav.selfCare'), Icon: SparklesIcon },
     { href: '/assistant', label: t('nav.assistant'), Icon: SparklesIcon },
+    { href: '/about', label: t('nav.about'), Icon: SparklesIcon },
+    { href: '/organizations', label: t('nav.organizations'), Icon: SparklesIcon },
   ];
 
   const moreActive = more.some((m) => pathname === m.href || pathname.startsWith(m.href));
@@ -55,7 +57,7 @@ export function BottomNav() {
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-sand-50/95 backdrop-blur border-t border-ink/5 mz-no-print">
         <ul className="flex items-stretch justify-between px-2 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           {primary.map((tab) => {
-            const active = pathname === tab.href || (tab.href !== '/' && pathname.startsWith(tab.href));
+            const active = pathname === tab.href || (tab.href !== '/dashboard' && pathname.startsWith(tab.href));
             return (
               <li key={tab.href} className="flex-1">
                 <Link

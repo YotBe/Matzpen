@@ -13,9 +13,11 @@ interface Props {
   variant?: 'panel' | 'page';
   /** Optional prefilled prompt that is auto-sent once on mount. */
   initialPrompt?: string;
+  /** Patient context from Golden Record — shown as a banner above the chat. */
+  patientContext?: { name: string; diagnosis: string } | null;
 }
 
-export function AIAssistant({ variant = 'page', initialPrompt }: Props) {
+export function AIAssistant({ variant = 'page', initialPrompt, patientContext }: Props) {
   const { t } = useT();
 
   const transport = useMemo(
@@ -69,10 +71,12 @@ export function AIAssistant({ variant = 'page', initialPrompt }: Props) {
   }
 
   const starters = [
-    t('assistant.starter.involuntary'),
-    t('assistant.starter.bituachLeumi'),
-    t('assistant.starter.refusesMeds'),
-    t('assistant.starter.playbook'),
+    'מה זכויותי לאחר אשפוז פסיכיאטרי?',
+    'איך מגישים בקשה לועדת אשפוז כפוי?',
+    'מה ההבדל בין סעיף 15 ל-17?',
+    'כיצד מתנהל טופס 17א?',
+    'איך מבקשים פטור ממס הכנסה?',
+    'מה עושים כשהמטופל מסרב לתרופות?',
   ];
 
   const containerClass =
@@ -82,6 +86,20 @@ export function AIAssistant({ variant = 'page', initialPrompt }: Props) {
 
   return (
     <div className={containerClass} dir="rtl">
+      {patientContext && (
+        <div className="px-4 md:px-5 pt-3 pb-0">
+          <div className="flex items-center gap-2 bg-clay-bg border border-clay/20 rounded-xl px-4 py-2 text-sm">
+            <span className="font-semibold text-clay shrink-0">מדבר על:</span>
+            <span className="text-ink truncate">{patientContext.name}</span>
+            {patientContext.diagnosis && (
+              <>
+                <span className="text-ink-mute shrink-0">|</span>
+                <span className="text-ink-mute truncate">{patientContext.diagnosis}</span>
+              </>
+            )}
+          </div>
+        </div>
+      )}
       <div
         ref={scrollerRef}
         className="flex-1 overflow-y-auto px-4 md:px-5 py-5 space-y-4"
@@ -163,16 +181,20 @@ export function AIAssistant({ variant = 'page', initialPrompt }: Props) {
           </button>
         </form>
 
-        <div className="flex items-center justify-between gap-2 px-1">
-          <p className="text-[10px] text-ink-mute leading-snug flex-1 min-w-0">
-            {t('assistant.disclaimer')}
+        <div className="bg-amber_-bg border border-amber_/30 rounded-xl px-4 py-3">
+          <p className="text-xs text-amber_-ink leading-snug font-medium">
+            ⚠️ מצפן AI אינו תחליף לייעוץ רפואי או משפטי. במצב חירום — חייגו{' '}
+            <strong>100</strong> (משטרה) או <strong>101</strong> (מד״א).
           </p>
-          <Link
-            href="/playbook"
-            className="text-[10px] font-semibold text-clay underline whitespace-nowrap shrink-0"
-          >
-            {t('assistant.playbookLink')}
-          </Link>
+          <div className="flex items-center gap-3 mt-1.5">
+            <span className="text-[10px] text-amber_-ink/70 flex-1">{t('assistant.disclaimer')}</span>
+            <Link
+              href="/playbook"
+              className="text-[10px] font-semibold text-clay underline whitespace-nowrap shrink-0"
+            >
+              {t('assistant.playbookLink')}
+            </Link>
+          </div>
         </div>
       </div>
     </div>

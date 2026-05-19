@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { PREVIEW_MODE_ENABLED } from '@/lib/constants';
 
-const PUBLIC_PATHS = ['/login'];
+const PUBLIC_PATHS = ['/login', '/', '/about', '/organizations'];
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const { user, loading, configured } = useAuth();
@@ -19,7 +19,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
     if (!configured) return;
     if (loading) return;
     if (!user && !isPublic) router.replace('/login');
-    if (user && pathname === '/login') router.replace('/');
+    if (user && pathname === '/login') router.replace('/dashboard');
   }, [user, loading, configured, isPublic, pathname, router]);
 
   // Preview mode is OFF by default. An unconfigured deploy used to show a

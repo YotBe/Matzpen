@@ -16,7 +16,7 @@ export function NavBar() {
   const toolsRef = useRef<HTMLLIElement>(null);
 
   const links = [
-    { href: '/', label: t('nav.daily'), helper: t('nav.dailyHelper') },
+    { href: '/dashboard', label: t('nav.daily'), helper: t('nav.dailyHelper') },
     { href: '/emergency', label: t('nav.emergency'), helper: t('nav.emergencyHelper') },
     { href: '/golden-record', label: t('nav.goldenRecord'), helper: t('nav.goldenRecordHelper') },
     { href: '/bureaucracy', label: t('nav.bureaucracy'), helper: t('nav.bureaucracyHelper') },
@@ -32,6 +32,8 @@ export function NavBar() {
     { href: '/hospitalization', label: t('nav.hospitalization'), helper: t('nav.hospitalizationHelper') },
     { href: '/case-studies', label: t('nav.cases'), helper: t('nav.casesHelper') },
     { href: '/self-care', label: t('nav.selfCare'), helper: t('nav.selfCareHelper') },
+    { href: '/about', label: t('nav.about'), helper: t('nav.aboutHelper') },
+    { href: '/organizations', label: t('nav.organizations'), helper: t('nav.organizationsHelper') },
   ];
 
   const inTools = tools.some((tl) => pathname === tl.href || pathname.startsWith(tl.href));
@@ -67,7 +69,7 @@ export function NavBar() {
         </Link>
         <ul className="flex items-center gap-1">
           {links.map((l) => {
-            const active = pathname === l.href || (l.href !== '/' && pathname.startsWith(l.href));
+            const active = pathname === l.href || (l.href !== '/dashboard' && pathname.startsWith(l.href));
             return (
               <li key={l.href}>
                 <Link
