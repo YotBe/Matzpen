@@ -56,7 +56,7 @@ Required:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-Local dev: copy `.env.local.example` → `.env.local` and fill values, then `npm run dev`.
+Local dev: copy `.env.example` → `.env.local` and fill values, then `npm run dev`.
 Vercel: set both vars under Project → Settings → Environment Variables, then **redeploy** (existing builds were compiled without them).
 
 When the vars are absent the app runs in a read-only "preview" mode: `AuthGate` lets everything through, `DailyLogForm` simulates saves, and the dashboard shows `MOCK_LOGS`.

@@ -14,18 +14,23 @@ export default function manifest(): MetadataRoute.Manifest {
     dir: 'rtl',
     orientation: 'portrait',
     icons: [
+      // PNGs are what Android's install prompt and splash screen require;
+      // the SVG stays as a crisp fallback for browsers that prefer it.
+      { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
       {
-        src: '/icon.svg',
-        sizes: 'any',
-        type: 'image/svg+xml',
-        purpose: 'any',
-      },
-      {
-        src: '/icon.svg',
-        sizes: 'any',
-        type: 'image/svg+xml',
+        src: '/icons/maskable-192.png',
+        sizes: '192x192',
+        type: 'image/png',
         purpose: 'maskable',
       },
+      {
+        src: '/icons/maskable-512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+      { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
     ],
     categories: ['health', 'medical', 'lifestyle'],
   };

@@ -6,6 +6,15 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { LanguageToggle } from '@/components/LanguageToggle';
+import { safeInternalPath } from '@/lib/publicPaths';
+
+// Where to land after a successful sign-in. Read from window.location at
+// call time (not useSearchParams) so this page stays statically prerendered.
+function nextPath(): string {
+  return (
+    safeInternalPath(new URLSearchParams(window.location.search).get('next')) ?? '/'
+  );
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,7 +40,7 @@ export default function LoginPage() {
     try {
       if (mode === 'signin') await signInEmail(email, password);
       else await signUpEmail(email, password);
-      router.replace('/');
+      router.replace(nextPath());
     } catch (err) {
       setError(err instanceof Error ? err.message : t('login.unknownError'));
     } finally {
@@ -47,8 +56,8 @@ export default function LoginPage() {
     setBusy(true);
     setError(null);
     try {
-      await signInGoogle();
-      router.replace('/');
+      await signInGoogle(nextPath());
+      router.replace(nextPath());
     } catch (err) {
       setError(err instanceof Error ? err.message : t('login.unknownError'));
     } finally {

@@ -5,21 +5,31 @@ import { useEffect, type ReactNode } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { PREVIEW_MODE_ENABLED } from '@/lib/constants';
-
-const PUBLIC_PATHS = ['/login'];
+import { isPublicPath, safeInternalPath } from '@/lib/publicPaths';
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const { user, loading, configured } = useAuth();
   const { t } = useT();
   const router = useRouter();
   const pathname = usePathname();
-  const isPublic = PUBLIC_PATHS.includes(pathname ?? '');
+  const isPublic = isPublicPath(pathname);
 
   useEffect(() => {
     if (!configured) return;
     if (loading) return;
-    if (!user && !isPublic) router.replace('/login');
-    if (user && pathname === '/login') router.replace('/');
+    if (!user && !isPublic) {
+      // Carry the destination through login so deep links (e.g. an envelope
+      // invite opened by a signed-out caregiver) survive the round-trip.
+      const next =
+        pathname && pathname !== '/' ? `?next=${encodeURIComponent(pathname)}` : '';
+      router.replace(`/login${next}`);
+    }
+    if (user && pathname === '/login') {
+      const next = safeInternalPath(
+        new URLSearchParams(window.location.search).get('next'),
+      );
+      router.replace(next ?? '/');
+    }
   }, [user, loading, configured, isPublic, pathname, router]);
 
   // Preview mode is OFF by default. An unconfigured deploy used to show a

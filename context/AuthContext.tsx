@@ -19,7 +19,7 @@ interface AuthContextValue {
   configured: boolean;
   signInEmail: (email: string, password: string) => Promise<void>;
   signUpEmail: (email: string, password: string) => Promise<void>;
-  signInGoogle: () => Promise<void>;
+  signInGoogle: (next?: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -71,11 +71,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw error;
   }, []);
 
-  const signInGoogle = useCallback(async () => {
+  const signInGoogle = useCallback(async (next?: string) => {
     if (!supabase) throw new Error('Supabase not configured');
+    // `next` must already be a validated same-origin path (see
+    // lib/publicPaths.safeInternalPath) — it lets OAuth users land back on
+    // deep links like envelope invites instead of the dashboard.
+    const origin = typeof window !== 'undefined' ? window.location.origin : undefined;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: typeof window !== 'undefined' ? window.location.origin : undefined },
+      options: { redirectTo: origin ? `${origin}${next ?? '/'}` : undefined },
     });
     if (error) throw error;
   }, []);

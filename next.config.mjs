@@ -26,6 +26,17 @@ const nextConfig = {
         headers: SECURITY_HEADERS,
       },
       {
+        // Token-addressed pages hold patient medical data behind an
+        // unguessable URL. Robots.txt asks politely; this header makes any
+        // compliant indexer drop the page even if it found the link.
+        source: '/share/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }],
+      },
+      {
+        source: '/envelope/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }],
+      },
+      {
         // The service worker file must never be cached by intermediaries,
         // otherwise users get stuck on an old SW that serves stale shells.
         source: '/sw.js',
