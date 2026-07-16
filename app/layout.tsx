@@ -14,10 +14,27 @@ const heebo = Heebo({
   display: 'swap',
 });
 
+const APP_NAME = 'מצפן · Matzpen — מרכז ניהול משבר למשפחות';
+const APP_DESCRIPTION =
+  'אפליקציה למשפחות וצוות תומך של אדם המתמודד עם הפרעה דו-קוטבית — מעקב, התראות מוקדמות, וניהול חירום וזכויות';
+
 export const metadata: Metadata = {
-  title: 'מצפן · Matzpen — מרכז ניהול משבר למשפחות',
-  description:
-    'אפליקציה למשפחות וצוות תומך של אדם המתמודד עם הפרעה דו-קוטבית — מעקב, התראות מוקדמות, וניהול חירום וזכויות',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  title: APP_NAME,
+  description: APP_DESCRIPTION,
+  applicationName: 'Matzpen',
+  appleWebApp: {
+    capable: true,
+    title: 'מצפן',
+    statusBarStyle: 'default',
+  },
+  openGraph: {
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+    type: 'website',
+    locale: 'he_IL',
+    siteName: 'Matzpen',
+  },
 };
 
 export const viewport: Viewport = {

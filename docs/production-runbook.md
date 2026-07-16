@@ -29,6 +29,7 @@ deployment serving real caregivers. Follow it in order. Each section is
    20260517_warning_signs.sql
    20260518_envelope_existing_tables.sql
    20260519_push_subscriptions.sql
+   20260520_token_cleanup.sql
    ```
 
 3. Enable email/password auth + Google OAuth (the login page expects
@@ -86,7 +87,11 @@ deployment serving real caregivers. Follow it in order. Each section is
    VAPID_PRIVATE_KEY
    VAPID_SUBJECT
    NEXT_PUBLIC_CONTACT_EMAIL
+   NEXT_PUBLIC_APP_URL
    ```
+   (`NEXT_PUBLIC_APP_URL` = the production origin, e.g.
+   `https://matzpen.org.il` — used for canonical/OG metadata. The full
+   annotated list lives in `.env.example`.)
 4. Add the custom domain. Wait for DNS to verify.
 5. Trigger a production deploy.
 
@@ -120,6 +125,14 @@ deployment serving real caregivers. Follow it in order. Each section is
     `/vault` — each should load with no console errors.
 12. `/vault` → record a 5-second audio clip → upload. Confirm it appears
     with a working signed-URL playback.
+12b. Caregiver A → `/golden-record` → create a share link. Open it in a
+    THIRD incognito window with **no login**. The record must render
+    without redirecting to `/login` (this is the ER-doctor path), and the
+    response must carry an `X-Robots-Tag: noindex` header (check the
+    Network tab).
+12c. While signed out, open `/terms` and `/privacy` directly — both must
+    load without a login redirect (the sign-up consent checkbox links
+    there).
 
 ### Operator (you)
 13. PostHog → Live Events: verify `daily_log_submitted`,
@@ -189,7 +202,7 @@ message (after the fix in commit replacing `instanceof Error` with the
 
 | What the banner says | Root cause | Fix |
 |---|---|---|
-| `column "X" of relation "golden_records" does not exist` (e.g. X = `region`, `city`, `discharge_date`, `next_refill_date`, `when_well_loves`, `when_well_calms`, `when_well_never_say`, `warning_signs`, `caregiver_id`) | A migration from the 20260512 → 20260517 range has not been applied to this Supabase project. | Open the Supabase SQL editor and apply migrations from `supabase/migrations/` in chronological order from 20260511 onwards. The 9-line list is in **section 1** above. |
+| `column "X" of relation "golden_records" does not exist` (e.g. X = `region`, `city`, `discharge_date`, `next_refill_date`, `when_well_loves`, `when_well_calms`, `when_well_never_say`, `warning_signs`, `caregiver_id`) | A migration from the 20260512 → 20260517 range has not been applied to this Supabase project. | Open the Supabase SQL editor and apply migrations from `supabase/migrations/` in chronological order from 20260511 onwards. The ordered list is in **section 1** above. |
 | `new row violates row-level security policy "golden_records_*"` or `permission denied for table golden_records` | The RLS migration `20260512_rls_and_patient_ownership.sql` is applied but the legacy backfill is missing → an existing row has `caregiver_id = NULL` and the UPDATE policy rejects the upsert. | Run `20260516_golden_record_caregiver_backfill.sql` (idempotent — safe to re-run). If the user is a brand-new sign-up, this shouldn't trigger. |
 | `relation "public.golden_records" does not exist` | The base schema was never created on this Supabase project. | The schema is created implicitly by the migrations. Apply 20260511 first; the table is added by the initial migration the user ran when the project was provisioned. |
 | `JWT expired` / `Invalid JWT` | Stale auth session. | Have the user sign out and sign back in. |

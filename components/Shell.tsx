@@ -10,7 +10,10 @@ import { AIAssistantWidget } from '@/components/AIAssistantWidget';
 
 export function Shell({ children }: { children: ReactNode }) {
   const pathname = usePathname() ?? '/';
-  const hideChrome = pathname === '/login';
+  // /share/[token] is viewed by people outside the account (ER staff, on-call
+  // psychiatrists) — it renders its own minimal header, so the authenticated
+  // app chrome (nav, AI widget) would be broken noise there.
+  const hideChrome = pathname === '/login' || pathname.startsWith('/share/');
 
   return (
     <div className="min-h-dvh flex flex-col">
